@@ -1,0 +1,9 @@
+[submodule "submodules/lua-wcwidth"]
+	path = submodules/lua-wcwidth
+	url = https://github.com/aperezdc/lua-wcwidth
+[submodule "submodules/utf8.lua"]
+	path = submodules/utf8.lua
+	url = https://github.com/Stepets/utf8.lua
+[submodule "submodules/json.lua"]
+	path = submodules/json.lua
+	url = https://github.com/rxi/json.lua.git
