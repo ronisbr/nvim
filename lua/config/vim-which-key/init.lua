@@ -10,9 +10,8 @@ vim.g.which_key_max_size = 0
 -- Hide status line when opening `vim-which-key`, and restore it when existing
 -- the buffer.
 vim.cmd([[
-augroup which_key_group
+autocmd! FileType which_key
 autocmd FileType which_key highlight default link WhichKeySeperator GitSignsAdd
-  set laststatus=0 noshowmode noruler
-autocmd BufLeave <buffer> set laststatus=2 noshowmode ruler
-augroup end
+autocmd FileType which_key set laststatus=0 noshowmode noruler
+autocmd FileType which_key autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 ]])
