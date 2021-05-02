@@ -30,6 +30,7 @@ vim.g.mapleader = ' '
 -- -----------------------------------------------------------------------------
 
 map('n', '<Leader>', [[:<C-u>WhichKey "<space>"<CR>]], {silent = true})
+map('v', '<Leader>', [[:<C-u>WhichKeyVisual "<space>"<CR>]], {silent = true})
 vim.call('which_key#register', '<Space>', 'g:which_key_leader')
 
 map('n', '<Leader><Up>', '<C-w>k', {silent = true})
@@ -141,10 +142,22 @@ vim.g.which_key_leader = {
 
   ['t'] = {
     ['name'] = '+text',
+    ['c']    = {
+      ['name'] = '+align comments',
+      ['l']    = {":call v:lua.require('utils/align_comment').align_comments('l')", 'To the left'},
+      ['c']    = {":call v:lua.require('utils/align_comment').align_comments('c')", 'To the center'},
+      ['r']    = {":call v:lua.require('utils/align_comment').align_comments('r')", 'To the right'},
+      ['.']    = {
+        ['name'] = '+with dot',
+        ['l']    = {":call v:lua.require('utils/align_comment').align_comments_with_char('.', 'l')", 'To the left'},
+        ['c']    = {":call v:lua.require('utils/align_comment').align_comments_with_char('.', 'c')", 'To the center'},
+        ['r']    = {":call v:lua.require('utils/align_comment').align_comments_with_char('.', 'r')", 'To the right'},
+      },
+    },
     ['f']    = {
       ['name'] = '+fill',
-      ['f']    = {":call v:lua.require('utils/text_manipulation').fill_with_cursor_character()", 'Fill with cursor char'},
-      ['p']    = {":call v:lua.require('utils/text_manipulation').fill_with_input()", 'Fill with input pattern'}
+      ['f']    = {":call v:lua.require('utils/fill_text').fill_with_cursor_character()", 'Fill with cursor char'},
+      ['p']    = {":call v:lua.require('utils/fill_text').fill_with_input()", 'Fill with input pattern'}
     }
   },
 
