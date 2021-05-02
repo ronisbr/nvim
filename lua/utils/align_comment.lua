@@ -112,8 +112,8 @@ function M._align_comment_in_line(line, comment_pattern, fill_char, alignment)
     -- Get the string after the comment until the end of the line.
     local comment = utf8.sub(line, char_id + 1, -1)
 
-    -- Remove the leading space in the commend.
-    comment = string.gsub(comment, '^%s*', '')
+    -- Remove the leading and trailing space in the comment.
+      comment = string.gsub(comment, '^%s*(.-)%s*$', '%1')
 
     -- Count how many characters we have.
     local total_chars = utf8_aux.display_len(code) + utf8_aux.display_len(comment)
