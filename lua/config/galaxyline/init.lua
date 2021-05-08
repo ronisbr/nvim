@@ -67,7 +67,7 @@ local mode_map = {
   ['Rv'] = {'VIRTUAL',  colors.red},
   ['rm'] = {'--MORE',   colors.cyan},
   -- Fallback mode.
-  ['fallback'] = {'UNKNOW', colors.blue}
+  ['fallback'] = {'UNKNOWN', colors.blue}
 }
 
 -- Return the highlight color of the current mode.
@@ -82,6 +82,24 @@ local function mode_hl()
   return mode[2]
 end
 
+-- Return the current mode name.
+local function mode_name()
+  local mode = mode_map[vim.fn.mode()]
+
+  -- Fallback if a mode is not available in `mode_map`.
+  if mode == nil then
+    str = mode_map['n'][1]
+  else
+    str = mode[1]
+  end
+
+  -- Make the string size constant.
+  local mode_len = string.len(str)
+  local delta = math.floor((8 - mode_len)/2)
+  local str = string.rep(" ", delta) .. str .. string.rep(" ", 8 - mode_len - delta)
+  return str
+end
+
 --                                 Left part
 -- -----------------------------------------------------------------------------
 
@@ -92,7 +110,7 @@ gls.left[1] = {
   ViMode = {
     provider = function()
       vim.api.nvim_command('hi GalaxyViMode guifg=' .. mode_hl())
-      return '█'
+      return '█' .. ' ' .. mode_name()
     end,
     highlight = {colors.fg, colors.section_bg},
   }
