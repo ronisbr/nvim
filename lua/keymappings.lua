@@ -167,6 +167,10 @@ vim.g.which_key_leader = {
     ['-']    = {'split', 'Horiz. window'},
     ['|']    = {'vsplit', 'Vert. window'},
     ['c']    = {'close', 'Close window'},
+    ['k']    = {'<C-w>k', 'Up window'},
+    ['j']    = {'<C-w>j', 'Down window'},
+    ['h']    = {'<C-w>h', 'Left window'},
+    ['l']    = {'<C-w>l', 'Right window'},
   }
 }
 
