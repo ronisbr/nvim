@@ -28,19 +28,19 @@ Function to separate the arguments of the function definition.
 """
 def get_julia_args(func_decl):
 	# Remove all spaces and line breaks from the function definition.
-	line   = julia_func_decl_oneline(func_decl)
+	line = julia_func_decl_oneline(func_decl)
 
 	# Remove everything between {}.
-	linep  = re.sub('{[^>{}]+}', '', line)
+	linep = re.sub('{[^>{}]+}', '', line)
 
 	# Tokenize the arguments.
-	args   = ((linep.split('(',1)[1]).split(')',1)[0]).split(',')
+	args = ((linep.split('(',1)[1]).split(')',1)[0]).split(',')
 
 	# Organize the arguments.
 	output = ""
 	if (len(args) > 1) or ( (len(args) == 1) and (len(args[0]) > 0) ):
 		for a in args:
-			output += "* `" + a.split('::',1)[0].strip() + "`: <++>\n"
+			output += "* `" + a.strip() + "`: <++>\n"
 	else:
 		output += "\n"
 
