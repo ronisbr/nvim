@@ -18,6 +18,7 @@ return require('packer').startup(function()
   use 'JuliaEditorSupport/julia-vim'
   use 'SirVer/ultisnips'
   use 'Th3Whit3Wolf/one-nvim'
+  use 'folke/todo-comments.nvim'
   use 'glepnir/dashboard-nvim'
   use 'glepnir/galaxyline.nvim'
   use 'honza/vim-snippets'
