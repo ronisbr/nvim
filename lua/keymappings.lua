@@ -69,6 +69,12 @@ map('n', '<Esc>', ':noh<CR><Esc>', {silent = true, noremap = true})
 map('i', '<C-n>', 'compe#complete()', {noremap = true, expr = true})
 map('i', '<C-p>', 'compe#complete()', {noremap = true, expr = true})
 
+-- Remap keys that open floaterm.
+map('i', '<F1>', '<ESC><F1>', {noremap = false})
+map('i', '<F2>', '<ESC><F2>', {noremap = false})
+map('i', '<F3>', '<ESC><F3>', {noremap = false})
+map('i', '<F4>', '<ESC><F4>', {noremap = false})
+
 -- Visual mode
 -- -----------------------------------------------------------------------------
 
