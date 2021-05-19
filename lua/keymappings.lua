@@ -106,6 +106,7 @@ vim.g.which_key_leader = {
   -- Buffer
   ['b'] = {
     ['name'] = '+buffer',
+    ['c']    = {'BufferClose', 'Close buffer'},
     ['d']    = {'bdelete', 'Delete buffer'},
     ['p']    = {'BufferPick', 'Buffer pick'},
     ['s']    = {':setlocal spell!', 'Toggle spell'},
