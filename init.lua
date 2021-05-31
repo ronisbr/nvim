@@ -29,6 +29,7 @@ require('config/ultisnips')
 require('config/undotree')
 require('config/vim-better-whitespace')
 require('config/vim-which-key')
+require('config/vimtex')
 
 -- Key mappings
 -- ============================================================================
