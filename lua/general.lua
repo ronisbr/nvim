@@ -19,10 +19,10 @@ vim.o.sidescrolloff = 8                  -- Columns of context
 vim.o.smartcase = true                   -- Don't ignore case with capitals
 vim.o.splitbelow = true                  -- Put new windows below current
 vim.o.splitright = true                  -- Put new windows right of current
-vim.o.t_Co = "256"                       -- Support 256 colors
 vim.o.termguicolors = true               -- True color support
 vim.o.virtualedit = 'block'              -- Set virtualedit for block mode only
 vim.o.wildmode = 'list:longest'          -- Command-line completion mode
+vim.go.t_Co = "256"                      -- Support 256 colors
 
 -- Buffer-scoped options
 
