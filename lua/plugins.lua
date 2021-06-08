@@ -25,7 +25,6 @@ return require('packer').startup(function()
   use 'honza/vim-snippets'
   use 'hrsh7th/nvim-compe'
   use 'junegunn/vim-easy-align'
-  use 'kyazdani42/nvim-tree.lua'
   use 'kyazdani42/nvim-web-devicons'
   use 'lervag/vimtex'
   use 'lewis6991/gitsigns.nvim'
@@ -40,6 +39,15 @@ return require('packer').startup(function()
   use 'terrortylor/nvim-comment'
   use 'tpope/vim-fugitive'
   use 'voldikss/vim-floaterm'
-  use {'lukas-reineke/indent-blankline.nvim', branch = 'lua'}
+
+  use {
+    'lukas-reineke/indent-blankline.nvim',
+    branch = 'lua'
+  }
+
+  use {
+    'kyazdani42/nvim-tree.lua',
+    commit = '3196205131a2d4d53d92d195215ee72343349e5b'
+  }
 
 end)
