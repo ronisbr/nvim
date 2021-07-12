@@ -30,6 +30,7 @@ return require('packer').startup(function()
   use 'lervag/vimtex'
   use 'lewis6991/gitsigns.nvim'
   use 'liuchengxu/vim-which-key'
+  use 'lukas-reineke/indent-blankline.nvim'
   use 'mbbill/undotree'
   use 'ntpeters/vim-better-whitespace'
   use 'nvim-lua/plenary.nvim'
@@ -40,10 +41,5 @@ return require('packer').startup(function()
   use 'terrortylor/nvim-comment'
   use 'tpope/vim-fugitive'
   use 'voldikss/vim-floaterm'
-
-  use {
-    'lukas-reineke/indent-blankline.nvim',
-    branch = 'lua'
-  }
 
 end)
