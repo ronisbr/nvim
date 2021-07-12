@@ -3,7 +3,7 @@
 
 require('telescope').setup{
   defaults = {
-    layout_defaults = {
+    layout_config = {
       flex = {
         flip_columns = 130
       }
