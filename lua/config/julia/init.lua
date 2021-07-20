@@ -1,4 +1,4 @@
--- Plugin configuration: julia-vim
+-- Plugin configuration: julia-vim and julia LSP
 -- ============================================================================
 
 -- Substitute LaTeX symbols after typing.

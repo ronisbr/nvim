@@ -32,6 +32,7 @@ return require('packer').startup(function()
   use 'lewis6991/gitsigns.nvim'
   use 'lukas-reineke/indent-blankline.nvim'
   use 'mbbill/undotree'
+  use 'neovim/nvim-lspconfig'
   use 'ntpeters/vim-better-whitespace'
   use 'nvim-lua/plenary.nvim'
   use 'nvim-lua/popup.nvim'
