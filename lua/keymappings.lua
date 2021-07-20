@@ -68,8 +68,8 @@ map('t', '<Esc>', '<C-\\><C-n>', {noremap = true, silent = true})
 
 local wk = require("which-key")
 
--- Leader
--- -----------------------------------------------------------------------------
+-- Leader (normal mode)
+-- --------------------
 
 wk.register({
   ['<leader>'] = {
@@ -103,6 +103,26 @@ wk.register({
       b    = {'<cmd>Telescope marks<cr>', 'Bookmarks'},
       f    = {'<cmd>Telescope find_files<cr>', 'Find files'},
       h    = {'<cmd>Telescope oldfiles<cr>', 'History'},
+    },
+
+    -- LSP
+    l = {
+      name = '+lsp',
+      a = {'<cmd>lua vim.lsp.buf.code_action()<cr>', 'Code action'},
+      e = {'<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<cr>', 'Show line diag.'},
+      f = {'<cmd>lua vim.lsp.buf.formatting()<cr>', 'Buffer formatting'},
+      k = {'<cmd>lua vim.lsp.buf.hover()<cr>', 'Hover'},
+      r = {'<cmd>lua vim.lsp.buf.rename()<cr>', 'Rename'},
+      t = {'<cmd>lua vim.lsp.buf.type_definition()<cr>', 'Type definition'},
+      ['['] = {'<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>', 'Prev. diag.'},
+      [']'] = {'<cmd>lua vim.lsp.diagnostic.goto_next()<cr>', 'Next diag.'},
+      g = {
+        name = '+goto',
+        D    = {'<cmd>lua vim.lsp.buf.declaration()<cr>', 'Goto declaration'},
+        d    = {'<cmd>lua vim.lsp.buf.definition()<cr>', 'Goto definition'},
+        i    = {'<cmd>lua vim.lsp.buf.implementation()<cr>', 'Goto implementation'},
+        r    = {'<cmd>lua vim.lsp.buf.references()<cr>', 'Goto references'},
+      },
     },
 
     -- Git
@@ -163,12 +183,65 @@ wk.register({
   }
 })
 
+-- Leader (visual mode)
+-- --------------------
+
+wk.register({
+  ['<leader>'] = {
+    -- LSP
+    l = {
+      name = '+lsp',
+      a = {'<cmd>lua vim.lsp.buf.code_action()<cr>', 'Code action'},
+      e = {'<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<cr>', 'Show line diag.'},
+      f = {'<cmd>lua vim.lsp.buf.formatting()<cr>', 'Buffer formatting'},
+      k = {'<cmd>lua vim.lsp.buf.hover()<cr>', 'Hover'},
+      r = {'<cmd>lua vim.lsp.buf.rename()<cr>', 'Rename'},
+      t = {'<cmd>lua vim.lsp.buf.type_definition()<cr>', 'Type definition'},
+      ['['] = {'<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>', 'Prev. diag.'},
+      [']'] = {'<cmd>lua vim.lsp.diagnostic.goto_next()<cr>', 'Next diag.'},
+      g = {
+        name = '+goto',
+        D    = {'<cmd>lua vim.lsp.buf.declaration()<cr>', 'Goto declaration'},
+        d    = {'<cmd>lua vim.lsp.buf.definition()<cr>', 'Goto definition'},
+        i    = {'<cmd>lua vim.lsp.buf.implementation()<cr>', 'Goto implementation'},
+        r    = {'<cmd>lua vim.lsp.buf.references()<cr>', 'Goto references'},
+      },
+    },
+
+    -- Text manipulation
+    t = {
+      name = '+text',
+      c    = {
+        name  = '+align comments',
+        l     = {"<cmd>call v:lua.require('utils/align_comment').align_comments('l')<cr>", 'To the left'},
+        c     = {"<cmd>call v:lua.require('utils/align_comment').align_comments('c')<cr>", 'To the center'},
+        r     = {"<cmd>call v:lua.require('utils/align_comment').align_comments('r')<cr>", 'To the right'},
+        ['.'] = {
+          name = '+with dot',
+          l    = {"<cmd>call v:lua.require('utils/align_comment').align_comments_with_char('.', 'l')<cr>", 'To the left'},
+          c    = {"<cmd>call v:lua.require('utils/align_comment').align_comments_with_char('.', 'c')<cr>", 'To the center'},
+          r    = {"<cmd>call v:lua.require('utils/align_comment').align_comments_with_char('.', 'r')<cr>", 'To the right'},
+        },
+      },
+      ['f']    = {
+        ['name'] = '+fill',
+        ['f']    = {"<cmd>call v:lua.require('utils/fill_text').fill_with_cursor_character()<cr>", 'Fill with cursor char'},
+        ['p']    = {"<cmd>call v:lua.require('utils/fill_text').fill_with_input()<cr>", 'Fill with input pattern'}
+      }
+    },
+  }
+}, {
+  mode = 'v',
+})
+
 -- s
 -- -----------------------------------------------------------------------------
 
-vim.g.which_key_s = {
-  name = 'Hop',
-  l    = {'<cmd>HopLine<cr>', 'Hop line'},
-  s    = {'<cmd>HopChar2<cr>', 'Hop char 2'},
-  w    = {'<cmd>HopWord<cr>', 'Hop word'},
-}
+wk.register({
+  s = {
+    name = 'Hop',
+    l    = {'<cmd>HopLine<cr>', 'Hop line'},
+    s    = {'<cmd>HopChar2<cr>', 'Hop char 2'},
+    w    = {'<cmd>HopWord<cr>', 'Hop word'},
+  }
+})
