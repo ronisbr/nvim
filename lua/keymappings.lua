@@ -63,6 +63,12 @@ map('x', '<S-Down>', ':move \'>+1<CR>gv-gv', {noremap = true, silent = true})
 
 map('t', '<Esc>', '<C-\\><C-n>', {noremap = true, silent = true})
 
+-- Lsp saga
+-- -----------------------------------------------------------------------------
+
+map('n', '<C-f>', '<cmd>lua require("lspsaga.action").smart_scroll_with_saga(1)<cr>', {noremap = true, silent = true})
+map('n', '<C-b>', '<cmd>lua require("lspsaga.action").smart_scroll_with_saga(-1)<cr>', {noremap = true, silent = true})
+
 -- WhichKey
 -- -----------------------------------------------------------------------------
 
@@ -108,21 +114,17 @@ wk.register({
     -- LSP
     l = {
       name = '+lsp',
-      a = {'<cmd>lua vim.lsp.buf.code_action()<cr>', 'Code action'},
-      e = {'<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<cr>', 'Show line diag.'},
+      a = {'<cmd>lua require("lspsaga.codeaction").code_action()<CR>', 'Code action'},
+      c = {'<cmd>lua require("lspsaga.diagnostic").show_cursor_diagnostics()<cr>', 'Cursor diag.'},
+      d = {'<cmd>lua require("lspsaga.provider").preview_definition()<cr>', 'Preview definition'},
       f = {'<cmd>lua vim.lsp.buf.formatting()<cr>', 'Buffer formatting'},
-      k = {'<cmd>lua vim.lsp.buf.hover()<cr>', 'Hover'},
-      r = {'<cmd>lua vim.lsp.buf.rename()<cr>', 'Rename'},
-      t = {'<cmd>lua vim.lsp.buf.type_definition()<cr>', 'Type definition'},
-      ['['] = {'<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>', 'Prev. diag.'},
-      [']'] = {'<cmd>lua vim.lsp.diagnostic.goto_next()<cr>', 'Next diag.'},
-      g = {
-        name = '+goto',
-        D    = {'<cmd>lua vim.lsp.buf.declaration()<cr>', 'Goto declaration'},
-        d    = {'<cmd>lua vim.lsp.buf.definition()<cr>', 'Goto definition'},
-        i    = {'<cmd>lua vim.lsp.buf.implementation()<cr>', 'Goto implementation'},
-        r    = {'<cmd>lua vim.lsp.buf.references()<cr>', 'Goto references'},
-      },
+      h = {'<cmd>lua require("lspsaga.provider").lsp_finder()<cr>', 'Lsp Finder'},
+      k = {'<cmd>lua require("lspsaga.hover").render_hover_doc()<cr>', 'Hover doc.'},
+      l = {'<cmd>lua require("lspsaga.diagnostic").show_line_diagnostics()<cr>', 'Line diag.'},
+      r = {'<cmd>lua require("lspsaga.rename").rename()<cr>', 'Rename'},
+      s = {'<cmd>lua require("lspsaga.signaturehelp").signature_help()<cr>', 'Signature help'},
+      ['['] = {'<cmd>lua require("lspsaga.diagnostic").lsp_jump_diagnostic_prev()<cr>', 'Prev. diag.'},
+      [']'] = {'<cmd>lua require("lspsaga.diagnostic").lsp_jump_diagnostic_next()<cr>', 'Next diag.'},
     },
 
     -- Git
@@ -191,21 +193,17 @@ wk.register({
     -- LSP
     l = {
       name = '+lsp',
-      a = {'<cmd>lua vim.lsp.buf.code_action()<cr>', 'Code action'},
-      e = {'<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<cr>', 'Show line diag.'},
+      a = {'<cmd>lua require("lspsaga.codeaction").code_action()<CR>', 'Code action'},
+      c = {'<cmd>lua require("lspsaga.diagnostic").show_cursor_diagnostics()<cr>', 'Cursor diag.'},
+      d = {'<cmd>lua require("lspsaga.provider").preview_definition()<cr>', 'Preview definition'},
       f = {'<cmd>lua vim.lsp.buf.formatting()<cr>', 'Buffer formatting'},
-      k = {'<cmd>lua vim.lsp.buf.hover()<cr>', 'Hover'},
-      r = {'<cmd>lua vim.lsp.buf.rename()<cr>', 'Rename'},
-      t = {'<cmd>lua vim.lsp.buf.type_definition()<cr>', 'Type definition'},
-      ['['] = {'<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>', 'Prev. diag.'},
-      [']'] = {'<cmd>lua vim.lsp.diagnostic.goto_next()<cr>', 'Next diag.'},
-      g = {
-        name = '+goto',
-        D    = {'<cmd>lua vim.lsp.buf.declaration()<cr>', 'Goto declaration'},
-        d    = {'<cmd>lua vim.lsp.buf.definition()<cr>', 'Goto definition'},
-        i    = {'<cmd>lua vim.lsp.buf.implementation()<cr>', 'Goto implementation'},
-        r    = {'<cmd>lua vim.lsp.buf.references()<cr>', 'Goto references'},
-      },
+      h = {'<cmd>lua require("lspsaga.provider").lsp_finder()<cr>', 'Lsp Finder'},
+      k = {'<cmd>lua require("lspsaga.hover").render_hover_doc()<cr>', 'Hover doc.'},
+      l = {'<cmd>lua require("lspsaga.diagnostic").show_line_diagnostics()<cr>', 'Line diag.'},
+      r = {'<cmd>lua require("lspsaga.rename").rename()<cr>', 'Rename'},
+      s = {'<cmd>lua require("lspsaga.signaturehelp").signature_help()<cr>', 'Signature help'},
+      ['['] = {'<cmd>lua require("lspsaga.diagnostic").lsp_jump_diagnostic_prev()<cr>', 'Prev. diag.'},
+      [']'] = {'<cmd>lua require("lspsaga.diagnostic").lsp_jump_diagnostic_next()<cr>', 'Next diag.'},
     },
 
     -- Text manipulation

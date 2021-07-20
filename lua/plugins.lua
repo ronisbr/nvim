@@ -23,6 +23,7 @@ return require('packer').startup(function()
   use 'folke/which-key.nvim'
   use 'glepnir/dashboard-nvim'
   use 'glepnir/galaxyline.nvim'
+  use 'glepnir/lspsaga.nvim'
   use 'honza/vim-snippets'
   use 'hrsh7th/nvim-compe'
   use 'junegunn/vim-easy-align'

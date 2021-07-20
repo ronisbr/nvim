@@ -1,7 +1,7 @@
 -- Plugin configuration: nvim-compe
 -- ============================================================================
 
-require'compe'.setup {
+require'compe'.setup({
   enabled = true;
   autocomplete = false;
   debug = false;
@@ -13,7 +13,9 @@ require'compe'.setup {
   max_abbr_width = 100;
   max_kind_width = 100;
   max_menu_width = 100;
-  documentation = true;
+  documentation = {
+    border = 'rounded',
+  };
 
   source = {
     path = {kind = "  "},
@@ -30,4 +32,4 @@ require'compe'.setup {
     -- for emoji press : (idk if that in compe tho)
     latex_symbols = true
   };
-}
+})
