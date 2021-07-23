@@ -3,6 +3,13 @@
 
 local nvim_lsp = require('lspconfig')
 
+-- Do not show virtual text since we are using lspsaga.
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+        virtual_text = false
+    }
+)
+
 -- =============================================================================
 --                                   Julia
 -- =============================================================================
