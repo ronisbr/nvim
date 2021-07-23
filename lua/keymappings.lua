@@ -89,6 +89,7 @@ wk.register({
     u = {'UndotreeToggle', 'Undo tree'},
 
     -- Buffer management
+    [','] = {'<cmd>Telescope buffers<cr>', 'List buffers'},
     b = {
       name  = '+buffer',
       c     = {'<cmd>BufferClose<cr>', 'Close buffer'},
