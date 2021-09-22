@@ -145,7 +145,7 @@ gls.left[3] = {
     },
     condition = condition.buffer_not_empty,
     highlight = {
-      require('galaxyline.provider_fileinfo').get_file_icon,
+      require('galaxyline.providers.fileinfo').get_file_icon,
       colors.section_bg
     }
   }
@@ -262,7 +262,7 @@ gls.right[2] = {
 gls.right[3] = {
   FileSize = {
     condition = function()
-      return require('galaxyline.provider_fileinfo').get_file_size() ~= ''
+      return require('galaxyline.providers.fileinfo').get_file_size() ~= ''
     end,
     provider = {function() return ' ' end, 'FileSize'},
     highlight = {colors.fg, colors.bg},
