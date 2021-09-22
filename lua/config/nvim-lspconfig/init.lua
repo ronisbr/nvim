@@ -83,10 +83,10 @@ vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
 -- -----------------------------------------------------------------------------
 
 local signs = {
-  Error = " ",
-  Warn  = " ",
-  Hint  = " ",
-  Info  = " "
+  Error     = " ",
+  Warning   = " ",
+  Hint      = " ",
+  Info      = " "
 }
 
 for type, icon in pairs(signs) do
@@ -102,23 +102,15 @@ end
 --                                   Julia
 -- =============================================================================
 
-local julia_cmd = {
-  "julia",
-  "--startup-file=no",
-  "--history-file=no",
-  vim.fn.expand("~/.nvim/lua/config/julia/lsp/run.jl")
-}
+-- To use Julia LSP, execute the following command:
+--     julia --project=~/.julia/environments/nvim-lspconfig -e 'using Pkg; Pkg.add("LanguageServer")
 
-nvim_lsp['julials'].setup({
-  cmd = julia_cmd,
-  flags = {
-    debounce_text_changes = 150,
-  },
-  filetypes = {'julia'},
-  on_new_config = function(new_config, _)
-    new_config.cmd = julia_cmd
-  end,
-})
+nvim_lsp['julials'].setup({ })
 
+-- =============================================================================
+--                                    C++
+-- =============================================================================
+
+-- To use C++ LSP, the software `ccls` must be installed.
 nvim_lsp['ccls'].setup({ })
 
