@@ -41,10 +41,6 @@ map('n', '<Esc>', ':noh<CR><Esc>', {silent = true, noremap = true})
 -- Insert mode
 -- -----------------------------------------------------------------------------
 
--- Call auto-complete with `<C-n>` and `<C-p>`.
-map('i', '<C-n>', 'compe#complete()', {noremap = true, expr = true})
-map('i', '<C-p>', 'compe#complete()', {noremap = true, expr = true})
-
 -- Remap keys that open floaterm.
 map('i', '<F1>', '<ESC><F1>', {noremap = false})
 map('i', '<F2>', '<ESC><F2>', {noremap = false})
