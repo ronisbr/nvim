@@ -13,8 +13,6 @@ vim.cmd 'autocmd BufWritePost plugins.lua PackerCompile'
 return require('packer').startup(function()
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
-
-  use 'GoldsteinE/compe-latex-symbols'
   use 'JuliaEditorSupport/julia-vim'
   use 'NTBBloodbath/galaxyline.nvim'
   use 'SirVer/ultisnips'
@@ -23,6 +21,7 @@ return require('packer').startup(function()
   use 'folke/todo-comments.nvim'
   use 'folke/which-key.nvim'
   use 'glepnir/dashboard-nvim'
+  use 'kdheepak/cmp-latex-symbols'
   use 'honza/vim-snippets'
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-calc'
@@ -50,5 +49,4 @@ return require('packer').startup(function()
   use 'terrortylor/nvim-comment'
   use 'tpope/vim-fugitive'
   use 'voldikss/vim-floaterm'
-
 end)

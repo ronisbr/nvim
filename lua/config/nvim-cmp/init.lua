@@ -6,7 +6,7 @@ local lspkind = require'lspkind'
 
 cmp.setup({
   completion = {
-    autocomplete = false
+    autocomplete = false,
   },
 
   formatting = {
@@ -31,23 +31,14 @@ cmp.setup({
     end,
   },
 
-  sources = {
+  sources = cmp.config.sources({
     { name = 'buffer' },
     { name = 'calc' },
+    { name = 'latex_symbols' },
     { name = 'nvim_lsp' },
     { name = 'path' },
     { name = 'ultisnips' },
-  }
-})
-
-cmp.setup.cmdline(':', {
-  sources = {
-    { name = 'cmdline' }
-  }
-})
-
-cmp.setup.cmdline('/', {
-  sources = {
+  }, {
     { name = 'buffer' }
-  }
+  })
 })
