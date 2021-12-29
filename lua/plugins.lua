@@ -20,7 +20,7 @@ return require('packer').startup(function()
   use 'dstein64/nvim-scrollview'
   use 'folke/todo-comments.nvim'
   use 'folke/which-key.nvim'
-  use 'glepnir/dashboard-nvim'
+  use 'goolord/alpha-nvim'
   use 'kdheepak/cmp-latex-symbols'
   use 'honza/vim-snippets'
   use 'hrsh7th/cmp-buffer'

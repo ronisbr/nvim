@@ -14,7 +14,7 @@ require('weather').init()
 -- Configuration of the plugins
 -- ============================================================================
 
-require('config/dashboard-nvim')
+require('config/alpha-nvim')
 require('config/floatterm')
 require('config/galaxyline')
 require('config/gitsigns')
