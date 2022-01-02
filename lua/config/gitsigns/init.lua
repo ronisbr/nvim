@@ -21,6 +21,14 @@ require('gitsigns').setup {
     ['+'] = '₊'
   },
 
+  current_line_blame = false,
+  current_line_blame_opts = {
+    virt_text = true,
+    virt_text_pos = 'eol',
+    delay = 1000,
+    ignore_whitespace = false,
+  },
+
   keymaps = {
     -- Default keymap options
     noremap = true,
@@ -28,19 +36,27 @@ require('gitsigns').setup {
     -- We do not want to define any keymap here.
   },
 
+  preview_config = {
+    border = 'single',
+    style = 'minimal',
+    relative = 'cursor',
+    row = 0,
+    col = 1
+  },
+
   signs = {
     add = {
       hl = 'GitSignsAdd',
       linehl = 'GitSignsAddLn',
       numhl = 'GitSignsAddNr',
-      text = '+',
+      text = '▊',
     },
 
     change = {
       hl = 'GitSignsChange',
       linehl = 'GitSignsChangeLn',
       numhl = 'GitSignsChangeNr',
-      text = '~'
+      text = '▊',
     },
 
     delete = {
@@ -68,7 +84,8 @@ require('gitsigns').setup {
     }
   },
 
-  watch_index = {
-    interval = 1000
+  watch_gitdir = {
+    interval = 1000,
+    follow_files = true
   }
 }

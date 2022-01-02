@@ -126,8 +126,18 @@ wk.register({
 
     -- Git
     g = {
-      name = '+git',
-      g    = {'<cmd>Git<cr>', 'Fugitive'},
+      name  = '+git',
+      g     = {'<cmd>Git<cr>', 'Fugitive'},
+      s     = {'<cmd>Gitsigns stage_hunk<cr>', 'Stage hunk'},
+      u     = {'<cmd>Gitsigns undo_stage_hunk<cr>', 'Undo stage hunk'},
+      r     = {'<cmd>Gitsigns reset_hunk<cr>', 'Reset hunk'},
+      R     = {'<cmd>Gitsigns reset_buffer<cr>', 'Reset buffer'},
+      p     = {'<cmd>Gitsigns preview_hunk<cr>', 'Preview hunk'},
+      b     = {'<cmd>lua require"gitsigns".blame_line{full=true}<cr>', 'Blame line'},
+      S     = {'<cmd>Gitsigns stage_buffer<cr>', 'Stage buffer'},
+      U     = {'<cmd>Gitsigns reset_buffer_index<cr>', 'Reset buffer index'},
+      [']'] = {'<cmd>Gitsigns next_hunk<cr>', 'Next hunk'},
+      ['['] = {'<cmd>Gitsigns prev_hunk<cr>', 'Next hunk'},
     },
 
     -- Bookmark
@@ -201,6 +211,13 @@ wk.register({
       s = {'<cmd>lua require("lspsaga.signaturehelp").signature_help()<cr>', 'Signature help'},
       ['['] = {'<cmd>lua require("lspsaga.diagnostic").lsp_jump_diagnostic_prev()<cr>', 'Prev. diag.'},
       [']'] = {'<cmd>lua require("lspsaga.diagnostic").lsp_jump_diagnostic_next()<cr>', 'Next diag.'},
+    },
+
+    -- Git
+    g = {
+      name = '+git',
+      s    = {':Gitsigns stage_hunk<cr>', 'Stage hunk'},
+      r    = {':Gitsigns reset_hunk<cr>', 'Reset hunk'},
     },
 
     -- Text manipulation
