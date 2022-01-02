@@ -49,4 +49,5 @@ return require('packer').startup(function()
   use 'terrortylor/nvim-comment'
   use 'tpope/vim-fugitive'
   use 'voldikss/vim-floaterm'
+  use 'olimorris/onedarkpro.nvim'
 end)
