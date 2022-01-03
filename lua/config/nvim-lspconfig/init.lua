@@ -26,7 +26,9 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 
 nvim_lsp.julials.setup({
   root_dir = function(fname)
-    return util.find_git_ancestor(fname) or util.path.dirname(fname)
+    return util.root_pattern 'Project.toml'(fname) or
+           util.find_git_ancestor(fname) or
+           util.path.dirname(fname)
   end,
 })
 
