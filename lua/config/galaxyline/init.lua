@@ -167,7 +167,7 @@ gls.left[4] = {
 
 gls.left[5] = {
   SectionSeparatorMarker = {
-    provider = function() return '' end,
+    provider = function() return '▌' end,
     highlight = {colors.section_bg, colors.bg},
   },
 }
@@ -273,7 +273,7 @@ gls.right[3] = {
 
 gls.right[4] = {
   Separator = {
-    provider = function() return '' end,
+    provider = function() return '▐' end,
     highlight = {colors.section_bg, colors.bg},
   }
 }
@@ -401,7 +401,7 @@ gls.short_line_left[2] = {
     provider = 'FileName',
     condition = condition.buffer_not_empty,
     highlight = {colors.fg, colors.section_bg},
-    separator = '',
+    separator = '▌',
     separator_highlight = {colors.section_bg, colors.bg}
   },
 }
