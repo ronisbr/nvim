@@ -1,31 +1,32 @@
 -- Appearence configuration
 -- ============================================================================
 
-local onedarkpro = require('onedarkpro')
+require('doom-one').setup({
+  cursor_coloring        = false,
+  enable_treesitter      = true,
+  italic_comments        = true,
+  terminal_colors        = false,
+  transparent_background = false,
 
-onedarkpro.setup({
-  theme = "onedark", -- Override with "onedark" or "onelight".
-  colors = {},       -- Override default colors.
-  hlgroups = {},     -- Override default highlight groups.
-
-  styles = {
-      strings = "NONE",    -- Style that is applied to strings.
-      comments = "italic", -- Style that is applied to comments.
-      keywords = "NONE",   -- Style that is applied to keywords.
-      functions = "NONE",  -- Style that is applied to functions.
-      variables = "NONE",  -- Style that is applied to variables.
+  pumblend = {
+    enable = true,
+    transparency_amount = 20,
   },
 
-  options = {
-      bold = false,                    -- Use the themes opinionated bold styles?
-      italic = false,                  -- Use the themes opinionated italic styles?
-      underline = false,               -- Use the themes opinionated underline styles?
-      undercurl = false,               -- Use the themes opinionated undercurl styles?
-      cursorline = false,              -- Use cursorline highlighting?
-      transparency = false,            -- Use a transparent background?
-      terminal_colors = false,         -- Use the theme's colors for Neovim's :terminal?
-      window_unfocussed_color = false, -- When the window is out of focus, change the normal background?
+  plugins_integrations = {
+    neorg            = true,
+    barbar           = true,
+    bufferline       = true,
+    gitgutter        = true,
+    gitsigns         = true,
+    telescope        = true,
+    neogit           = true,
+    nvim_tree        = true,
+    dashboard        = true,
+    startify         = true,
+    whichkey         = true,
+    indent_blankline = true,
+    vim_illuminate   = true,
+    lspsaga          = true,
   }
 })
-
-onedarkpro.load()

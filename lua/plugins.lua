@@ -15,6 +15,8 @@ return require('packer').startup(function()
   use 'JuliaEditorSupport/julia-vim'
   use 'L3MON4D3/LuaSnip'
   use 'NTBBloodbath/galaxyline.nvim'
+  use 'NTBBloodbath/doom-one.nvim'
+  use 'SirVer/ultisnips'
   use 'Th3Whit3Wolf/one-nvim'
   use 'dstein64/nvim-scrollview'
   use 'folke/todo-comments.nvim'
