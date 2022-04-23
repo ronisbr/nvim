@@ -53,4 +53,5 @@ return require('packer').startup(function()
   use 'tpope/vim-fugitive'
   use 'voldikss/vim-floaterm'
   use 'wbthomason/packer.nvim'
+  use 'wfxr/minimap.vim'
 end)
