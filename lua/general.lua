@@ -11,6 +11,7 @@ vim.o.hidden = true                      -- Enable modified buffers in backgroun
 vim.o.ignorecase = true                  -- Ignore case
 vim.o.inccommand = 'nosplit'             -- Show effects of a command incrementally
 vim.o.joinspaces = false                 -- No double spaces with join after a dot
+vim.o.laststatus = 3                     -- Global status line
 vim.o.mouse = 'a'                        -- Use mouse in all modes
 vim.o.scrolloff = 4                      -- Lines of context
 vim.o.shiftround = true                  -- Round indent
