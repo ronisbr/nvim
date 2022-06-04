@@ -14,7 +14,6 @@ return require('packer').startup(function()
   -- Packer can manage itself
   use 'JuliaEditorSupport/julia-vim'
   use 'L3MON4D3/LuaSnip'
-  use 'NTBBloodbath/galaxyline.nvim'
   use 'NTBBloodbath/doom-one.nvim'
   use 'Th3Whit3Wolf/one-nvim'
   use 'dstein64/nvim-scrollview'
@@ -37,6 +36,7 @@ return require('packer').startup(function()
   use 'lukas-reineke/indent-blankline.nvim'
   use 'mbbill/undotree'
   use 'neovim/nvim-lspconfig'
+  use 'nvim-lualine/lualine.nvim'
   use 'ntpeters/vim-better-whitespace'
   use 'nvim-lua/plenary.nvim'
   use 'nvim-lua/popup.nvim'
