@@ -8,6 +8,7 @@ require('lualine').setup({
       'alpha',
       'NvimTree',
     },
-    section_separators = { left = ' ', right = ' ' }
+    section_separators = { left = ' ', right = ' ' },
+    theme = "base16"
   }
 })

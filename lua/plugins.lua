@@ -12,9 +12,11 @@ vim.cmd 'autocmd BufWritePost plugins.lua PackerCompile'
 
 return require('packer').startup(function()
   -- Packer can manage itself
+  use 'wbthomason/packer.nvim'
   use 'JuliaEditorSupport/julia-vim'
   use 'L3MON4D3/LuaSnip'
   use 'NTBBloodbath/doom-one.nvim'
+  use 'RRethy/nvim-base16'
   use 'Th3Whit3Wolf/one-nvim'
   use 'dstein64/nvim-scrollview'
   use 'folke/todo-comments.nvim'
@@ -36,10 +38,10 @@ return require('packer').startup(function()
   use 'lukas-reineke/indent-blankline.nvim'
   use 'mbbill/undotree'
   use 'neovim/nvim-lspconfig'
-  use 'nvim-lualine/lualine.nvim'
   use 'ntpeters/vim-better-whitespace'
   use 'nvim-lua/plenary.nvim'
   use 'nvim-lua/popup.nvim'
+  use 'nvim-lualine/lualine.nvim'
   use 'nvim-telescope/telescope.nvim'
   use 'olimorris/onedarkpro.nvim'
   use 'onsails/lspkind-nvim'
@@ -52,6 +54,5 @@ return require('packer').startup(function()
   use 'terrortylor/nvim-comment'
   use 'tpope/vim-fugitive'
   use 'voldikss/vim-floaterm'
-  use 'wbthomason/packer.nvim'
   use 'wfxr/minimap.vim'
 end)
