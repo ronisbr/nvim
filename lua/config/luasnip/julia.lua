@@ -262,8 +262,8 @@ end
 -- =============================================================================
 
 function M.config()
-  ls.snippets = {
-    julia = {
+  ls.add_snippets(
+    "julia", {
       -- Julia function documentation
       -- -----------------------------------------------------------------------
       s({
@@ -363,7 +363,7 @@ function M.config()
         )
       }),
     }
-  }
+  )
 end
 
 return M
