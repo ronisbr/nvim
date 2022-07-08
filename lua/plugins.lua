@@ -50,9 +50,9 @@ return require('packer').startup(function()
   use 'romgrk/barbar.nvim'
   use 'saadparwaiz1/cmp_luasnip'
   use 'simrat39/symbols-outline.nvim'
-  use 'tami5/lspsaga.nvim'
   use 'terrortylor/nvim-comment'
   use 'tpope/vim-fugitive'
   use 'voldikss/vim-floaterm'
   use 'wfxr/minimap.vim'
+  use {'glepnir/lspsaga.nvim', branch = 'main'}
 end)

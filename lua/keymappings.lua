@@ -112,16 +112,15 @@ wk.register({
     l = {
       name = '+lsp',
       a = {'<cmd>lua require("lspsaga.codeaction").code_action()<CR>', 'Code action'},
-      c = {'<cmd>lua require("lspsaga.diagnostic").show_cursor_diagnostics()<cr>', 'Cursor diag.'},
-      d = {'<cmd>lua require("lspsaga.provider").preview_definition()<cr>', 'Preview definition'},
-      f = {'<cmd>lua vim.lsp.buf.formatting()<cr>', 'Buffer formatting'},
-      h = {'<cmd>lua require("lspsaga.provider").lsp_finder()<cr>', 'Lsp Finder'},
+      d = {'<cmd>lua require("lspsaga.definition").preview_definition()<cr>', 'Preview definition'},
+      f = {'<cmd>lua vim.lsp.buf.format({async = true})<cr>', 'Buffer formatting'},
+      h = {'<cmd>lua require("lspsaga.finder").lsp_finder()<cr>', 'Lsp Finder'},
       k = {'<cmd>lua require("lspsaga.hover").render_hover_doc()<cr>', 'Hover doc.'},
       l = {'<cmd>lua require("lspsaga.diagnostic").show_line_diagnostics()<cr>', 'Line diag.'},
-      r = {'<cmd>lua require("lspsaga.rename").rename()<cr>', 'Rename'},
+      r = {'<cmd>lua require("lspsaga.rename").lsp_rename()<cr>', 'Rename'},
       s = {'<cmd>lua require("lspsaga.signaturehelp").signature_help()<cr>', 'Signature help'},
-      ['['] = {'<cmd>lua require("lspsaga.diagnostic").lsp_jump_diagnostic_prev()<cr>', 'Prev. diag.'},
-      [']'] = {'<cmd>lua require("lspsaga.diagnostic").lsp_jump_diagnostic_next()<cr>', 'Next diag.'},
+      ['['] = {'<cmd>lua require("lspsaga.diagnostic").goto_prev()<cr>', 'Prev. diag.'},
+      [']'] = {'<cmd>lua require("lspsaga.diagnostic").goto_next()<cr>', 'Next diag.'},
     },
 
     -- Git
