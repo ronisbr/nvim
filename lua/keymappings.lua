@@ -99,6 +99,9 @@ wk.register({
       [']'] = {'<cmd>BufferNext<cr>', 'Next buffer'}
     },
 
+    -- Change root
+    ['cd'] = {'<cmd>:cd %:h<cr>', 'Change directory'},
+
     -- File management
     f = {
       name = '+file',
