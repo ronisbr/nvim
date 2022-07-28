@@ -128,7 +128,7 @@ function M.julia_create_arguments_nodes(func_decl, init_p)
       -- Remove trailing and leading spaces.
       v = string.gsub(v, '^%s*(.-)%s*$', '%1')
 
-      v = str.gsub(v, '%s*=.*', '')
+      v = string.gsub(v, '%s*=.*', '')
       kwargs_nodes[k]     = t('- `' .. v .. '`: ')
       kwargs_nodes[k + 1] = i(init_p)
       kwargs_nodes[k + 2] = t({'', ''})
