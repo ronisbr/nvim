@@ -7,7 +7,6 @@
 local M = {}
 
 local ls = require("luasnip")
-local utf8_misc = require("misc.utf8")
 
 -- Auxiliary Functions ---------------------------------------------------------------------
 
@@ -107,7 +106,7 @@ function M.luasnip_center_block(args)
 
   if args[1][1] ~= nil then
     local str = args[1][1]
-    local dw = utf8_misc.display_len(str)
+    local dw = vim.fn.strdisplaywidth(str)
 
     -- Only align if we have space.
     if dw < (tw - 2) then

@@ -6,10 +6,6 @@
 
 local M = {}
 
-local utf8 = require('utf8.utf8')
-local utf8_misc = require('misc.utf8')
-local wcwidth = require('wcwidth.init')
-
 --- Fill the current line with `pattern` until the break column.
 --
 -- pattern String with the pattern to fill the line.
@@ -24,7 +20,7 @@ function M.fill_with_pattern(pattern)
   local line = vim.api.nvim_buf_get_lines(buf, cur_pos[1] - 1, cur_pos[1], true)
 
   -- Get the length of the repeating pattern.
-  local pattern_len = utf8_misc.display_len(pattern)
+  local pattern_len = vim.fn.strdisplaywidth(pattern)
 
   -- Get the size of text width.
   local textwidth = vim.o.textwidth
@@ -35,10 +31,10 @@ function M.fill_with_pattern(pattern)
   end
 
   -- Get the string from the beginning of the line up to the cursor position.
-  local prefix = utf8.char(utf8.codepoint(line[1], 1, cur_pos[2] + 1))
+  local prefix = vim.fn.strcharpart(line[1], 0, cur_pos[2])
 
   -- Get the display size of the prefix.
-  local prefix_len = utf8_misc.display_len(prefix)
+  local prefix_len = vim.fn.strdisplaywidth(prefix)
 
   -- Count how many character we must add from the cursor position until the break column.
   local num_rep = math.floor((textwidth - prefix_len) / pattern_len)
@@ -55,8 +51,9 @@ function M.fill_with_pattern(pattern)
     if rem > 0 then
       local inc = 0
 
-      for _, c in utf8.codes(pattern) do
-        local w = wcwidth(utf8.codepoint(c))
+      for k = 0, (vim.fn.strchars(pattern) - 1) do
+        local c = vim.fn.strcharpart(pattern, k, 1)
+        local w = vim.fn.strdisplaywidth(c)
 
         if w < 0 then break end
         inc = inc + w
@@ -83,7 +80,7 @@ function M.fill_with_cursor_character()
   local line = vim.api.nvim_buf_get_lines(buf, cur_pos[1] - 1, cur_pos[1], true)
 
   -- Get the character under the cursor.
-  local char = utf8.char(utf8.codepoint(line[1], cur_pos[2] + 1))
+  local char = vim.fn.strcharpart(line[1], cur_pos[2], 1)
 
   return M.fill_with_pattern(char)
 end

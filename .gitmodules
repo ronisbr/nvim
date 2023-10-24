@@ -1,6 +1,0 @@
-[submodule "submodules/utf8.nvim"]
-	path = submodules/utf8.nvim
-	url = https://github.com/uga-rosa/utf8.nvim.git
-[submodule "submodules/lua-wcwidth"]
-	path = submodules/lua-wcwidth
-	url = https://github.com/aperezdc/lua-wcwidth.git
