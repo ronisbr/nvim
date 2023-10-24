@@ -7,6 +7,7 @@
 local M = {}
 
 local ls = require("luasnip")
+local utf8_misc = require("misc.utf8")
 
 -- Auxiliary Functions ---------------------------------------------------------------------
 
@@ -91,6 +92,42 @@ function M.trim_string(str)
 end
 
 -- Snippet Functions -----------------------------------------------------------------------
+
+--- Create the LuaSnip nodes that centers the input from `args` into a Julia comment block.
+function M.luasnip_center_block(args)
+  -- Get the current text width.
+  local tw = vim.o.textwidth
+
+  -- If the input is nil or if the text width is not set, we should do nothing.
+  if ((args[1][1] == nil) or (tw <= 0)) then
+    return ls.snippet_node(nil, {})
+  end
+
+  local nodes = {}
+
+  if args[1][1] ~= nil then
+    local str = args[1][1]
+    local dw = utf8_misc.display_len(str)
+
+    -- Only align if we have space.
+    if dw < (tw - 2) then
+      local lpad = math.floor((tw - 2 - dw) / 2)
+      local rpad = tw - 2 - dw - lpad
+
+      local lstr = string.rep(" ", lpad)
+      local rstr = string.rep(" ", rpad)
+
+      nodes[1] = ls.text_node({"", ""})
+      nodes[2] = ls.text_node(string.rep("#", tw))
+      nodes[3] = ls.text_node({"", ""})
+      nodes[4] = ls.text_node("#" .. lstr .. str .. rstr .. "#")
+      nodes[5] = ls.text_node({"", ""})
+      nodes[6] = ls.text_node(string.rep("#", tw))
+    end
+  end
+
+  return ls.snippet_node(nil, nodes)
+end
 
 --- Create the LuaSnip argument nodes for a Julia function declaration.
 --
@@ -344,6 +381,22 @@ end
 function M.config()
   ls.add_snippets(
     "julia", {
+      -- Julia Comment Block ---------------------------------------------------------------
+
+      ls.snippet({
+        trig = "jlcblk",
+        dscr = "Julia Comment Block",
+        docstring = {
+          "###############################",
+          "#            Comment          #",
+          "###############################",
+        }
+      }, {
+          ls.insert_node(0),
+          ls.insert_node(1),
+          ls.dynamic_node(2, M.luasnip_center_block, 1)
+        }),
+
       -- Julia Function Documentation ------------------------------------------------------
 
       ls.snippet({
