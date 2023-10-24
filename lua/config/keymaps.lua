@@ -110,6 +110,14 @@ vim.api.nvim_set_keymap(
 vim.api.nvim_set_keymap(
   "n", 
   "<leader>rfi",
-  '<cmd>lua require("misc.text_manipulation").fill_with_input()<cr>', 
+  '<cmd>lua require("misc.text_manipulation").fill_with_input()<cr>',
   { desc = "Fill with Input" }
+)
+
+-- whitespace.nvim -------------------------------------------------------------------------
+
+vim.keymap.set(
+  "n",
+  "<leader>cw",
+  require("whitespace-nvim").trim
 )
