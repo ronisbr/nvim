@@ -3,13 +3,42 @@
 
 local wk = require("which-key")
 
-wk.register({
-  o = { name = "open" },
-  r = { name = "ronisbr",
-    j = { name = "julia" },
-    f = { name = "fill" }
-  }
-}, { prefix = "<leader>" })
+wk.register(
+  {
+    o = { name = "open" },
+    r = {
+      name = "ronisbr",
+      c = {
+        name = "comments",
+        {
+          a = {
+            name = "align"
+          }
+        }
+      },
+      j = { name = "julia" },
+      f = { name = "fill" }
+    }
+  },
+  { prefix = "<leader>" }
+)
+
+wk.register(
+  {
+    r = {
+      name = "ronisbr",
+      c = {
+        name = "comments",
+        {
+          a = {
+            name = "align"
+          }
+        }
+      },
+    }
+  },
+  { prefix = "<leader>", mode = "v" }
+)
 
 -- floaterm --------------------------------------------------------------------------------
 
@@ -45,6 +74,22 @@ vim.api.nvim_set_keymap("v", "<D-v>", "<C-R>+", { noremap = true, silent = true 
 -- ronisbr ---------------------------------------------------------------------------------
 
 -- Comment Manipulation --
+
+vim.keymap.set(
+  { "n", "v" },
+  "<leader>rcac",
+  '<cmd>lua require("misc.comment_manipulation").align_comments("c")<cr>',
+  { desc = "Align Comments to the Center"}
+)
+
+vim.keymap.set(
+  { "n", "v" },
+  "<leader>rcar",
+  '<cmd>lua require("misc.comment_manipulation").align_comments("r")<cr>',
+  { desc = "Align Comments to the Right"}
+)
+
+-- Julia --
 
 vim.api.nvim_set_keymap(
   "n",
