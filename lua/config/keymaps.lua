@@ -6,6 +6,7 @@ local wk = require("which-key")
 wk.register({
   o = { name = "open" },
   r = { name = "ronisbr",
+    j = { name = "julia" },
     f = { name = "fill" }
   }
 }, { prefix = "<leader>" })
@@ -41,7 +42,18 @@ vim.api.nvim_set_keymap("!", "<D-v>", "<C-R>+", { noremap = true, silent = true 
 vim.api.nvim_set_keymap("t", "<D-v>", "<C-R>+", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "<D-v>", "<C-R>+", { noremap = true, silent = true })
 
--- Text Manipulation -----------------------------------------------------------------------
+-- ronisbr ---------------------------------------------------------------------------------
+
+-- Comment Manipulation --
+
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>rjc",
+  '<cmd>lua require("misc.comment_manipulation").wrap_julia_comment_in_block()<cr>',
+  { desc = "Wrap Comment in Block"}
+)
+
+-- Text Manipulation --
 
 vim.api.nvim_set_keymap(
   "n",
