@@ -16,7 +16,6 @@ wk.register(
           }
         }
       },
-      j = { name = "julia" },
       f = { name = "fill" }
     }
   },
@@ -89,15 +88,6 @@ vim.keymap.set(
   { desc = "Align Comments to the Right"}
 )
 
--- Julia --
-
-vim.api.nvim_set_keymap(
-  "n",
-  "<leader>rjc",
-  '<cmd>lua require("misc.comment_manipulation").wrap_julia_comment_in_block()<cr>',
-  { desc = "Wrap Comment in Block"}
-)
-
 -- Text Manipulation --
 
 vim.api.nvim_set_keymap(
@@ -108,7 +98,7 @@ vim.api.nvim_set_keymap(
 )
 
 vim.api.nvim_set_keymap(
-  "n", 
+  "n",
   "<leader>rfi",
   '<cmd>lua require("misc.text_manipulation").fill_with_input()<cr>',
   { desc = "Fill with Input" }
