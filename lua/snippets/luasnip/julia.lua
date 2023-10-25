@@ -452,6 +452,7 @@ function M.config()
             return M.comment_box_line(args[1][1])
           end, { 1 }),
           ls.text_node({ "", ""}),
+
           ls.function_node(function (args)
             return M.comment_box_left_padding(args[1][1])
           end, { 1 }),
@@ -460,6 +461,7 @@ function M.config()
             return M.comment_box_right_padding(args[1][1])
           end, { 1 }),
           ls.text_node({ "", ""}),
+
           ls.function_node(function (args)
             return M.comment_box_line(args[1][1])
           end, { 1 }),
