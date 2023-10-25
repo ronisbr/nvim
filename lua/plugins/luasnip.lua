@@ -6,7 +6,10 @@ return {
     lazy = false,
     config = function ()
       require("snippets.luasnip.julia").config()
-      require("luasnip").config.setup({ store_selection_keys = "<Tab>" })
+      require("luasnip").config.setup({
+        store_selection_keys = "<Tab>",
+        update_events = {"TextChanged", "TextChangedI"}
+      })
     end
   }
 }
