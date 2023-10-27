@@ -1,6 +1,7 @@
 -- Keymaps are automatically loaded on the VeryLazy event.
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 
+local map = vim.keymap.set
 local wk = require("which-key")
 
 wk.register(
@@ -39,49 +40,79 @@ wk.register(
   { prefix = "<leader>", mode = "v" }
 )
 
+-- Line Movements and Actions --------------------------------------------------------------
+
+-- Delete the highlighted section without replacing the default register.
+map("x", "<localleader>d", '"_d')
+
+-- Keep cursor position when performing half-jumps.
+map("n", "<C-d>", "<C-d>zz")
+map("n", "<C-u>", "<C-u>zz")
+
+-- Keep cursor position when joining.
+map("n", "J", "mzJ`z")
+
+-- Move highlighted lines in visual mode.
+map("v", "K", ":move '<-2<cr>gv=gv", { noremap = true, silent = true })
+map("v", "J", ":move '>+1<cr>gv=gv", { noremap = true, silent = true })
+
+-- Paste over highlighted text preserving the default register.
+map("x", "<localleader>p", '"_dP')
+
+-- Window Manipulation ---------------------------------------------------------------------
+
+map("n", "<leader><Up>",    "<C-w>k", { desc = "Up Window" })
+map("n", "<leader><Down>",  "<C-w>j", { desc = "Down Window" })
+map("n", "<leader><Left>",  "<C-w>h", { desc = "Left Window" })
+map("n", "<leader><Right>", "<C-w>l", { desc = "Right Window" })
+
+--------------------------------------------------------------------------------------------
+--                                        Plugins                                         --
+--------------------------------------------------------------------------------------------
+
 -- floaterm --------------------------------------------------------------------------------
 
-vim.keymap.set("n", "<leader>ot", "<cmd>FloatermToggle<cr>", { desc = "Toogle Floatterm" })
-vim.keymap.set({"i", "n", "v"}, "<F2>", "<esc><cmd>FloatermNew<cr>", { desc = "New Floatterm" })
-vim.keymap.set({"i", "n", "v"}, "<F5>", "<esc><cmd>FloatermToggle<cr>", { desc = "Toggle Floatterm" })
-vim.keymap.set("t", "<F2>", "<C-\\><C-n><cmd>FloatermNew<cr>", { desc = "New Floatterm" })
-vim.keymap.set("t", "<F3>", "<C-\\><C-n><cmd>FloatermPrev<cr>", { desc = "Previous Floatterm" })
-vim.keymap.set("t", "<F4>", "<C-\\><C-n><cmd>FloatermNext<cr>", { desc = "Next Floatterm" })
-vim.keymap.set("t", "<F5>", "<C-\\><C-n><cmd>FloatermToggle<cr>", { desc = "Toggle Floatterm" })
+map("n", "<leader>ot", "<cmd>FloatermToggle<cr>", { desc = "Toogle Floatterm" })
+map({"i", "n", "v"}, "<F2>", "<esc><cmd>FloatermNew<cr>", { desc = "New Floatterm" })
+map({"i", "n", "v"}, "<F5>", "<esc><cmd>FloatermToggle<cr>", { desc = "Toggle Floatterm" })
+map("t", "<F2>", "<C-\\><C-n><cmd>FloatermNew<cr>", { desc = "New Floatterm" })
+map("t", "<F3>", "<C-\\><C-n><cmd>FloatermPrev<cr>", { desc = "Previous Floatterm" })
+map("t", "<F4>", "<C-\\><C-n><cmd>FloatermNext<cr>", { desc = "Next Floatterm" })
+map("t", "<F5>", "<C-\\><C-n><cmd>FloatermToggle<cr>", { desc = "Toggle Floatterm" })
 
 -- Neogit ----------------------------------------------------------------------------------
 
-vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })
+map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })
 
 -- Neovide ---------------------------------------------------------------------------------
 
 if vim.g.neovide then
-  vim.keymap.set("n", "<D-s>", ":w<CR>") -- Save
-  vim.keymap.set("v", "<D-c>", '"+y') -- Copy
-  vim.keymap.set("n", "<D-v>", '"+P') -- Paste normal mode
-  vim.keymap.set("v", "<D-v>", '"+P') -- Paste visual mode
-  vim.keymap.set("c", "<D-v>", "<C-R>+") -- Paste command mode
-  vim.keymap.set("i", "<D-v>", '<ESC>l"+Pli') -- Paste insert mode
+  map("n", "<D-s>", ":w<CR>")      -- ................................................. Save
+  map("v", "<D-c>", '"+y')         -- ................................................. Copy
+  map("n", "<D-v>", '"+P')         -- .................................... Paste normal mode
+  map("v", "<D-v>", '"+P')         -- .................................... Paste visual mode
+  map("c", "<D-v>", "<C-R>+")      -- ................................... Paste command mode
+  map("i", "<D-v>", '<ESC>l"+Pli') -- .................................... Paste insert mode
 end
 
 -- Allow clipboard copy paste in neovim.
-vim.api.nvim_set_keymap("", "<D-v>", "+p<CR>",  { noremap = true, silent = true })
-vim.api.nvim_set_keymap("!", "<D-v>", "<C-R>+", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("t", "<D-v>", "<C-R>+", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("v", "<D-v>", "<C-R>+", { noremap = true, silent = true })
+map("",  "<D-v>", "+p<CR>", { noremap = true, silent = true })
+map("!", "<D-v>", "<C-R>+", { noremap = true, silent = true })
+map("t", "<D-v>", "<C-R>+", { noremap = true, silent = true })
+map("v", "<D-v>", "<C-R>+", { noremap = true, silent = true })
 
 -- ronisbr ---------------------------------------------------------------------------------
 
 -- Comment Manipulation --
 
-vim.keymap.set(
+map(
   { "n", "v" },
   "<leader>rcac",
   '<cmd>lua require("misc.comment_manipulation").align_comments("c")<cr>',
   { desc = "Align Comments to the Center"}
 )
 
-vim.keymap.set(
+map(
   { "n", "v" },
   "<leader>rcar",
   '<cmd>lua require("misc.comment_manipulation").align_comments("r")<cr>',
@@ -90,14 +121,14 @@ vim.keymap.set(
 
 -- Text Manipulation --
 
-vim.api.nvim_set_keymap(
+map(
   "n",
   "<leader>rfc",
   '<cmd>lua require("misc.text_manipulation").fill_with_cursor_character()<cr>',
   { desc = "Fill with Cursor"}
 )
 
-vim.api.nvim_set_keymap(
+map(
   "n",
   "<leader>rfi",
   '<cmd>lua require("misc.text_manipulation").fill_with_input()<cr>',
@@ -106,7 +137,7 @@ vim.api.nvim_set_keymap(
 
 -- whitespace.nvim -------------------------------------------------------------------------
 
-vim.keymap.set(
+map(
   "n",
   "<leader>cw",
   require("whitespace-nvim").trim
