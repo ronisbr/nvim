@@ -103,7 +103,7 @@ return {
   opts = {
 
     options = {
-      -- Filetypes in which we will hide the bar. 
+      -- Filetypes in which we will hide the bar.
       disabled_filetypes = {
         "alpha",
         "dashboard",
@@ -142,7 +142,7 @@ return {
       },
 
       lualine_c = {
-        { 
+        {
           "branch",
           color = function ()
             local c = require("nano-theme.colors").get()
@@ -163,8 +163,8 @@ return {
       },
 
       lualine_y = {
-        { 
-          "progress", 
+        {
+          "progress",
           color = function ()
             local c = require("nano-theme.colors").get()
             return { fg = c.nano_faded_color }
