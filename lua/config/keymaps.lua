@@ -46,7 +46,7 @@ wk.register(
 map("n", "<leader>fs", ":w<cr>", { desc = "Save File", silent = true })
 
 -- Open file browser.
-map("n", "<leader>.", ":Telescope file_browser<cr>", {
+map("n", "<leader>.", ":Telescope file_browser path=%:p:h select_buffer=true<cr>", {
   desc = "Open File Explorer",
   silent = true
 })
