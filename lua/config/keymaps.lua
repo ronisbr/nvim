@@ -40,6 +40,17 @@ wk.register(
   { prefix = "<leader>", mode = "v" }
 )
 
+-- File ------------------------------------------------------------------------------------
+
+-- Save file.
+map("n", "<leader>fs", ":w<cr>", { desc = "Save File", silent = true })
+
+-- Open file browser.
+map("n", "<leader>.", ":Telescope file_browser<cr>", {
+  desc = "Open File Explorer",
+  silent = true
+})
+
 -- Line Movements and Actions --------------------------------------------------------------
 
 -- Delete the highlighted section without replacing the default register.
