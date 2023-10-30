@@ -9,6 +9,7 @@ return {
         "Trouble",
         "alpha",
         "dashboard",
+        "floaterm",
         "help",
         "lazy",
         "lazyterm",
