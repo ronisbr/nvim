@@ -6,6 +6,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
+vim.o.background = "light"
+
 -- LazyVim --------------------------------------------------------------------------------
 
 require("lazy").setup({
