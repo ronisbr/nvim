@@ -108,6 +108,7 @@ return {
         "alpha",
         "dashboard",
         "neo-tree",
+        "noice",
         "starter",
       },
       component_separators = { left = "", right = "" },
