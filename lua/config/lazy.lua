@@ -8,6 +8,36 @@ vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 vim.o.background = "light"
 
+-- We must set this autocmd here to ensure it is created before the theme definition.
+vim.api.nvim_create_autocmd(
+  "ColorScheme", {
+    pattern = "nano-theme",
+    callback = function ()
+      local c = require("nano-theme.colors").get()
+
+      -- Set additional highlight groups.
+      vim.api.nvim_set_hl(
+        0,
+        "@assignment",
+        { fg = c.nano_salient_color, bold = true }
+      )
+
+      vim.api.nvim_set_hl(
+        0,
+        "@function.macro.call",
+        { fg = c.nano_salient_color, bold = true }
+      )
+
+      vim.api.nvim_set_hl(
+        0,
+        "@string.interpolation",
+        { fg = c.nano_salient_color, bold = true }
+      )
+    end
+  }
+)
+
+
 -- LazyVim --------------------------------------------------------------------------------
 
 require("lazy").setup({
