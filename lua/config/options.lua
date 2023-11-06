@@ -3,11 +3,9 @@
 
 local opt = vim.opt
 
-opt.laststatus = 0
 opt.pumblend = 0
 opt.shiftwidth = 4
 opt.showtabline = 0
-opt.statusline = " "
 opt.tabstop = 4
 opt.textwidth = 92
 opt.winblend = 0

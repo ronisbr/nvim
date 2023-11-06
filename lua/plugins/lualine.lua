@@ -116,11 +116,30 @@ return {
       theme = "nano-theme",
     },
 
-    -- We will show only the winbar (at top). Hence, let's remove all
-    -- components from the status bar.
+    -- The status bar will show only the buffer list.
     sections = {
       lualine_a = {},
-      lualine_b = {},
+      lualine_b = {
+        {
+          "buffers",
+          buffers_color = {
+            active = function()
+              local c = require("nano-theme.colors").get()
+              return { fg = c.nano_salient_color, gui = "bold" }
+            end,
+
+            inactive = function()
+              local c = require("nano-theme.colors").get()
+              return { fg = c.nano_foreground_color }
+            end,
+          },
+          mode = 0,
+          symbols = {
+            alternate_file = "",
+            modified = " [+]",
+          }
+        }
+      },
       lualine_c = {},
       lualine_x = {},
       lualine_y = {},

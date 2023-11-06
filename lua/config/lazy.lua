@@ -63,10 +63,3 @@ require("lazy").setup({
     },
   },
 })
-
--- Late Configuration ---------------------------------------------------------------------
-
-require("lualine").hide({
-  place = { "statusline" },
-  unhide = false
-})
