@@ -8,7 +8,6 @@ opt.guifont = "JetBrains Mono NL,Apple Color Emoji,Symbols Nerd Font Mono:h13"
 opt.pumblend = 0
 opt.shiftwidth = 4
 opt.showtabline = 0
-opt.spell = true
 opt.spelllang = "en_us,pt_br"
 opt.spellsuggest = "best,7"
 opt.tabstop = 4
