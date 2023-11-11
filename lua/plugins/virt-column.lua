@@ -3,8 +3,9 @@
 return {
   "lukas-reineke/virt-column.nvim",
   opts = {
-    exclude = { 
-      filetypes = { "dashboard" },
+    char = "│",
+    exclude = {
+      filetypes = { "dashboard", "markdown" },
     },
     virtcolumn = "93",
   },

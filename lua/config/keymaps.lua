@@ -18,7 +18,9 @@ wk.register(
         }
       },
       f = { name = "fill" }
-    }
+    },
+    t = { name = "tables" },
+    z = { name = "zk" }
   },
   { prefix = "<leader>" }
 )
@@ -152,4 +154,59 @@ map(
   "n",
   "<leader>cw",
   require("whitespace-nvim").trim
+)
+
+-- zk-nvim ---------------------------------------------------------------------------------
+
+-- Create a new zk note.
+local function zk_new_note()
+  vim.ui.select(
+    {
+      "Diário",
+      "Notas",
+      "Trabalho"
+    }, {
+      prompt = "Select the directory:",
+    },
+    function(choice)
+      local cmd = require("zk.commands")
+
+      if choice == "Diário" then
+        cmd.get("ZkNew")({ dir = "Diário" })
+      elseif choice == "Notas" then
+        local title = vim.fn.input("Note Title: ")
+        cmd.get("ZkNew")({ dir = "Notas", title = title })
+      elseif choice == "Trabalho" then
+        local title = vim.fn.input("Note Title: ")
+        cmd.get("ZkNew")({ dir = "Trabalho", title = title })
+      end
+    end)
+end
+
+map(
+  "n",
+  "<leader>zn",
+  zk_new_note,
+  { desc = "New Note", noremap = true, silent = true }
+)
+
+map(
+  "n",
+  "<leader>zf",
+  '<cmd>ZkNotes { sort = { "modified" } }<cr>',
+  { desc = "Find Notes", noremap = true, silent = true }
+)
+
+map(
+  "n",
+  "<leader>zd",
+  "<cmd>Telescope file_browser path=~/Nextcloud/zk<cr>",
+  { desc = "Open zk directory", noremap = true }
+)
+
+map(
+  "n",
+  "<leader>zt",
+  "<cmd>ZkTags<cr>",
+  { desc = "Open zk directory", noremap = true }
 )

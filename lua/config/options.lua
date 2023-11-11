@@ -4,7 +4,7 @@
 local opt = vim.opt
 
 opt.conceallevel = 1
-opt.guifont = "JetBrains Mono NL,Apple Color Emoji,Symbols Nerd Font Mono:h13"
+opt.guifont = "JetBrains Mono,Symbols Nerd Font Mono,Apple Color Emoji:h13"
 opt.pumblend = 0
 opt.shiftwidth = 4
 opt.showtabline = 0
