@@ -33,12 +33,6 @@ vim.api.nvim_create_autocmd(
         "@string.interpolation",
         { fg = c.nano_salient_color, bold = true }
       )
-
-      vim.api.nvim_set_hl(
-        0,
-        "@text.literal.block.markdown",
-        { bg = c.nano_highlight_color }
-      )
     end
   }
 )
