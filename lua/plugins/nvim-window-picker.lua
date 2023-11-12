@@ -19,7 +19,7 @@ return {
       highlights = {
         statusline = {
           focused   = { fg = c.nano_background_color, bg = c.nano_popout_color },
-          unfocused = { fg = c.nano_background_color, bg = c.nano_salient_color }
+          unfocused = { fg = c.nano_background_color, bg = c.nano_popout_color }
         },
       },
 
