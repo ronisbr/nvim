@@ -15,6 +15,10 @@ return {
   lazy = true,
 
   opts = {
-    disable_insert_on_commit = false
+    disable_insert_on_commit = false,
+    log_view = {
+      kind = "replace"
+    },
+    kind = "replace"
   }
 }
