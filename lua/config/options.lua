@@ -16,6 +16,9 @@ opt.winblend = 0
 
 vim.g.autoformat = false
 
+-- Set neovim language to English.
+vim.cmd("language en_US.UTF-8")
+
 -- Neovide Configuration -------------------------------------------------------------------
 
 if vim.g.neovide then
