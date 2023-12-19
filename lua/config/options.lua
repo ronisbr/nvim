@@ -4,6 +4,7 @@
 local opt = vim.opt
 
 opt.conceallevel = 1
+opt.formatexpr = ""
 opt.guifont = "JetBrains Mono,Symbols Nerd Font Mono,Apple Color Emoji:h13"
 opt.pumblend = 0
 opt.shiftwidth = 4
