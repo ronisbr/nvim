@@ -80,7 +80,7 @@ function M.fill_with_cursor_character()
   local line = vim.api.nvim_buf_get_lines(buf, cur_pos[1] - 1, cur_pos[1], true)
 
   -- Get the character under the cursor.
-  local char = vim.fn.strcharpart(line[1], cur_pos[2], 1)
+  local char = vim.fn.strpart(line[1], cur_pos[2], 1)
 
   return M.fill_with_pattern(char)
 end
