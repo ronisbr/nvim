@@ -2,6 +2,7 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 
 local map = vim.keymap.set
+local ls = require("luasnip")
 local wk = require("which-key")
 
 wk.register(
@@ -92,6 +93,21 @@ map("t", "<F2>", "<C-\\><C-n><cmd>FloatermNew<cr>", { desc = "New Floatterm" })
 map("t", "<F3>", "<C-\\><C-n><cmd>FloatermPrev<cr>", { desc = "Previous Floatterm" })
 map("t", "<F4>", "<C-\\><C-n><cmd>FloatermNext<cr>", { desc = "Next Floatterm" })
 map("t", "<F5>", "<C-\\><C-n><cmd>FloatermToggle<cr>", { desc = "Toggle Floatterm" })
+
+-- luasnip ---------------------------------------------------------------------------------
+
+map({"i", "s"}, "<C-j>", function() ls.jump( 1) end, { silent = true })
+map({"i", "s"}, "<C-k>", function() ls.jump(-1) end, { silent = true })
+map(
+  {"i", "s"},
+  "<C-e>",
+  function()
+    if ls.choice_active() then
+      ls.change_choice(1)
+    end
+  end,
+  { silent = true }
+)
 
 -- Neogit ----------------------------------------------------------------------------------
 
