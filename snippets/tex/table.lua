@@ -26,7 +26,7 @@ return {
     fmta(
       "\\begin{longtable<>}{<>}\n" ..
       "\t\\caption{<>}\n" ..
-      "\t\\lable{tab:<>} \\\\\n" ..
+      "\t\\label{tab:<>} \\\\\n" ..
       "\t<>\n" ..
       "\t\\endfirsthead\n" ..
       "\t<>\n" ..
@@ -74,7 +74,7 @@ return {
     fmta(
       "\\begin{table<>}<>\n" ..
       "\t\\caption{<>}\n" ..
-      "\t\\lable{tab:<>}\n" ..
+      "\t\\label{tab:<>}\n" ..
       "\t\\begin{center}\n" ..
       "\t\t\\begin{tabular}{<>}\n" ..
       "\t\t\t<>\n"..
