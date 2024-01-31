@@ -75,11 +75,10 @@ return {
       "\\begin{table<>}<>\n" ..
       "\t\\caption{<>}\n" ..
       "\t\\label{tab:<>}\n" ..
-      "\t\\begin{center}\n" ..
-      "\t\t\\begin{tabular}{<>}\n" ..
-      "\t\t\t<>\n"..
-      "\t\t\\end{tabular}\n" ..
-      "\t\\end{center}\n" ..
+      "\t\\centering\n" ..
+      "\t\\begin{tabular}{<>}\n" ..
+      "\t\t<>\n"..
+      "\t\\end{tabular}\n" ..
       "\\end{table<>}\n" ..
       "<>",
       { c(1, { t(""), t("*") }), i(2, "[htbp]"), i(3), i(4), i(5), i(6), rep(1), i(0) }
