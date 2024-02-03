@@ -183,6 +183,15 @@ return {
       },
 
       lualine_y = {
+        -- This component is necessary to allow Neovide to keep the winbar fixed while
+        -- scrolling with smooth scroll enabled.
+        {
+          "spacer",
+          color = "WinBar",
+          fmt = function ()
+            return " "
+          end
+        },
         {
           "progress",
           color = function ()
@@ -239,7 +248,17 @@ return {
 
       lualine_y = {},
 
-      lualine_z = {},
+      lualine_z = {
+        -- This component is necessary to allow Neovide to keep the winbar fixed while
+        -- scrolling with smooth scroll enabled.
+        {
+          "spacer",
+          color = "WinBar",
+          fmt = function ()
+            return " "
+          end
+        },
+      },
     },
   },
 }

@@ -18,6 +18,12 @@ vim.api.nvim_create_autocmd(
       -- Set additional highlight groups.
       vim.api.nvim_set_hl(
         0,
+        "WinBar",
+        { fg = c.fg, bg = c.nano_subtle_color }
+      )
+
+      vim.api.nvim_set_hl(
+        0,
         "@assignment",
         { fg = c.nano_salient_color, bold = true }
       )
