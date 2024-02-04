@@ -6,7 +6,7 @@ return {
     opts = {
       defaults = {
         -- Add transparency if we are in neovide.
-        winblend = vim.g.neovide and 70 or 0,
+        winblend = vim.g.neovide and 30 or 0,
 
         mappings = {
           i = {
