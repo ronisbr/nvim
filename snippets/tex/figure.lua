@@ -24,10 +24,10 @@ return {
     fmta(
       "\\begin{figure<>}<>\n" ..
       "\t\\begin{center}\n" ..
-      "\t\t\\includegraphics[width=0.95\textwidth]{./figs/<>}\n" ..
+      "\t\t\\includegraphics[width=0.95\\textwidth]{./figs/<>}\n" ..
       "\t\\end{center}\n" ..
       "\t\\caption{<>}\n" ..
-      "\t\\lable{fig:<>}\n" ..
+      "\t\\label{fig:<>}\n" ..
       "\\end{figure<>}\n",
       { c(1, { t(""), t("*") }), i(2, "[htbp]"), i(3), i(4), i(5), rep(1) }
     )
