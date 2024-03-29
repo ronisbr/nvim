@@ -302,7 +302,7 @@ function M.luasnip_argument_nodes(func_decl, init_p)
         kwargs_nodes[k] = ls.text_node({ "", "" })
         k = k + 1
 
-        kwargs_nodes[k] = ls.text_node(" (**Default**: " .. dv .. ")")
+        kwargs_nodes[k] = ls.text_node("    (**Default**: " .. dv .. ")")
         k = k + 1
       end
 
