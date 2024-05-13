@@ -66,10 +66,6 @@ map("n", "<C-u>", "<C-u>zz")
 -- Keep cursor position when joining.
 map("n", "J", "mzJ`z")
 
--- Move highlighted lines in visual mode.
-map("v", "K", ":move '<-2<cr>gv=gv", { noremap = true, silent = true })
-map("v", "J", ":move '>+1<cr>gv=gv", { noremap = true, silent = true })
-
 -- Paste over highlighted text preserving the default register.
 map("x", "<localleader>p", '"_dP')
 
