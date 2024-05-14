@@ -36,6 +36,15 @@ vim.api.nvim_create_autocmd(
 
       vim.api.nvim_set_hl(
         0,
+        "@markup.strong.markdown_inline",
+        {
+          bold = true,
+          fg = c.fg
+        }
+      )
+
+      vim.api.nvim_set_hl(
+        0,
         "@string.interpolation",
         { fg = c.nano_salient_color, bold = true }
       )
@@ -44,6 +53,16 @@ vim.api.nvim_create_autocmd(
         0,
         "@text.literal.block.markdown",
         { bg = c.nano_highlight_color }
+      )
+
+      vim.api.nvim_set_hl(
+        0,
+        "@text.literal.heading.markdown",
+        {
+          bg = c.nano_subtle_color,
+          fg = c.nano_strong_color,
+          bold = true,
+        }
       )
     end
   }
