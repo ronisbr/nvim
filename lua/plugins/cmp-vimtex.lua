@@ -2,14 +2,14 @@
 
 return {
   {
-    "micangl/cmp-vimtex"
-  },
-
-  {
-    "hrsh7th/nvim-cmp",
-    dependency = { "micangl/cmp-vimtex" },
-    opts = function(_, opts)
-      table.insert(opts.sources, { name = "vimtex" })
-    end
+    "micangl/cmp-vimtex",
+    dependencies = {
+      {
+        "hrsh7th/nvim-cmp",
+        opts = function(_, opts)
+          table.insert(opts.sources, { name = "vimtex" })
+        end
+      }
+    }
   }
 }

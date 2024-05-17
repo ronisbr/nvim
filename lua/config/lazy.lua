@@ -74,6 +74,7 @@ vim.api.nvim_create_autocmd(
 require("lazy").setup({
   spec = {
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    { import = "lazyvim.plugins.extras.coding.luasnip" },
     { import = "plugins" },
   },
   defaults = {

@@ -1,7 +1,7 @@
 -- Plugin configuration: nvim-cmp ----------------------------------------------------------
 
-local cmp = require'cmp'
-local luasnip = require'luasnip'
+local cmp = require("cmp")
+local luasnip = require("luasnip")
 
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -10,13 +10,11 @@ end
 
 return {
   "hrsh7th/nvim-cmp",
-
   opts = {
     completion = {
       -- Do not autocomplete on typing. Instead, wait for `<C-Space>`.
       autocomplete = false,
     },
-
     mapping = {
       ["<Tab>"] = cmp.mapping(
         function(fallback)
@@ -45,12 +43,6 @@ return {
         end,
         { "i", "s" }
       ),
-    },
-
-    snippet = {
-      expand = function(args)
-        require('luasnip').lsp_expand(args.body)
-      end,
-    },
+    }
   },
 }
