@@ -205,7 +205,7 @@ map(
 map(
   "n",
   "<leader>zf",
-  '<cmd>ZkNotes { sort = { "modified" } }<cr>',
+  '<cmd>ZkNotes { excludeHrefs = { "Diário" }, sort = { "modified" } }<cr>',
   { desc = "Find Notes", noremap = true, silent = true }
 )
 
@@ -213,12 +213,19 @@ map(
   "n",
   "<leader>zd",
   "<cmd>Telescope file_browser path=~/Nextcloud/zk<cr>",
-  { desc = "Open zk directory", noremap = true }
+  { desc = "Open zk Directory", noremap = true }
+)
+
+map(
+  "n",
+  "<leader>zj",
+  '<cmd>ZkNotes { hrefs = { "Diário" }, sort = { "path" } }<cr>',
+  { desc = "Find Journals", noremap = true, silent = true }
 )
 
 map(
   "n",
   "<leader>zt",
   "<cmd>ZkTags<cr>",
-  { desc = "Open zk directory", noremap = true }
+  { desc = "Find Tags", noremap = true }
 )
