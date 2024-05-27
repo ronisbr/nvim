@@ -15,8 +15,12 @@ return {
 
   opts = {
     disable_insert_on_commit = false,
+    commit_editor = {
+      kind = "split",
+      staged_diff_split_kind = "vsplit"
+    },
     log_view = {
-      kind = "replace"
+      kind = "vsplit"
     },
     kind = "replace"
   }
