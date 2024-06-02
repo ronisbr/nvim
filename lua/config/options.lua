@@ -1,43 +1,35 @@
--- Options are automatically loaded before lazy.nvim startup
--- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
+-- Description -----------------------------------------------------------------------------
+--
+-- General options for Neovim.
+--
+-- -----------------------------------------------------------------------------------------
 
-local opt = vim.opt
+vim.opt.breakindent = true
+vim.opt.clipboard = "unnamedplus"
+vim.opt.cursorline = true
+vim.opt.expandtab = true
+vim.opt.ignorecase = true
+vim.opt.inccommand = "nosplit"
+vim.opt.lazyredraw = true
+vim.opt.list = true
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.mouse = 'a'
+vim.opt.scrolloff = 10
+vim.opt.shiftwidth = 4
+vim.opt.showcmd = false
+vim.opt.showmode = false
+vim.opt.signcolumn = 'yes'
+vim.opt.smartcase = true
+vim.opt.spelllang = "en_us,pt_br"
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.tabstop = 4
+vim.opt.textwidth = 92
+vim.opt.undofile = true
+vim.opt.updatetime = 250
+vim.opt.colorcolumn = "93"
 
-opt.conceallevel = 1
-opt.concealcursor = "nc"
-opt.formatexpr = ""
-opt.guifont = "JetBrains Mono,Symbols Nerd Font Mono,Apple Color Emoji:h13"
-opt.pumblend = 0
-opt.shiftwidth = 4
-opt.showtabline = 0
-opt.spelllang = "en_us,pt_br"
-opt.spellsuggest = "best,7"
-opt.tabstop = 4
-opt.textwidth = 92
-opt.winblend = 0
+vim.opt.number = true
+vim.opt.relativenumber = true
 
-vim.g.autoformat = false
-
--- Set neovim language to English.
-vim.cmd("language en_US.UTF-8")
-
--- Neovide Configuration -------------------------------------------------------------------
-
-if vim.g.neovide then
-  vim.g.neovide_cursor_animation_length = 0
-  vim.g.neovide_floating_blur_amount_x = 10.0
-  vim.g.neovide_floating_blur_amount_y = 10.0
-  vim.g.neovide_floating_shadow = false
-  vim.g.neovide_floating_z_height = 2.0
-  vim.g.neovide_padding_bottom = 20
-  vim.g.neovide_padding_left = 20
-  vim.g.neovide_padding_right = 20
-  vim.g.neovide_padding_top = 20
-  vim.g.neovide_scale_factor = 1.1
-  vim.g.neovide_scroll_animation_length = 0.15
-  vim.g.neovide_transparency = 1.0
-
-  opt.pumblend = 30
-  opt.winblend = 30
-end
-
+-- vim: ts=2 sts=2 sw=2 et

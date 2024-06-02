@@ -1,231 +1,108 @@
--- Keymaps are automatically loaded on the VeryLazy event.
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
+-- Description -----------------------------------------------------------------------------
+--
+-- Keymaps configurations.
+--
+-- -----------------------------------------------------------------------------------------
+
+local M = { }
 
 local map = vim.keymap.set
-local ls = require("luasnip")
-local wk = require("which-key")
+local ctrl_r = vim.api.nvim_replace_termcodes("<Ctrl-R>", true, false, true)
 
-wk.register(
-  {
-    o = { name = "open" },
-    r = {
-      name = "ronisbr",
-      c = {
-        name = "comments",
-        {
-          a = {
-            name = "align"
-          }
-        }
-      },
-      f = { name = "fill" }
-    },
-    t = { name = "tables" },
-    z = { name = "zk" }
-  },
-  { prefix = "<leader>" }
-)
+map("n", "<Esc>", "<Esc>:noh<CR>", { silent = true })
 
-wk.register(
-  {
-    r = {
-      name = "ronisbr",
-      c = {
-        name = "comments",
-        {
-          a = {
-            name = "align"
-          }
-        }
-      },
-    }
-  },
-  { prefix = "<leader>", mode = "v" }
-)
+-- Autocompletion --------------------------------------------------------------------------
 
--- File ------------------------------------------------------------------------------------
-
--- Save file.
-map("n", "<leader>fs", ":w<cr>", { desc = "Save File", silent = true })
-
--- Open file browser.
-map("n", "<leader>.", ":Telescope file_browser path=%:p:h select_buffer=true<cr>", {
-  desc = "Open File Explorer",
-  silent = true
-})
-
--- Line Movements and Actions --------------------------------------------------------------
-
--- Delete the highlighted section without replacing the default register.
-map("x", "<localleader>d", '"_d')
-
--- Keep cursor position when performing half-jumps.
-map("n", "<C-d>", "<C-d>zz")
-map("n", "<C-u>", "<C-u>zz")
-
--- Keep cursor position when joining.
-map("n", "J", "mzJ`z")
-
--- Paste over highlighted text preserving the default register.
-map("x", "<localleader>p", '"_dP')
-
--- Window Manipulation ---------------------------------------------------------------------
-
-map("n", "<leader><Up>",    "<C-w>k", { desc = "Up Window" })
-map("n", "<leader><Down>",  "<C-w>j", { desc = "Down Window" })
-map("n", "<leader><Left>",  "<C-w>h", { desc = "Left Window" })
-map("n", "<leader><Right>", "<C-w>l", { desc = "Right Window" })
-
---------------------------------------------------------------------------------------------
---                                        Plugins                                         --
---------------------------------------------------------------------------------------------
-
--- floaterm --------------------------------------------------------------------------------
-
-map("n", "<leader>ot", "<cmd>FloatermToggle<cr>", { desc = "Toogle Floatterm" })
-map({"i", "n", "v"}, "<F2>", "<esc><cmd>FloatermNew<cr>", { desc = "New Floatterm" })
-map({"i", "n", "v"}, "<F5>", "<esc><cmd>FloatermToggle<cr>", { desc = "Toggle Floatterm" })
-map("t", "<F2>", "<C-\\><C-n><cmd>FloatermNew<cr>", { desc = "New Floatterm" })
-map("t", "<F3>", "<C-\\><C-n><cmd>FloatermPrev<cr>", { desc = "Previous Floatterm" })
-map("t", "<F4>", "<C-\\><C-n><cmd>FloatermNext<cr>", { desc = "Next Floatterm" })
-map("t", "<F5>", "<C-\\><C-n><cmd>FloatermToggle<cr>", { desc = "Toggle Floatterm" })
-
--- luasnip ---------------------------------------------------------------------------------
-
-map({"i", "s"}, "<C-j>", function() ls.jump( 1) end, { silent = true })
-map({"i", "s"}, "<C-k>", function() ls.jump(-1) end, { silent = true })
 map(
-  {"i", "s"},
-  "<C-e>",
+  "i",
+  "<CR>",
   function()
-    if ls.choice_active() then
-      ls.change_choice(1)
+    -- If the completion menu is visible but nothing is selected, close the menu and send
+    -- `<CR>`.
+    -- If the completion menu is visible with a selection, just add the selection.
+    -- Otherwise, just send `<CR>`.
+    if vim.fn.pumvisible() == 1 then
+      return vim.fn.complete_info().selected == -1 and "<C-y><CR>" or "<C-y>"
+    else
+      return "<CR>"
     end
   end,
-  { silent = true }
-)
-
--- Neogit ----------------------------------------------------------------------------------
-
-map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })
-
--- Neovide ---------------------------------------------------------------------------------
-
-if vim.g.neovide then
-  map("n", "<D-s>", ":w<CR>")      -- ................................................. Save
-  map("v", "<D-c>", '"+y')         -- ................................................. Copy
-  map("n", "<D-v>", '"+P')         -- .................................... Paste normal mode
-  map("v", "<D-v>", '"+P')         -- .................................... Paste visual mode
-  map("c", "<D-v>", "<C-R>+")      -- ................................... Paste command mode
-  map("i", "<D-v>", '<ESC>l"+Pli') -- .................................... Paste insert mode
-end
-
--- Allow clipboard copy paste in neovim.
-map("",  "<D-v>", "+p<CR>", { noremap = true, silent = true })
-map("!", "<D-v>", "<C-R>+", { noremap = true, silent = true })
-map("t", "<D-v>", "<C-R>+", { noremap = true, silent = true })
-map("v", "<D-v>", "<C-R>+", { noremap = true, silent = true })
-
--- ronisbr ---------------------------------------------------------------------------------
-
--- Comment Manipulation --
-
-map(
-  { "n", "v" },
-  "<leader>rcac",
-  '<cmd>lua require("misc.comment_manipulation").align_comments("c")<cr>',
-  { desc = "Align Comments to the Center"}
+  { expr = true, noremap = true, silent = true }
 )
 
 map(
-  { "n", "v" },
-  "<leader>rcar",
-  '<cmd>lua require("misc.comment_manipulation").align_comments("r")<cr>',
-  { desc = "Align Comments to the Right"}
+  "i",
+  "<Tab>",
+  function()
+    return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>"
+  end,
+  { expr = true }
 )
 
--- Text Manipulation --
+map(
+  "i",
+  "<S-Tab>",
+  function()
+    return vim.fn.pumvisible() == 1 and "<C-p>" or "<S-Tab>"
+  end,
+  { expr = true }
+)
+
+-- Buffers ---------------------------------------------------------------------------------
 
 map(
   "n",
-  "<leader>rfc",
-  '<cmd>lua require("misc.text_manipulation").fill_with_cursor_character()<cr>',
-  { desc = "Fill with Cursor"}
+  "[b",
+  ":bprev<CR>",
+  {
+    desc = "Previous Buffer",
+    silent = true
+  }
 )
 
 map(
   "n",
-  "<leader>rfi",
-  '<cmd>lua require("misc.text_manipulation").fill_with_input()<cr>',
-  { desc = "Fill with Input" }
+  "]b",
+  ":bnext<CR>",
+  {
+    desc = "Next Buffer",
+    silent = true
+  }
 )
 
--- whitespace.nvim -------------------------------------------------------------------------
+-- Text Manipulation -----------------------------------------------------------------------
 
 map(
   "n",
-  "<leader>cw",
-  require("whitespace-nvim").trim
-)
-
--- zk-nvim ---------------------------------------------------------------------------------
-
--- Create a new zk note.
-local function zk_new_note()
-  vim.ui.select(
-    {
-      "Diário",
-      "Notas",
-      "Trabalho"
-    }, {
-      prompt = "Select the directory:",
-    },
-    function(choice)
-      local cmd = require("zk.commands")
-
-      if choice == "Diário" then
-        cmd.get("ZkNew")({ dir = "Diário" })
-      elseif choice == "Notas" then
-        local title = vim.fn.input("Note Title: ")
-        cmd.get("ZkNew")({ dir = "Notas", title = title })
-      elseif choice == "Trabalho" then
-        local title = vim.fn.input("Note Title: ")
-        cmd.get("ZkNew")({ dir = "Trabalho", title = title })
-      end
-    end)
-end
-
-map(
-  "n",
-  "<leader>zn",
-  zk_new_note,
-  { desc = "New Note", noremap = true, silent = true }
+  "<Leader>tf",
+  "vy<Esc>93PD<Esc>d92|",
+  {
+    desc = "Fill with Character Under the Cursor"
+  }
 )
 
 map(
-  "n",
-  "<leader>zf",
-  '<cmd>ZkNotes { excludeHrefs = { "Diário" }, sort = { "modified" } }<cr>',
-  { desc = "Find Notes", noremap = true, silent = true }
+  "v",
+  "<Leader>tf",
+  "y<Esc>93PD<Esc>d92|",
+  {
+    desc = "Fill with Selected Pattern",
+  }
 )
 
+-- Create a text block given the following input:
+--
+--     Current line: Fill pattern.
+--     Next line: Text to be centered in the block.
 map(
   "n",
-  "<leader>zd",
-  "<cmd>Telescope file_browser path=~/Nextcloud/zk<cr>",
-  { desc = "Open zk Directory", noremap = true }
+  "<Leader>tb",
+  "<Cmd>set formatoptions-=ro<CR>0v$hy93P\"_D<Esc>\"_d92|j0<Cmd>center<CR>0R<C-R>0<Esc>o<Esc>P<Cmd>right<CR><Esc>khjllv$hykpkyyjpjdd0<Cmd>set formatoptions+=ro",
+  {
+    desc = "Convert to Block"
+  }
 )
 
-map(
-  "n",
-  "<leader>zj",
-  '<cmd>ZkNotes { hrefs = { "Diário" }, sort = { "path" } }<cr>',
-  { desc = "Find Journals", noremap = true, silent = true }
-)
+return M
 
-map(
-  "n",
-  "<leader>zt",
-  "<cmd>ZkTags<cr>",
-  { desc = "Find Tags", noremap = true }
-)
+-- vim:ts=2:sts=2:sw=2:et
