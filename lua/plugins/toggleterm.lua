@@ -17,7 +17,22 @@ return {
       float_opts = {
         border = "curved"
       }
-    }
+    },
+
+    config = function(_, opts)
+      require("toggleterm").setup(opts)
+
+      vim.api.nvim_create_autocmd("TermOpen", {
+        group = vim.api.nvim_create_augroup("ronisbr-term-open", { clear = true }),
+
+        callback = function(event)
+          local map = vim.keymap.set
+
+          -- Keymaps -------------------------------------------------------------------------
+
+          map("t", "<Esc>", "<C-\\><C-n>", { silent = true })
+        end})
+    end
   }
 }
 
