@@ -12,9 +12,7 @@ return {
 
     opts = {
       auto_install = true,
-      highlight = {
-        enable = true,
-      },
+
       ensure_installed = {
         "bash",
         "c",
@@ -25,6 +23,14 @@ return {
         "markdown",
         "vim",
         "vimdoc"
+      },
+
+      highlight = {
+        enable = true,
+      },
+
+      indent = {
+        enable = true,
       }
     },
 
