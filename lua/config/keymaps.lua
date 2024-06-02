@@ -97,7 +97,9 @@ map(
 map(
   "n",
   "<Leader>tb",
-  "<Cmd>set formatoptions-=ro<CR>0v$hy93P\"_D<Esc>\"_d92|j0<Cmd>center<CR>0R<C-R>0<Esc>o<Esc>P<Cmd>right<CR><Esc>khjllv$hykpkyyjpjdd0<Cmd>set formatoptions+=ro",
+  "<Cmd>set formatoptions-=ro<CR>" ..
+  "0v$hy93P\"_D<Esc>\"_d92|j0<Cmd>center<CR>0R<C-R>0<Esc>o<Esc>P<Cmd>right<CR><Esc>khjllv$hykpkyyjpjdd0" ..
+  "<Cmd>set formatoptions+=ro",
   {
     desc = "Convert to Block"
   }
