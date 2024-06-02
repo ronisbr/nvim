@@ -74,6 +74,28 @@ map(
 
 map(
   "n",
+  "<Leader>ta",
+  "<Cmd>set formatoptions-=ro<CR>" ..
+  "vy`]a<CR><Esc><Cmd>right<CR>k93PD<Esc>d92|j0whv$hykP`]lDjddk$" ..
+  "<Cmd>set formatoptions+=ro<CR>",
+  {
+    desc = "Left Aling with Character Under the Cursor"
+  }
+)
+
+map(
+  "v",
+  "<Leader>ta",
+  "y<Cmd>set formatoptions-=ro<CR>" ..
+  "`]a<CR><Esc><Cmd>right<CR>k93PD<Esc>d92|j0whv$hykP`]lDjddk$" ..
+  "<Cmd>set formatoption+=ro<CR>",
+  {
+    desc = "Left Aling with Selected Pattern"
+  }
+)
+
+map(
+  "n",
   "<Leader>tf",
   "vy<Esc>93PD<Esc>d92|",
   {
