@@ -97,7 +97,7 @@ map(
 map(
   "n",
   "<Leader>tf",
-  "vy<Esc>93PD<Esc>d92|",
+  "vy93pDd92|",
   {
     desc = "Fill with Character Under the Cursor"
   }
@@ -106,7 +106,7 @@ map(
 map(
   "v",
   "<Leader>tf",
-  "y<Esc>93PD<Esc>d92|",
+  "y93pDd92|",
   {
     desc = "Fill with Selected Pattern",
   }
