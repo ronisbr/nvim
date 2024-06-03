@@ -31,6 +31,9 @@ return {
 
       indent = {
         enable = true,
+        disable = {
+          "markdown"
+        },
       }
     },
 
