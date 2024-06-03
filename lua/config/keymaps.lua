@@ -79,7 +79,7 @@ map(
   "vy`]a<CR><Esc><Cmd>right<CR>k93PD<Esc>d92|j0whv$hykP`]lDjddk$" ..
   "<Cmd>set formatoptions+=ro<CR>",
   {
-    desc = "Left Aling with Character Under the Cursor"
+    desc = "Left Align with Character Under the Cursor"
   }
 )
 
@@ -90,7 +90,7 @@ map(
   "`]a<CR><Esc><Cmd>right<CR>k93PD<Esc>d92|j0whv$hykP`]lDjddk$" ..
   "<Cmd>set formatoption+=ro<CR>",
   {
-    desc = "Left Aling with Selected Pattern"
+    desc = "Left Align with Selected Pattern"
   }
 )
 
