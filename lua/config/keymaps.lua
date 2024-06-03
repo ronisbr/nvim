@@ -76,7 +76,7 @@ map(
   "n",
   "<Leader>ta",
   "<Cmd>set formatoptions-=ro<CR>" ..
-  "vy`]a<CR><Esc><Cmd>right<CR>k93PD<Esc>d92|j0whv$hykP`]lDjddk$" ..
+  "mavy`]a<CR><Esc><Cmd>right<CR>k93PD<Esc>d92|j0whv$hykP`]lDjdd`a" ..
   "<Cmd>set formatoptions+=ro<CR>",
   {
     desc = "Left Align with Character Under the Cursor"
@@ -86,9 +86,9 @@ map(
 map(
   "v",
   "<Leader>ta",
-  "y<Cmd>set formatoptions-=ro<CR>" ..
-  "`]a<CR><Esc><Cmd>right<CR>k93PD<Esc>d92|j0whv$hykP`]lDjddk$" ..
-  "<Cmd>set formatoption+=ro<CR>",
+  "yma<Cmd>set formatoptions-=ro<CR>" ..
+  "`]a<CR><Esc><Cmd>right<CR>k93pD<Esc>d92|j0whv$hykP`]lDjdd`a" ..
+  "<Cmd>set formatoptions+=ro<CR>",
   {
     desc = "Left Align with Selected Pattern"
   }
