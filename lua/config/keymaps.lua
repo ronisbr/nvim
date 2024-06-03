@@ -7,7 +7,6 @@
 local M = { }
 
 local map = vim.keymap.set
-local ctrl_r = vim.api.nvim_replace_termcodes("<Ctrl-R>", true, false, true)
 
 map("n", "<Esc>", "<Esc>:noh<CR>", { silent = true })
 
@@ -76,7 +75,7 @@ map(
   "n",
   "<Leader>ta",
   "<Cmd>set formatoptions-=ro<CR>" ..
-  "mavy`]a<CR><Esc><Cmd>right<CR>k93PD<Esc>d92|j0whv$hykP`]lDjdd`a" ..
+  "mavy`]a<CR><Esc><Cmd>right<CR>k93PDd92|j0whv$hykP`]lDjdd`a" ..
   "<Cmd>set formatoptions+=ro<CR>",
   {
     desc = "Left Align with Character Under the Cursor"
@@ -87,7 +86,7 @@ map(
   "v",
   "<Leader>ta",
   "yma<Cmd>set formatoptions-=ro<CR>" ..
-  "`]a<CR><Esc><Cmd>right<CR>k93pD<Esc>d92|j0whv$hykP`]lDjdd`a" ..
+  "`]a<CR><Esc><Cmd>right<CR>k93pDd92|j0whv$hykP`]lDjdd`a" ..
   "<Cmd>set formatoptions+=ro<CR>",
   {
     desc = "Left Align with Selected Pattern"
@@ -120,7 +119,7 @@ map(
   "n",
   "<Leader>tb",
   "<Cmd>set formatoptions-=ro<CR>" ..
-  "0v$hy93P\"_D<Esc>\"_d92|j0<Cmd>center<CR>0R<C-R>0<Esc>o<Esc>P<Cmd>right<CR><Esc>khjllv$hykpkyyjpjdd0" ..
+  "0v$hy93P\"_D\"_d92|j0<Cmd>center<CR>0R<C-R>0<Esc>o<Esc>P<Cmd>right<CR>khjllv$hykpkyyjpjdd0" ..
   "<Cmd>set formatoptions+=ro",
   {
     desc = "Convert to Block"
