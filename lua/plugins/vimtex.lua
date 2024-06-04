@@ -8,6 +8,7 @@ return {
   {
     "lervag/vimtex",
     lazy = false,
+    version = false,
 
     init = function()
       vim.g.vimtex_view_method = "skim"

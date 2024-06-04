@@ -8,6 +8,7 @@ return {
   {
      "voldikss/vim-floaterm",
     cmd = { "FloatermNew", "FloatermToggle", "FloatermNext", "FloatermPrev" },
+    version = false,
 
     keys = {
       { "<Leader>ot", ":FloattermToggle<CR>", desc = "Open Terminal", silent = true },

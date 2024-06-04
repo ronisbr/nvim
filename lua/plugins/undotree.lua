@@ -8,6 +8,8 @@ return {
   {
     "mbbill/undotree",
     cmd = "UndotreeToggle",
+    version = false,
+
     keys = {
       { "<Leader>ou", ":UndotreeToggle<CR>", desc = "Open Undotree", silent = true }
     }

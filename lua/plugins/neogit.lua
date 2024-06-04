@@ -8,6 +8,7 @@ return {
   {
     "NeogitOrg/neogit",
     cmd = "Neogit",
+    version = false,
 
     dependencies = {
       "nvim-lua/plenary.nvim",

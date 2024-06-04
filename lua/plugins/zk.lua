@@ -48,6 +48,7 @@ return {
       { "<leader>zj", '<cmd>ZkNotes { hrefs = { "Diário" }, sort = { "path" } }<cr>', desc = "Find Journals", noremap = true, silent = true },
       { "<leader>zt", "<cmd>ZkTags<cr>", desc = "Find Tags", noremap = true },
     },
+    version = false,
 
     config = function()
       require("zk").setup({

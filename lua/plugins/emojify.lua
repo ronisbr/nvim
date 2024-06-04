@@ -8,6 +8,7 @@ return {
   {
     "ronisbr/emojify.nvim",
     lazy = false,
+    version = false,
 
     config = function ()
       require("emojify").setup({

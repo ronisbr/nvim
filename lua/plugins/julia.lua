@@ -8,6 +8,7 @@ return {
   {
     "JuliaEditorSupport/julia-vim",
     lazy = false,
+    version = false,
 
     config = function()
       vim.g.latex_to_unicode_auto = true

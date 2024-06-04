@@ -79,6 +79,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
+    version = false,
 
     dependencies = {
       "williamboman/mason.nvim",
@@ -162,6 +163,8 @@ return {
   {
     "williamboman/mason.nvim",
     cmd = "Mason",
+    version = false,
+
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
     },
