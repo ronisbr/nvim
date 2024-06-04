@@ -10,43 +10,6 @@ local map = vim.keymap.set
 
 map("n", "<Esc>", "<Esc>:noh<CR>", { silent = true })
 
--- Autocompletion --------------------------------------------------------------------------
-
-map(
-  "i",
-  "<CR>",
-  function()
-    -- If the completion menu is visible but nothing is selected, close the menu and send
-    -- `<CR>`.
-    -- If the completion menu is visible with a selection, just add the selection.
-    -- Otherwise, just send `<CR>`.
-    if vim.fn.pumvisible() == 1 then
-      return vim.fn.complete_info().selected == -1 and "<C-y><CR>" or "<C-y>"
-    else
-      return "<CR>"
-    end
-  end,
-  { expr = true, noremap = true, silent = true }
-)
-
-map(
-  "i",
-  "<Tab>",
-  function()
-    return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>"
-  end,
-  { expr = true }
-)
-
-map(
-  "i",
-  "<S-Tab>",
-  function()
-    return vim.fn.pumvisible() == 1 and "<C-p>" or "<S-Tab>"
-  end,
-  { expr = true }
-)
-
 -- Buffers ---------------------------------------------------------------------------------
 
 map(
