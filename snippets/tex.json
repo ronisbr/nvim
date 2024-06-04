@@ -1,0 +1,67 @@
+{
+  "bold" : {
+    "prefix": "bf",
+    "body": [
+      "\\textbf{${TM_SELECTED_TEXT}$1}"
+    ],
+    "description": "Bold text"
+  },
+  "env": {
+    "prefix": "env",
+    "body": [
+      "\\begin{$1}",
+      "\t$0",
+      "\\end{$1}"
+    ],
+    "description": "LaTeX environment"
+  },
+  "figure": {
+    "prefix": "fig",
+    "body": [
+      "\\begin{figure}[${1:htbp}]",
+      "\t\\begin{center}",
+      "\t\t\\includegraphics[width=0.95\\textwidth]{./figs/$2}",
+      "\t\\end{center}",
+      "\t\\caption{$3}",
+      "\t\\label{fig:$4}",
+      "\\end{figure}",
+      "$0"
+    ],
+    "description": "Add a figure"
+  },
+  "math-bold": {
+    "prefix": "mbf",
+    "body": [
+      "\\mathbf{${TM_SELECTED_TEXT}$1}"
+    ],
+    "description": "Monospaced text"
+  },
+  "italic": {
+    "prefix": "it",
+    "body": [
+      "\\textit{${TM_SELECTED_TEXT}$1}"
+    ],
+    "description": "Italic text"
+  },
+  "monospace": {
+    "prefix": "tt",
+    "body": [
+      "\\texttt{${TM_SELECTED_TEXT}$1}"
+    ],
+    "description": "Monospaced text"
+  },
+  "table": {
+    "prefix": "tab",
+    "body": [
+      "\\begin{table}[${1:htbp}]",
+      "\t\\caption{$2}",
+      "\t\\label{tab:$3}",
+      "\t\\centering",
+      "\t\\begin{tabular}{$4}",
+      "\t\t$0",
+      "\t\\end{tabular}",
+      "\\end{table}"
+    ],
+    "description": "Add a table"
+  }
+}
