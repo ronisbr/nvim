@@ -41,6 +41,9 @@ return {
       "ZkMatch",
       "ZkTags"
     },
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+    },
     keys = {
       { "<leader>zn", zk_new_note, desc = "New Note", noremap = true, silent = true },
       { "<leader>zf", '<cmd>ZkNotes { excludeHrefs = { "Diário" }, sort = { "modified" } }<cr>', desc = "Find Notes", noremap = true, silent = true },
