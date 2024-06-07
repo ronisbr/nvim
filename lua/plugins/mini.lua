@@ -31,6 +31,7 @@ end
 
 local function miniclue_win_config(buf_id)
   return {
+    border = "rounded",
     width = miniclue_compute_dynamic_width(buf_id)
   }
 end
@@ -470,7 +471,13 @@ return {
       }
     },
 
-    opts = { }
+    opts = {
+      window = {
+        config = {
+          border = "rounded"
+        }
+      }
+    }
   },
 
   -- mini.statusline -----------------------------------------------------------------------
