@@ -152,21 +152,31 @@ return {
         group = vim.api.nvim_create_augroup("ronisbr-lsp-attach", { clear = true }),
 
         callback = function(event)
-          local map = function(keys, func, desc)
+          local function map(keys, func, desc)
             vim.keymap.set("n", keys, func, { buffer = event.buf, desc = desc })
+          end
+
+          local function maplsp(keys, scope, desc)
+            map(
+              keys,
+              function()
+                require("mini.extra").pickers.lsp({ scope = scope })
+              end,
+              desc
+            )
           end
 
           -- Keymaps -------------------------------------------------------------------------
 
-          map("gd", ":Telescope lsp_definitions<CR>", "Goto Definition")
-          map("gD", vim.lsp.buf.declaration, "Goto Declaration")
-          map("gr", ":Telescope lsp_references<CR>", "Goto References")
-          map("gI", ":Telescope lsp_implementations<CR>", "Goto Implementation")
+          maplsp("gd", "definition", "Goto Definition")
+          maplsp("gr", "references", "Goto References")
+          maplsp("gI", "implementation", "Goto Implementation")
+          maplsp("gD", "declaration", "Goto Declaration")
           map("K", vim.lsp.buf.hover, "Hover Documentation")
 
-          map("<Leader>cD",  ":Telescope lsp_type_definitions<CR>", "Type Definition")
-          map("<Leader>cd", ":Telescope lsp_document_symbols<CR>", "Document Symbols")
-          map("<Leader>cw", ":Telescope lsp_dynamic_workspace_symbols<CR>", "Workspace Symbols")
+          maplsp("<Leader>cD",  "type_definition", "Type Definition")
+          maplsp("<Leader>cd", "document_symbol", "Document Symbols")
+          maplsp("<Leader>cw", "workspace_symbol", "Workspace Symbols")
           map("<Leader>cr", vim.lsp.buf.rename, "Rename")
           map("<Leader>ca", vim.lsp.buf.code_action, "Action")
 

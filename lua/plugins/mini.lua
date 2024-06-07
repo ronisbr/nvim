@@ -388,6 +388,91 @@ return {
     end
   },
 
+  -- mini.pick -----------------------------------------------------------------------------
+
+  {
+    "echasnovski/mini.pick",
+    version = false,
+    cmd = "Pick",
+
+    dependencies = {
+      {
+        "echasnovski/mini.extra",
+        version = false,
+        opts = { }
+      }
+    },
+
+    keys = {
+      {
+        "<Leader>/",
+        function()
+          require("mini.extra").pickers.buf_lines({ scope = "current" })
+        end,
+        desc = "Fuzzily Search in Current Buffer",
+        silent = true,
+      },
+      {
+        "<Leader>.",
+        function()
+          require("mini.extra").pickers.explorer()
+        end,
+        desc = "Open File Browser in ./",
+        silent = true
+      },
+      {
+        "<Leader>f/",
+        function()
+          require("mini.extra").pickers.buf_lines({ scope = "all" })
+        end,
+        desc = "Find in Open Files",
+        silent = true,
+      },
+      {
+        "<Leader>fb",
+        function()
+          require("mini.pick").builtin.buffers({ })
+        end,
+        desc = "Find Existing Buffers",
+        silent = true
+      },
+      {
+        "<Leader>fd",
+        function()
+          require("mini.extra").pickers.diagnostic({ })
+        end,
+        desc = "Find Diagnostics",
+        silent = true
+      },
+      {
+        "<Leader>fh",
+        function()
+          require("mini.pick").builtin.help({ })
+        end,
+        desc = "Find Help",
+        silent = true
+      },
+      {
+        "<Leader>fi",
+        function()
+          require("mini.pick").builtin.grep_live({ })
+        end,
+        desc = "Find with Grep",
+        silent = true
+      },
+      {
+        "<Leader>fr",
+        function()
+          require("mini.extra").pickers.oldfiles({ })
+        end,
+        desc = "Find Recent Files",
+        silent = true
+      }
+    },
+
+    opts = { }
+  },
+
   -- mini.statusline -----------------------------------------------------------------------
 
   {

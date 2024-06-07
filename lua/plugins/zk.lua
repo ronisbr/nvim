@@ -5,7 +5,7 @@
 -- -----------------------------------------------------------------------------------------
 
 local function zk_new_note()
-  vim.ui.select(
+  require("mini.pick").ui_select(
     {
       "Diário",
       "Notas",
@@ -42,20 +42,52 @@ return {
       "ZkTags"
     },
     dependencies = {
-      "nvim-telescope/telescope.nvim",
+      "echasnovski/mini.pick"
     },
     keys = {
-      { "<leader>zn", zk_new_note, desc = "New Note", noremap = true, silent = true },
-      { "<leader>zf", '<cmd>ZkNotes { excludeHrefs = { "Diário" }, sort = { "modified" } }<cr>', desc = "Find Notes", noremap = true, silent = true },
-      { "<leader>zd", "<cmd>Telescope file_browser path=~/Nextcloud/zk<cr>", desc = "Open zk Directory", noremap = true },
-      { "<leader>zj", '<cmd>ZkNotes { hrefs = { "Diário" }, sort = { "path" } }<cr>', desc = "Find Journals", noremap = true, silent = true },
-      { "<leader>zt", "<cmd>ZkTags<cr>", desc = "Find Tags", noremap = true },
+      {
+        "<leader>zn",
+        zk_new_note,
+        desc = "New Note",
+        noremap = true,
+        silent = true
+      },
+      {
+        "<leader>zf",
+        '<cmd>ZkNotes { excludeHrefs = { "Diário" }, sort = { "modified" } }<cr>',
+        desc = "Find Notes",
+        noremap = true,
+        silent = true
+      },
+      {
+        "<leader>zd",
+        function()
+          require("mini.extra").pickers.explorer({
+            cwd = os.getenv("HOME") .. "/Nextcloud/zk"
+          })
+        end,
+        desc = "Open zk Directory",
+        noremap = true
+      },
+      {
+        "<leader>zj",
+        '<cmd>ZkNotes { hrefs = { "Diário" }, sort = { "path" } }<cr>',
+        desc = "Find Journals",
+        noremap = true,
+        silent = true
+      },
+      {
+        "<leader>zt",
+        "<cmd>ZkTags<cr>",
+        desc = "Find Tags",
+        noremap = true
+      },
     },
     version = false,
 
     config = function()
       require("zk").setup({
-        picker = "telescope",
+        picker = "minipick",
         lsp = {
           cmd = { "zk", "lsp" },
           name = "zk"
