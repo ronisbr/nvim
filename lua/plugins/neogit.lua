@@ -11,8 +11,8 @@ return {
     version = false,
 
     dependencies = {
+      "ibhagwan/fzf-lua",
       "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
       "sindrets/diffview.nvim",
     },
 
