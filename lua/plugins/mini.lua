@@ -354,6 +354,30 @@ return {
     end
   },
 
+  -- mini.misc -----------------------------------------------------------------------------
+
+  {
+    "echasnovski/mini.misc",
+    lazy = false,
+    version = false,
+
+    opts = { },
+
+    config = function(_, opts)
+      local MiniMisc = require("mini.misc")
+
+      require("mini.misc").setup(opts)
+
+      MiniMisc.setup_auto_root(
+        nil,
+        function(path)
+          return vim.fs.dirname(path)
+        end
+      )
+      MiniMisc.setup_restore_cursor()
+    end
+  },
+
   -- mini.move -----------------------------------------------------------------------------
 
   {
