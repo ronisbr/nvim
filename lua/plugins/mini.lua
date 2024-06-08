@@ -440,9 +440,9 @@ return {
       {
         "<Leader>.",
         function()
-          require("mini.extra").pickers.explorer()
+          require("mini.pick").builtin.files({ })
         end,
-        desc = "Open File Browser in ./",
+        desc = "Find Files in ./",
         silent = true
       },
       {
@@ -467,6 +467,16 @@ return {
           require("mini.extra").pickers.diagnostic({ })
         end,
         desc = "Find Diagnostics",
+        silent = true
+      },
+      {
+        "<Leader>ff",
+        function()
+          require("mini.extra").pickers.explorer({
+            cwd = vim.fs.dirname(vim.fn.expand("%:p"))
+          })
+        end,
+        desc = "Open Explorer in the Current File Path",
         silent = true
       },
       {
