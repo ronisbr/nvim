@@ -63,6 +63,10 @@ return {
 
       }),
 
+      performance = {
+        debounce = 400
+      },
+
       sources = cmp.config.sources({
         { name = "nvim_lsp" },
         { name = "path" },
