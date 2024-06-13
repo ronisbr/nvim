@@ -98,6 +98,50 @@ map(
   }
 )
 
+-- Placeholders <++> -----------------------------------------------------------------------
+
+map(
+  "n",
+  "<C-j>",
+  "/<++><CR>v3lc",
+  {
+    desc = "Change Next Placeholder",
+    silent = true,
+  }
+)
+
+map(
+  "i",
+  "<C-j>",
+  "<Esc><C-j>",
+  {
+    desc = "Change Next Placeholder",
+    remap = true,
+    silent = true
+  }
+)
+
+map(
+  "n",
+  "<C-k>",
+  "?<++><CR>v3lc",
+  {
+    desc = "Change Previous Placeholder",
+    silent = true
+  }
+)
+
+map(
+  "i",
+  "<C-k>",
+  "<Esc><C-k>",
+  {
+    desc = "Change Previous Placeholder",
+    remap = true,
+    silent = true
+  }
+)
+
 return M
 
 -- vim:ts=2:sts=2:sw=2:et
