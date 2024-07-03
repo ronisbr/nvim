@@ -91,10 +91,8 @@ local function ministatusline_file_info()
   end
 
   -- Add filetype icon.
-  local has_devicons, devicons = pcall(require, 'nvim-web-devicons')
-  local icon = has_devicons and
-    devicons.get_icon(vim.fn.expand('%:t'), nil, { default = true }) .. " " or
-    ""
+  local has_devicons, devicons = pcall(require, "mini.icons")
+  local icon = has_devicons and devicons.get("filetype", filetype) .. " " or ""
 
   return string.format("%s%s", icon, filetype)
 end
@@ -352,6 +350,16 @@ return {
         },
       })
     end
+  },
+
+  -- mini.icons ----------------------------------------------------------------------------
+
+  {
+    "echasnovski/mini.icons",
+    lazy = false,
+    version = false,
+
+    opts = { }
   },
 
   -- mini.misc -----------------------------------------------------------------------------
