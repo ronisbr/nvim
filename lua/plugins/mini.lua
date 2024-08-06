@@ -262,27 +262,27 @@ return {
 
   -- mini.completion -----------------------------------------------------------------------
 
-  -- {
-  --   "echasnovski/mini.completion",
-  --   lazy = false,
-  --   version = false,
-  --
-  --   opts = {
-  --     delay = {
-  --       completion = 1000
-  --     },
-  --
-  --     mappings = {
-  --       force_twostep =  "<C-Space>",
-  --       force_fallback = "<A-Space>",
-  --     },
-  --
-  --     lsp_completion = {
-  --       auto_setup = true,
-  --       source_func = "omnifunc",
-  --     }
-  --   }
-  -- },
+  {
+    "echasnovski/mini.completion",
+    lazy = false,
+    version = false,
+
+    opts = {
+      delay = {
+        completion = 1000
+      },
+
+      mappings = {
+        force_twostep =  "<C-Space>",
+        force_fallback = "<A-Space>",
+      },
+
+      lsp_completion = {
+        auto_setup = true,
+        source_func = "omnifunc",
+      }
+    }
+  },
 
   -- mini.diff -----------------------------------------------------------------------------
 
