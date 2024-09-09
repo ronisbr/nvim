@@ -226,7 +226,7 @@ local function create_julia_func_doc(input)
 
   -- Function declaration.
   table.insert(output, '"""')
-  table.insert(output, "    " .. suppress_kwargs(func_decl))
+  table.insert(output, "    " .. suppress_kwargs(func_decl) .. " -> <++>")
   table.insert(output, "")
   table.insert(output, "<++>")
   table.insert(output, "")
@@ -268,8 +268,8 @@ function M.insert_julia_func_doc(start_line, end_line)
   local julia_func_doc = create_julia_func_doc(input)
 
   -- Move the cursor to the beginning of start line and add the documentation.
-  vim.api.nvim_win_set_cursor(0, { start_line - 1, 0 })
-  vim.api.nvim_put(julia_func_doc, "l", true, false)
+  vim.api.nvim_win_set_cursor(0, { start_line, 0 })
+  vim.api.nvim_put(julia_func_doc, "l", false, false)
 end
 
 --- Setup the miscellaneous Julia functions.
