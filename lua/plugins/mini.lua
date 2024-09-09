@@ -610,7 +610,11 @@ return {
     version = false,
     lazy = false,
 
-    opts = { },
+    opts = {
+      detect = {
+        separator = "[,;]"
+      }
+    },
   },
 
   -- mini.tabline --------------------------------------------------------------------------
