@@ -32,6 +32,10 @@ return {
         enable = true,
       },
 
+      ignore_install = {
+        "gitcommit"
+      },
+
       indent = {
         enable = true,
         disable = {
