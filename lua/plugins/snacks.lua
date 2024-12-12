@@ -60,6 +60,13 @@ return {
             section = "session"
           },
           {
+            icon = "",
+            key = "g",
+            desc = "LazyGit",
+            action = ":lua Snacks.lazygit()",
+            enabled = package.loaded.lazy ~= nil
+          },
+          {
             icon = "󰒲 ",
             key = "L",
             desc = "Lazy",
