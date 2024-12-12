@@ -11,6 +11,7 @@ return {
     version = false,
 
     opts = {
+
       events = { "BufWritePost", "BufReadPost", "InsertLeave" },
       linters_by_ft = {
         markdown = { "markdownlint" },

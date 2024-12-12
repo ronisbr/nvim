@@ -184,6 +184,7 @@ return {
   },
 
   -- mini.clue -----------------------------------------------------------------------------
+
   {
     "echasnovski/mini.clue",
     event = "VeryLazy",
@@ -203,11 +204,14 @@ return {
 
           -- Description of Mapping Groups -------------------------------------------------
 
-          { mode = "n", keys = "<Leader>f", desc = "+Find" },
           { mode = "n", keys = "<Leader>c", desc = "+Code" },
+          { mode = "n", keys = "<Leader>f", desc = "+Find" },
           { mode = "n", keys = "<Leader>o", desc = "+Open" },
-          { mode = "n", keys = "<Leader>s", desc = "+Show" },
+          { mode = "n", keys = "<Leader>s", desc = "+Snacks" },
           { mode = "n", keys = "<Leader>t", desc = "+Text" },
+
+          { mode = "n", keys = "<Leader>sg", desc = "+Git" },
+          { mode = "n", keys = "<Leader>st", desc = "+Toggle" },
         },
 
         -- Set the triggers that will show miniclue window.
@@ -397,29 +401,29 @@ return {
 
   -- mini.notify ---------------------------------------------------------------------------
 
-  {
-    "echasnovski/mini.notify",
-    lazy = false,
-    version = false,
-    opts = { },
-
-    config = function(_, opts)
-      local MiniNotify = require("mini.notify")
-      MiniNotify.setup(opts)
-      vim.notify = MiniNotify.make_notify()
-
-      -- Keymaps ---------------------------------------------------------------------------
-      vim.keymap.set(
-        "n",
-        "<Leader>sn",
-        "<Cmd>lua MiniNotify.show_history()<CR>",
-        {
-          desc = "Show Notifications",
-          silent = true,
-        }
-      )
-    end
-  },
+  -- {
+  --   "echasnovski/mini.notify",
+  --   lazy = false,
+  --   version = false,
+  --   opts = { },
+  --
+  --   config = function(_, opts)
+  --     local MiniNotify = require("mini.notify")
+  --     MiniNotify.setup(opts)
+  --     vim.notify = MiniNotify.make_notify()
+  --
+  --     -- Keymaps ---------------------------------------------------------------------------
+  --     vim.keymap.set(
+  --       "n",
+  --       "<Leader>sn",
+  --       "<Cmd>lua MiniNotify.show_history()<CR>",
+  --       {
+  --         desc = "Show Notifications",
+  --         silent = true,
+  --       }
+  --     )
+  --   end
+  -- },
 
   -- mini.pick -----------------------------------------------------------------------------
 
@@ -649,7 +653,25 @@ return {
         silent = true
       },
     },
-    opts = { }
+    opts = { },
+
+    config = function(_, opts)
+      require("mini.trailspace").setup(opts)
+
+      -- HACK: We need to disabel the mini.trailspace and enable when a new buffer is
+      -- created to avoid interference with the dashboard snacks.nvim. See:
+      --
+      --  https://github.com/echasnovski/mini.nvim/issues/1395
+      --
+      --  TODO: Can we improve this?
+      vim.g.minitrailspace_disable = true
+
+      vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+          vim.g.minitrailspace_disable = false
+        end
+      })
+    end
   }
 }
 

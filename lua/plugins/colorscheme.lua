@@ -26,6 +26,12 @@ return {
             current_theme = vim.fn.system("defaults read -g AppleInterfaceStyle")
             current_theme = current_theme:gsub("\n", "")
             vim.o.background = (current_theme == "Dark") and "dark" or "light"
+
+            if (vim.o.background == "light") then
+              require("snacks").config.styles.zen.backdrop.bg = "#ECEFF1"
+            else
+              require("snacks").config.styles.zen.backdrop.bg = "#434C5E"
+            end
           end
         ))
       else

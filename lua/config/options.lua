@@ -6,6 +6,7 @@
 
 vim.opt.breakindent = true
 vim.opt.clipboard = "unnamedplus"
+vim.opt.colorcolumn = "93"
 vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
@@ -14,6 +15,7 @@ vim.opt.lazyredraw = true
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.mouse = 'a'
+vim.opt.ruler = false
 vim.opt.scrolloff = 10
 vim.opt.shiftwidth = 4
 vim.opt.showcmd = false
@@ -27,7 +29,6 @@ vim.opt.tabstop = 4
 vim.opt.textwidth = 92
 vim.opt.undofile = true
 vim.opt.updatetime = 250
-vim.opt.colorcolumn = "93"
 
 vim.opt.number = true
 vim.opt.relativenumber = true
