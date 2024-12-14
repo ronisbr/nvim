@@ -10,7 +10,9 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     version = false,
 
-    opts = { },
+    opts = {
+      create_cmp_source = false,
+    },
   }
 }
 

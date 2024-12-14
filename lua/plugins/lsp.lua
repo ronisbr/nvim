@@ -139,6 +139,7 @@ local servers = {
 return {
   {
     "neovim/nvim-lspconfig",
+    dependencies = { "saghen/blink.cmp" },
     event = { "BufReadPre", "BufNewFile" },
     version = false,
 
@@ -246,6 +247,7 @@ return {
       require("mason-lspconfig").setup_handlers({
         function (server_name)
           local server = servers[server_name] or {}
+          server.capabilities = require("blink.cmp").get_lsp_capabilities(server.capabilities)
           require("lspconfig")[server_name].setup(server)
         end,
       })
