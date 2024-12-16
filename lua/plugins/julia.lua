@@ -11,6 +11,7 @@ return {
     version = false,
 
     config = function()
+      vim.g.latex_to_unicode_tab = false
       vim.g.latex_to_unicode_auto = true
     end
   }

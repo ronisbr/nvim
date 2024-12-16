@@ -10,7 +10,7 @@ return {
   version = 'v0.*',
 
   opts = {
-    keymap = { preset = "enter" },
+    keymap = { preset = "super-tab" },
 
     appearance = {
       use_nvim_cmp_as_default = false,
