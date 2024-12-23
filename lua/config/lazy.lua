@@ -39,7 +39,13 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 
     vim.api.nvim_set_hl(
       0,
-      "@function.macro.call",
+      "@function.macro.julia",
+      { fg = c.nano_salient_color, bold = true }
+    )
+
+    vim.api.nvim_set_hl(
+      0,
+      "@function.macro.call.julia",
       { fg = c.nano_salient_color, bold = true }
     )
 
