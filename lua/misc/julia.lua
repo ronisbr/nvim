@@ -229,12 +229,13 @@ local function create_julia_func_doc(input)
   table.insert(output, "    " .. suppress_kwargs(func_decl) .. " -> <++>")
   table.insert(output, "")
   table.insert(output, "<++>")
-  table.insert(output, "")
 
   -- Arguments.
   local args = create_args_info(func_decl)
 
   if (next(args) ~= nil) then
+    table.insert(output, "")
+
     for _, v in ipairs(args) do
       table.insert(output, v)
     end
