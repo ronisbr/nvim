@@ -170,7 +170,10 @@ return {
           bg = "#ECEFF1",
           blend = 10,
           transparent = true
-        }
+        },
+        height = 0,
+        -- Show the window above the command line.
+        zindex = 1000
       }
     }
   },
