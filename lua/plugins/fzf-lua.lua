@@ -35,6 +35,14 @@ return {
       silent = true
     },
     {
+      "<Leader>fc",
+      function()
+        require("fzf-lua").command_history()
+      end,
+      desc = "Find in Command History",
+      silent = true
+    },
+    {
       "<Leader>fh",
       function()
         require("fzf-lua").helptags()
