@@ -37,15 +37,15 @@ return {
           },
           {
             icon = " ",
-            key = "g",
+            key = "t",
             desc = "Find Text",
-            action = ":lua require('mini.pick').builtin['grep_live']()"
+            action = ":lua require('fzf-lua').live_grep_native()"
           },
           {
             icon = " ",
             key = "r",
             desc = "Recent Files",
-            action = ":lua require('mini.extra').pickers.oldfiles()"
+            action = ":lua require('fzf-lua').oldfiles()"
           },
           {
             icon = " ",
