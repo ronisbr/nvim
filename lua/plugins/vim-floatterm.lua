@@ -31,7 +31,7 @@ return {
       vim.g.floaterm_borderchars = '─│─│╭╮╯╰'
 
       -- Set the float term border.
-      vim.cmd [[hi FloatermBorder guibg=none guifg=none]]
+      vim.cmd [[hi FloatermBorder ctermbg=none ctermfg=none guibg=none guifg=none]]
     end,
   }
 }
