@@ -33,4 +33,23 @@ vim.opt.updatetime = 250
 vim.opt.number = true
 vim.opt.relativenumber = true
 
+-- Neovide ---------------------------------------------------------------------------------
+
+if vim.g.neovide then
+  vim.o.guifont = "JetBrains Mono,Symbols Nerd Font Mono:h15"
+
+  vim.g.neovide_cursor_animation_length = 0.05
+  vim.g.neovide_floating_blur_amount_x = 6.0
+  vim.g.neovide_floating_blur_amount_y = 6.0
+  vim.g.neovide_floating_corner_radius = 0.4
+  vim.g.neovide_floating_shadow = true
+  vim.g.neovide_floating_z_height = 10
+  vim.g.neovide_light_angle_degrees = 0
+  vim.g.neovide_light_radius = 5
+  vim.g.neovide_padding_bottom = 10
+  vim.g.neovide_padding_left = 10
+  vim.g.neovide_padding_right = 10
+  vim.g.neovide_padding_top = 10
+end
+
 -- vim: ts=2 sts=2 sw=2 et
