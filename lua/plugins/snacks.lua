@@ -4,6 +4,34 @@
 --
 -- -----------------------------------------------------------------------------------------
 
+local M = { }
+local map = vim.keymap.set
+
+-- Toggle the floating terminal.
+function M.toggle_terminal()
+  -- We need to compute the size of the window and terminal here to make sure the latter
+  -- appears centered on the screen.
+  local win_width   = vim.api.nvim_list_uis()[1].height
+  local win_height  = vim.api.nvim_list_uis()[1].width
+  local term_width  = math.floor(win_width * 0.8)
+  local term_height = math.floor(win_height * 0.8)
+  local term_row    = math.floor((win_width - term_width) / 2)
+  local term_col    = math.floor((win_height - term_height) / 2)
+
+  Snacks.terminal.toggle(
+    "/bin/zsh",
+    {
+      win = {
+        width = 0.8,
+        height = 0.8,
+        border = "rounded",
+        row = term_row,
+        col = term_col
+      }
+    }
+  )
+end
+
 return {
   "folke/snacks.nvim",
   priority = 1000,
@@ -162,10 +190,25 @@ return {
 
     quickfile = { enabled = true },
 
+    -- terminal ----------------------------------------------------------------------------
+
+    terminal = {
+      win = {
+        keys = {
+        }
+      }
+    },
+
     -- Styles ------------------------------------------------------------------------------
 
     styles = {
       lazygit = {
+        wo = {
+          winhighlight = "Normal:Normal"
+        }
+      },
+      terminal = {
+        border = "rounded",
         wo = {
           winhighlight = "Normal:Normal"
         }
@@ -199,6 +242,11 @@ return {
       "<leader>sn",
       function() Snacks.notifier.show_history() end,
       desc = "Notification History"
+    },
+    {
+      "<leader>stt",
+      M.toggle_terminal,
+      desc = "Toggle Floating Terminal"
     },
     {
       "<leader>sr",
@@ -235,6 +283,11 @@ return {
       function() Snacks.notifier.hide() end,
       desc = "Dismiss All Notifications"
     },
+    {
+      "<F5>",
+      M.toggle_terminal,
+      desc = "Toggle Floating Terminal"
+    }
   },
 
   init = function()
@@ -287,6 +340,17 @@ return {
           "wrap",
           { name = "Wrap" }
         ):map("<leader>stw")
+
+        -- Keymaps for the Plugins ---------------------------------------------------------
+
+        -- terminal --
+
+        map(
+          "t",
+          "<F5>",
+          "<C-\\><C-n>:lua require('snacks').terminal.toggle('/bin/zsh')<CR>",
+          { silent = true }
+        )
 
         -- Additional Configuraton -----------------------------------------------------------
 
