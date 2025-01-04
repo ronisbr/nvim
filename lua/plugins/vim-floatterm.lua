@@ -11,13 +11,48 @@ return {
     version = false,
 
     keys = {
-      { "<Leader>ot", ":FloattermToggle<CR>", desc = "Open Terminal", silent = true },
-      { "<F2>", "<Esc><Cmd>FloatermNew<CR>", desc = "New Floatterm", mode = {"i", "n", "v"} },
-      { "<F5>", "<Esc><Cmd>FloatermToggle<CR>", desc = "Toggle Floatterm", mode = {"i", "n", "v"} },
-      { "<F2>", "<C-\\><C-n><Cmd>FloatermNew<CR>", desc = "New Floatterm", mode = "t" },
-      { "<F3>", "<C-\\><C-n><Cmd>FloatermPrev<CR>", desc = "Previous Floatterm", mode = "t" },
-      { "<F4>", "<C-\\><C-n><Cmd>FloatermNext<CR>", desc = "Next Floatterm", mode = "t" },
-      { "<F5>", "<C-\\><C-n><Cmd>FloatermToggle<CR>", desc = "Toggle Floatterm", mode = "t" },
+      {
+        "<Leader>ot",
+        ":FloatermToggle<CR>",
+        desc = "Open Terminal",
+        silent = true
+      },
+      {
+        "<F2>",
+        "<Esc><Cmd>FloatermNew<CR>",
+        desc = "New Floatterm",
+        mode = {"i", "n", "v"}
+      },
+      {
+        "<F5>",
+        "<Esc><Cmd>FloatermToggle<CR>",
+        desc = "Toggle Floatterm",
+        mode = {"i", "n", "v"}
+      },
+      {
+        "<F2>",
+        "<C-\\><C-n><Cmd>FloatermNew<CR>",
+        desc = "New Floatterm",
+        mode = "t"
+      },
+      {
+        "<F3>",
+        "<C-\\><C-n><Cmd>FloatermPrev<CR>",
+        desc = "Previous Floatterm",
+        mode = "t"
+      },
+      {
+        "<F4>",
+        "<C-\\><C-n><Cmd>FloatermNext<CR>",
+        desc = "Next Floatterm",
+        mode = "t"
+      },
+      {
+        "<F5>",
+        "<C-\\><C-n><Cmd>FloatermToggle<CR>",
+        desc = "Toggle Floatterm",
+        mode = "t"
+      },
     },
 
     config = function ()
