@@ -304,6 +304,14 @@ return {
             })
           end,
         })
+
+        -- Neovide Configration ------------------------------------------------------------
+
+        -- We add a border to the lazygit window when using Neovide to make it look better
+        -- given the rounded corners.
+        if vim.g.neovide then
+          require("snacks").config.styles.lazygit.border = "rounded"
+        end
       end,
     })
   end,
