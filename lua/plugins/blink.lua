@@ -10,7 +10,10 @@ return {
   version = 'v0.*',
 
   opts = {
-    keymap = { preset = "super-tab" },
+    keymap = {
+      preset = "super-tab",
+      ["<C-/>"] = { "hide" },
+    },
 
     appearance = {
       use_nvim_cmp_as_default = false,
