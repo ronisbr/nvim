@@ -165,6 +165,11 @@ return {
     -- Styles ------------------------------------------------------------------------------
 
     styles = {
+      lazygit = {
+        wo = {
+          winhighlight = "Normal:Normal"
+        }
+      },
       zen = {
         backdrop = {
           blend = 25,
