@@ -22,11 +22,17 @@ function M.toggle_terminal()
     "/bin/zsh",
     {
       win = {
-        width = 0.8,
-        height = 0.8,
         border = "rounded",
+        col = term_col,
         row = term_row,
-        col = term_col
+        height = 0.8,
+        width = 0.8,
+        keys = {
+          -- The default keybindings for changing to normal mode after pressing <esc> two
+          -- times conflicts with bracketed paste mode in Julia REPL. Hence, we will disable
+          -- it. Thus, to change to normal mode, we need to enter <C-\><C-n>.
+          term_normal = {"<esc>", "<esc>", mode = "t"}
+        }
       }
     }
   )
@@ -190,15 +196,6 @@ return {
 
     quickfile = { enabled = true },
 
-    -- terminal ----------------------------------------------------------------------------
-
-    terminal = {
-      win = {
-        keys = {
-        }
-      }
-    },
-
     -- Styles ------------------------------------------------------------------------------
 
     styles = {
@@ -207,12 +204,13 @@ return {
           winhighlight = "Normal:Normal"
         }
       },
+
       terminal = {
-        border = "rounded",
         wo = {
           winhighlight = "Normal:Normal"
         }
       },
+
       zen = {
         backdrop = {
           blend = 25,
@@ -286,8 +284,9 @@ return {
     {
       "<F5>",
       M.toggle_terminal,
-      desc = "Toggle Floating Terminal"
-    }
+      desc = "Toggle Floating Terminal",
+      mode = {"i", "n"}
+    },
   },
 
   init = function()
