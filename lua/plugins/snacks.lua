@@ -9,22 +9,11 @@ local map = vim.keymap.set
 
 -- Toggle the floating terminal.
 function M.toggle_terminal()
-  -- We need to compute the size of the window and terminal here to make sure the latter
-  -- appears centered on the screen.
-  local win_width   = vim.api.nvim_list_uis()[1].height
-  local win_height  = vim.api.nvim_list_uis()[1].width
-  local term_width  = math.floor(win_width * 0.8)
-  local term_height = math.floor(win_height * 0.8)
-  local term_row    = math.floor((win_width - term_width) / 2)
-  local term_col    = math.floor((win_height - term_height) / 2)
-
   Snacks.terminal.toggle(
     "/bin/zsh",
     {
       win = {
         border = "rounded",
-        col = term_col,
-        row = term_row,
         height = 0.8,
         width = 0.8,
         keys = {
@@ -178,7 +167,7 @@ return {
 
     -- input -------------------------------------------------------------------------------
 
-    input = { enabled = true },
+    input = { enabled = false },
 
     -- notifier ----------------------------------------------------------------------------
 
@@ -202,7 +191,8 @@ return {
       lazygit = {
         wo = {
           winhighlight = "Normal:Normal"
-        }
+        },
+        border = "rounded"
       },
 
       terminal = {
@@ -354,19 +344,19 @@ return {
         -- Additional Configuraton -----------------------------------------------------------
 
         -- Use vim.notify to show LSP progress.
-        vim.api.nvim_create_autocmd("LspProgress", {
-          callback = function(ev)
-            local spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
-            vim.notify(vim.lsp.status(), "info", {
-              id = "lsp_progress",
-              title = "LSP Progress",
-              opts = function(notif)
-                notif.icon = ev.data.params.value.kind == "end" and " "
-                or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
-              end,
-            })
-          end,
-        })
+        -- vim.api.nvim_create_autocmd("LspProgress", {
+        --   callback = function(ev)
+        --     local spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+        --     vim.notify(vim.lsp.status(), "info", {
+        --       id = "lsp_progress",
+        --       title = "LSP Progress",
+        --       opts = function(notif)
+        --         notif.icon = ev.data.params.value.kind == "end" and " "
+        --         or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
+        --       end,
+        --     })
+        --   end,
+        -- })
 
         -- Neovide Configration ------------------------------------------------------------
 
