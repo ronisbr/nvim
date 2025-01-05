@@ -11,7 +11,7 @@ vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
 vim.opt.inccommand = "nosplit"
-vim.opt.lazyredraw = true
+vim.opt.lazyredraw = false
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.mouse = 'a'
@@ -38,18 +38,24 @@ vim.opt.relativenumber = true
 if vim.g.neovide then
   vim.o.guifont = "JetBrains Mono,Symbols Nerd Font Mono:h15"
 
-  vim.g.neovide_cursor_animation_length = 0.02
+  vim.g.neovide_cursor_animation_length = 0.05
   vim.g.neovide_floating_blur_amount_x = 6.0
   vim.g.neovide_floating_blur_amount_y = 6.0
   vim.g.neovide_floating_corner_radius = 0.4
-  vim.g.neovide_floating_shadow = true
-  vim.g.neovide_floating_z_height = 10
-  vim.g.neovide_light_angle_degrees = 0
-  vim.g.neovide_light_radius = 5
   vim.g.neovide_padding_bottom = 10
   vim.g.neovide_padding_left = 10
   vim.g.neovide_padding_right = 10
   vim.g.neovide_padding_top = 10
+  vim.g.neovide_scroll_animation_length = 0.1
+
+  -- We must disable shadows until this bug is fixed:
+  --
+  --     https://github.com/neovide/neovide/issues/2931
+  --
+  vim.g.neovide_floating_shadow = false
+  -- vim.g.neovide_floating_z_height = 10
+  -- vim.g.neovide_light_angle_degrees = 0
+  -- vim.g.neovide_light_radius = 5
 end
 
 -- vim: ts=2 sts=2 sw=2 et
