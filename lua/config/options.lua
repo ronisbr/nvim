@@ -38,7 +38,7 @@ vim.opt.relativenumber = true
 if vim.g.neovide then
   vim.o.guifont = "JetBrains Mono,Symbols Nerd Font Mono:h15"
 
-  vim.g.neovide_cursor_animation_length = 0.05
+  vim.g.neovide_cursor_animation_length = 0.02
   vim.g.neovide_floating_blur_amount_x = 6.0
   vim.g.neovide_floating_blur_amount_y = 6.0
   vim.g.neovide_floating_corner_radius = 0.4
