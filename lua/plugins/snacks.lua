@@ -206,6 +206,26 @@ return {
 
   keys = {
     {
+      "<leader>sd",
+      function() Snacks.notifier.hide() end,
+      desc = "Dismiss All Notifications"
+    },
+    {
+      "<leader>sn",
+      function() Snacks.notifier.show_history() end,
+      desc = "Notification History"
+    },
+    {
+      "<leader>sr",
+      function() Snacks.rename.rename_file() end,
+      desc = "Rename File"
+    },
+    {
+      "<leader>sS",
+      function() Snacks.scratch.select() end,
+      desc = "Select Scratch Buffer"
+    },
+    {
       "<leader>sz",
       function() Snacks.zen() end,
       desc = "Toggle Zen Mode"
@@ -215,26 +235,22 @@ return {
       function() Snacks.scratch() end,
       desc = "Toggle Scratch Buffer"
     },
+
+    -- Buffers -----------------------------------------------------------------------------
+
     {
-      "<leader>sS",
-      function() Snacks.scratch.select() end,
-      desc = "Select Scratch Buffer"
+      "<leader>sbc",
+      function() Snacks.bufdelete.all() end,
+      desc = "Delete All Buffers"
     },
     {
-      "<leader>sn",
-      function() Snacks.notifier.show_history() end,
-      desc = "Notification History"
+      "<leader>sbd",
+      function() Snacks.bufdelete() end,
+      desc = "Delete Current Buffer"
     },
-    {
-      "<leader>stt",
-      M.toggle_terminal,
-      desc = "Toggle Floating Terminal"
-    },
-    {
-      "<leader>sr",
-      function() Snacks.rename.rename_file() end,
-      desc = "Rename File"
-    },
+
+    -- Git ---------------------------------------------------------------------------------
+
     {
       "<leader>sgb",
       function() Snacks.gitbrowse() end,
@@ -260,10 +276,13 @@ return {
       function() Snacks.lazygit.log() end,
       desc = "Lazygit Log (cwd)"
     },
+
+    -- Terminal ----------------------------------------------------------------------------
+
     {
-      "<leader>sd",
-      function() Snacks.notifier.hide() end,
-      desc = "Dismiss All Notifications"
+      "<leader>stt",
+      M.toggle_terminal,
+      desc = "Toggle Floating Terminal"
     },
     {
       "<F5>",
@@ -287,10 +306,6 @@ return {
         end
 
         vim.print = _G.dd -- Override print to use snacks for `:=` command
-
-        -- Use Snacks to delete buffers using the abbreviation `:bd`.
-        vim.keymap.set("c", "bd", "lua Snacks.bufdelete()", { silent = true })
-
 
         -- Toggle Mappings -----------------------------------------------------------------
 
