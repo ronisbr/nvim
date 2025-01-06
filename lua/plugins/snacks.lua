@@ -15,13 +15,7 @@ function M.toggle_terminal()
       win = {
         border = "rounded",
         height = 0.8,
-        width = 0.8,
-        keys = {
-          -- The default keybindings for changing to normal mode after pressing <esc> two
-          -- times conflicts with bracketed paste mode in Julia REPL. Hence, we will disable
-          -- it. Thus, to change to normal mode, we need to enter <C-\><C-n>.
-          term_normal = {"<esc>", "<esc>", mode = "t"}
-        }
+        width = 0.8
       }
     }
   )
