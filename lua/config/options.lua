@@ -56,6 +56,22 @@ if vim.g.neovide then
   -- vim.g.neovide_floating_z_height = 10
   -- vim.g.neovide_light_angle_degrees = 0
   -- vim.g.neovide_light_radius = 5
+
+  -- Fix pasting using `CMD+v` on macOS. Otherwise, we will not be able to paste to the
+  -- terminal using `CMD+v` on Neovide. For more information, see:
+  --
+  --    https://github.com/neovide/neovide/issues/1263
+  vim.keymap.set(
+    {'n', 'v', 's', 'x', 'o', 'i', 'l', 'c', 't'},
+    '<D-v>',
+    function()
+      vim.api.nvim_paste(vim.fn.getreg('+'), true, -1)
+    end,
+    {
+      noremap = true,
+      silent = true
+    }
+  )
 end
 
 -- vim: ts=2 sts=2 sw=2 et
