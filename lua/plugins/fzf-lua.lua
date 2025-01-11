@@ -29,7 +29,7 @@ return {
     {
       "<Leader>fb",
       function()
-        require("fzf-lua").lines()
+        require("fzf-lua").buffers()
       end,
       desc = "Find Opened Buffers",
       silent = true
@@ -56,6 +56,14 @@ return {
         require("fzf-lua").live_grep_native()
       end,
       desc = "Find with Grep",
+      silent = true
+    },
+    {
+      "<Leader>fl",
+      function()
+        require("fzf-lua").lines()
+      end,
+      desc = "Find in Opened Buffer Lines",
       silent = true
     },
     {
