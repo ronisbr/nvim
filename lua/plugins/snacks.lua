@@ -56,13 +56,13 @@ return {
             icon = " ",
             key = "t",
             desc = "Find Text",
-            action = ":lua require('fzf-lua').live_grep_native()"
+            action = ":lua Snacks.picker.grep()"
           },
           {
             icon = " ",
             key = "r",
             desc = "Recent Files",
-            action = ":lua require('fzf-lua').oldfiles()"
+            action = ":lua Snacks.picker.recent()"
           },
           {
             icon = " ",
@@ -170,6 +170,20 @@ return {
       timeout = 3000,
     },
 
+    -- picker ------------------------------------------------------------------------------
+
+    picker = {
+      enabled = true,
+
+      win = {
+        input = {
+          keys = {
+            ["<Esc>"] = { "close", mode = { "n", "i" } }
+          }
+        }
+      }
+    },
+
     -- scope -------------------------------------------------------------------------------
 
     scope = { enabled = true },
@@ -183,16 +197,7 @@ return {
 
     styles = {
       lazygit = {
-        wo = {
-          winhighlight = "Normal:Normal"
-        },
         border = "rounded"
-      },
-
-      terminal = {
-        wo = {
-          winhighlight = "Normal:Normal"
-        }
       },
 
       zen = {
@@ -275,6 +280,81 @@ return {
       "<leader>sgl",
       function() Snacks.lazygit.log() end,
       desc = "Lazygit Log (cwd)"
+    },
+
+    -- Pickers -----------------------------------------------------------------------------
+
+    {
+      "<Leader>/",
+      function()
+        Snacks.picker.lines()
+      end,
+      desc = "Fuzzily Search in Current Buffer",
+      silent = true,
+    },
+    {
+      "<Leader>.",
+      function()
+        Snacks.picker.files()
+      end,
+      desc = "Find Files in ./",
+      silent = true
+    },
+    {
+      "<Leader>:",
+      function()
+        Snacks.picker.command_history()
+      end,
+      desc = "Find in Command History",
+      silent = true
+    },
+    {
+      "<Leader>fb",
+      function()
+        Snacks.picker.buffers()
+      end,
+      desc = "Find Opened Buffers",
+      silent = true
+    },
+    {
+      "<Leader>fh",
+      function()
+        Snacks.picker.help()
+      end,
+      desc = "Find Help",
+      silent = true
+    },
+    {
+      "<Leader>fi",
+      function()
+        Snacks.picker.grep()
+      end,
+      desc = "Find with Grep",
+      silent = true
+    },
+    {
+      "<Leader>fl",
+      function()
+        Snacks.picker.grep_buffers()
+      end,
+      desc = "Find in Opened Buffer Lines",
+      silent = true
+    },
+    {
+      "<Leader>fr",
+      function()
+        Snacks.picker.recent()
+      end,
+      desc = "Find Recent Files",
+      silent = true
+    },
+    {
+      "<Leader>fz",
+      function()
+        Snacks.picker()
+      end,
+      desc = "Snacks Picker Builtin Commands",
+      silent = true
     },
 
     -- Terminal ----------------------------------------------------------------------------
