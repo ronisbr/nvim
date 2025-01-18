@@ -101,6 +101,10 @@ require("lazy").setup(
 
     install = {
       colorscheme = { "nano-theme" }
+    },
+
+    ui = {
+      border = "rounded",
     }
   }
 )
