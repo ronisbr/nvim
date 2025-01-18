@@ -242,7 +242,11 @@ return {
     },
 
     config = function()
-      require("mason").setup()
+      require("mason").setup({
+        ui = {
+          border = "rounded",
+        }
+      })
       require("mason-lspconfig").setup()
       require("mason-lspconfig").setup_handlers({
         function (server_name)
