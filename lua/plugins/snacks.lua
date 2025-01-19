@@ -178,7 +178,10 @@ return {
       win = {
         input = {
           keys = {
-            ["<Esc>"] = { "close", mode = { "n", "i" } }
+            -- We will close the dialogs if we press `<Esc>`.
+            ["<Esc>"] = { "close", mode = { "n", "i" } },
+            -- We will go to normal mode if we press `<C-c>`.
+            ["<C-c>"] = "close"
           }
         }
       }
