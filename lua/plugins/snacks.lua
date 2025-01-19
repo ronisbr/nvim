@@ -293,7 +293,7 @@ return {
       silent = true,
     },
     {
-      "<Leader>.",
+      "<Leader><Space>",
       function()
         Snacks.picker.files()
       end,
