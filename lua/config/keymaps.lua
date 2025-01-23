@@ -114,7 +114,7 @@ map(
   "<Leader>tb",
   "<Cmd>set formatoptions-=ro<CR>" ..
   "0v$hy93P\"_D\"_d92|j0<Cmd>center<CR>0R<C-R>0<Esc>o<Esc>P<Cmd>right<CR>khjllv$hykpkyyjpjdd0" ..
-  "<Cmd>set formatoptions+=ro",
+  "<Cmd>set formatoptions+=ro<CR>",
   {
     desc = "Convert to Block"
   }
