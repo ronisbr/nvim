@@ -1,0 +1,32 @@
+{
+  "makieaxisconf" : {
+    "prefix": "makieaxisconf",
+    "body": [
+      "spinewidth         = 4,",
+      "title              = \"Title\",",
+      "titlesize          = 36,",
+      "xgridwidth         = 2,",
+      "xlabel             = \"X Label\",",
+      "xlabelsize         = 32,",
+      "xminorgridvisible  = true,",
+      "xminorgridwidth    = 2,",
+      "xminorticks        = Makie.IntervalsBetween(10),",
+      "xminorticksvisible = true,",
+      "xminortickwidth    = 2,",
+      "xticklabelsize     = 28,",
+      "xtickwidth         = 4,",
+      "ygridwidth         = 2,",
+      "ylabel             = \"Y Label\",",
+      "ylabelsize         = 32,",
+      "yminorgridvisible  = true,",
+      "yminorgridwidth    = 2,",
+      "yminorticks        = Makie.IntervalsBetween(5),",
+      "yminorticksvisible = true,",
+      "yminortickwidth    = 2,",
+      "yticklabelsize     = 28,",
+      "ytickwidth         = 4,"
+    ],
+    "description": "Default configuration for Makie Axis"
+  }
+}
+
