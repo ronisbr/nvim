@@ -151,6 +151,13 @@ return {
       },
     },
 
+    -- explorer ----------------------------------------------------------------------------
+
+    explorer = {
+      enabled = true,
+      replace_netrw = true,
+    },
+
     -- indent ------------------------------------------------------------------------------
 
     indent = {
@@ -317,6 +324,14 @@ return {
         Snacks.picker.buffers()
       end,
       desc = "Find Opened Buffers",
+      silent = true
+    },
+    {
+      "<Leader>ff",
+      function()
+        Snacks.picker.explorer()
+      end,
+      desc = "Open File Explorer",
       silent = true
     },
     {

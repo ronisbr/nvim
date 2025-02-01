@@ -481,16 +481,16 @@ return {
       --   desc = "Find Diagnostics",
       --   silent = true
       -- },
-      {
-        "<Leader>ff",
-        function()
-          require("mini.extra").pickers.explorer({
-            cwd = vim.fs.dirname(vim.fn.expand("%:p"))
-          })
-        end,
-        desc = "Open Explorer in the Current File Path",
-        silent = true
-      },
+      -- {
+      --   "<Leader>ff",
+      --   function()
+      --     require("mini.extra").pickers.explorer({
+      --       cwd = vim.fs.dirname(vim.fn.expand("%:p"))
+      --     })
+      --   end,
+      --   desc = "Open Explorer in the Current File Path",
+      --   silent = true
+      -- },
       -- {
       --   "<Leader>fh",
       --   function()
