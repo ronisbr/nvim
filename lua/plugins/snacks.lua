@@ -44,7 +44,7 @@ return {
             icon = " ",
             key = "f",
             desc = "Find File",
-            action = ":lua require('mini.pick').builtin['files']()"
+            action = ":lua Snacks.picker.explorer()"
           },
           {
             icon = " ",
@@ -68,7 +68,7 @@ return {
             icon = " ",
             key = "c",
             desc = "Config",
-            action = ":lua require('mini.extra').pickers.explorer({cwd = vim.fn.stdpath('config')})"
+            action = ":lua Snacks.picker.explorer({cwd = vim.fn.stdpath('config')})"
           },
           {
             icon = " ",
