@@ -68,11 +68,14 @@ map(
 map(
   "n",
   "<Leader>ta",
+  "<Cmd>set lazyredraw<CR>" ..
   "<Cmd>set formatoptions-=ro<CR>" ..
   "mavy`]a<CR><Esc><Cmd>right<CR>k93PDd92|j0whv$hykP`]lDjdd`a" ..
-  "<Cmd>set formatoptions+=ro<CR>",
+  "<Cmd>set formatoptions+=ro<CR>" ..
+  "<Cmd>set nolazyredraw<CR>",
   {
-    desc = "Left Align with Character Under the Cursor"
+    desc = "Left Align with Character Under the Cursor",
+    silent = true
   }
 )
 
@@ -80,28 +83,38 @@ map(
   "v",
   "<Leader>ta",
   "yma<Cmd>set formatoptions-=ro<CR>" ..
+  "<Cmd>set lazyredraw<CR>" ..
   "`]a<CR><Esc><Cmd>right<CR>k93pDd92|j0whv$hykP`]lDjdd`a" ..
-  "<Cmd>set formatoptions+=ro<CR>",
+  "<Cmd>set formatoptions+=ro<CR>" ..
+  "<Cmd>set nolazyredraw<CR>",
   {
-    desc = "Left Align with Selected Pattern"
+    desc = "Left Align with Selected Pattern",
+    silent = true
   }
 )
 
 map(
   "n",
   "<Leader>tf",
-  "vy93pDd92|",
+  "<Cmd>set lazyredraw<CR>" ..
+  "vy93pDd92|" ..
+  "<Cmd>set nolazyredraw<CR>",
   {
-    desc = "Fill with Character Under the Cursor"
+    desc = "Fill with Character Under the Cursor",
+    silent = true
   }
 )
 
 map(
   "v",
   "<Leader>tf",
-  "y93pDd92|",
+  "y" ..
+  "<Cmd>set lazyredraw<CR>" ..
+  "93pDd92|" ..
+  "<Cmd>set nolazyredraw<CR>",
   {
     desc = "Fill with Selected Pattern",
+    silent = true
   }
 )
 
@@ -112,11 +125,14 @@ map(
 map(
   "n",
   "<Leader>tb",
+  "<Cmd>set lazyredraw<CR>" ..
   "<Cmd>set formatoptions-=ro<CR>" ..
   "0v$hy93P\"_D\"_d92|j0<Cmd>center<CR>0R<C-R>0<Esc>o<Esc>P<Cmd>right<CR>khjllv$hykpkyyjpjdd0" ..
-  "<Cmd>set formatoptions+=ro<CR>",
+  "<Cmd>set formatoptions+=ro<CR>" ..
+  "<Cmd>set nolazyredraw<CR>",
   {
-    desc = "Convert to Block"
+    desc = "Convert to Block",
+    silent = true
   }
 )
 
