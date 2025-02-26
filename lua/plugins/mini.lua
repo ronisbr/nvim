@@ -69,6 +69,21 @@ local modes = setmetatable(
   }
 )
 
+-- We need to redraw the status line if a macro recording starts or end.
+vim.api.nvim_create_autocmd("RecordingEnter", {
+  pattern = "*",
+  callback = function()
+    vim.cmd("redrawstatus")
+  end,
+})
+
+vim.api.nvim_create_autocmd("RecordingLeave", {
+  pattern = "*",
+  callback = function()
+    vim.cmd("redrawstatus")
+  end,
+})
+
 -- .. Functions to Provide Sections to the Status Line .....................................
 
 -- Return the current branch name if we are in a git tree or an empty string otherwise.
@@ -108,6 +123,16 @@ local function ministatusline_location()
   local line_info = string.rep(" ", lines:len() - line:len()) .. line .. "/" .. lines
 
   return " " .. line_info .. " 󰗧 %2v/%-2{virtcol(\"$\") - 1}"
+end
+
+-- Return a string with the current macro being recorded or an empty string if we are not
+-- recording a macro.
+local function ministatusline_macro_recording()
+  if vim.fn.reg_recording() ~= "" then
+    return "󰑊 " .. vim.fn.reg_recording()
+  else
+    return ""
+  end
 end
 
 -- Return the current mode and the highlight to be used in the statusline.
@@ -539,6 +564,7 @@ return {
           local MiniStatusline = require("mini.statusline")
           local LazyStatus     = require("lazy.status")
 
+          local macro         = ministatusline_macro_recording()
           local mode, mode_hl = ministatusline_modes()
           local git           = ministatusline_branch_name()
           local diff          = MiniStatusline.section_diff({ trunc_width = 75 })
@@ -552,6 +578,7 @@ return {
 
           return MiniStatusline.combine_groups({
             { hl = mode_hl,                         strings = { mode } },
+            { hl = "MiniStatuslineMacro",           strings = { macro } },
             { hl = "MiniStatuslineFileinfo",        strings = { fileinfo } },
             { hl = "MiniStatuslineFilename",        strings = { filename } },
             { hl = "MiniStatuslineDevinfo",         strings = { fileencoding, git, diff } },
@@ -572,6 +599,15 @@ return {
         "MiniStatuslineLocation",
         {
           fg = get_color("Comment", "fg#"),
+          bg = get_color("StatusLine", "bg#")
+        }
+      )
+
+      vim.api.nvim_set_hl(
+        0,
+        "MiniStatuslineMacro",
+        {
+          fg = get_color("Special", "fg#"),
           bg = get_color("StatusLine", "bg#")
         }
       )
