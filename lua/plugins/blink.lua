@@ -28,8 +28,6 @@ return {
         "buffer"
       },
     },
-
-    signature = { enabled = true }
   },
 }
 
