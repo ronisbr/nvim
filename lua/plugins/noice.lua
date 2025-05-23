@@ -23,6 +23,10 @@ return {
       lsp_doc_border = true,
     },
 
+    popupmenu = {
+      enabled = false
+    },
+
     views = {
       cmdline_popup = {
         position = {
