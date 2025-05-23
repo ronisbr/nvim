@@ -7,23 +7,58 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    dependencies = { "saghen/blink.cmp" },
+    dependencies = { "echasnovski/mini.completion" },
     event = { "BufReadPre", "BufNewFile" },
     version = false,
 
     config = function()
+
+      -- Configuration of the LSP Clients --------------------------------------------------
+
       vim.lsp.config(
         "*",
         {
-          capabilities = require('blink.cmp').get_lsp_capabilities()
+          capabilities = MiniCompletion.get_lsp_capabilities()
         }
       )
 
+      -- Julia --
       vim.lsp.config("julials", {})
-      vim.lsp.config("lua_ls", {})
 
-      vim.lsp.enable("julials")
-      vim.lsp.enable("lua_ls")
+      -- Lua --
+      vim.lsp.config('lua_ls', {
+        on_init = function(client)
+          if client.workspace_folders then
+            local path = client.workspace_folders[1].name
+            if
+              path ~= vim.fn.stdpath('config')
+              and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
+            then
+              return
+            end
+          end
+
+          client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+            runtime = {
+              version = 'LuaJIT',
+              path = {
+                'lua/?.lua',
+                'lua/?/init.lua',
+              },
+            },
+
+            workspace = {
+              checkThirdParty = false,
+              library = {
+                vim.env.VIMRUNTIME
+              }
+            }
+          })
+        end,
+        settings = {
+          Lua = {}
+        }
+      })
 
       -- Create an autocmd to configure the buffer when the LSP attaches.
       vim.api.nvim_create_autocmd("LspAttach", {
@@ -42,13 +77,18 @@ return {
           map("gD", Snacks.picker.lsp_declarations, "Goto Declaration")
           map("K", vim.lsp.buf.hover, "Hover Documentation")
 
-          map("<Leader>cD",  Snacks.picker.lsp_type_definitions, "Type Definition")
+          map("<Leader>cD", Snacks.picker.lsp_type_definitions, "Type Definition")
           map("<Leader>cd", Snacks.picker.lsp_symbols, "Document Symbols")
           map("<Leader>cw", Snacks.picker.lsp_workspace_symbols, "Workspace Symbols")
           map("<Leader>cr", vim.lsp.buf.rename, "Rename")
           map("<Leader>ca", vim.lsp.buf.code_action, "Action")
         end
       })
+
+      -- Enable LSP Clients ----------------------------------------------------------------
+
+      vim.lsp.enable("julials")
+      vim.lsp.enable("lua_ls")
     end
   },
 }
