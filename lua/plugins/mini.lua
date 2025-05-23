@@ -8,34 +8,6 @@
 --                                    Local Functions                                     --
 --------------------------------------------------------------------------------------------
 
--- mini.clue -------------------------------------------------------------------------------
-
--- -- Compute the mini.clue window width dinamically.
--- local function miniclue_compute_dynamic_width(buf_id)
---   local max_width = 0.4 * vim.o.columns
---   local widths = vim.tbl_map(
---     vim.fn.strdisplaywidth,
---     vim.api.nvim_buf_get_lines(buf_id, 0, -1, false)
---   )
---
---   table.sort(widths)
---
---   for i = #widths, 1, -1 do
---     if widths[i] <= max_width then
---       return widths[i]
---     end
---   end
---
---   return max_width
--- end
---
--- local function miniclue_win_config(buf_id)
---   return {
---     border = "rounded",
---     width = miniclue_compute_dynamic_width(buf_id)
---   }
--- end
-
 -- mini.statusline -------------------------------------------------------------------------
 
 local function get_color(hl_group, attr)
@@ -208,110 +180,16 @@ return {
     opts = {}
   },
 
-  -- mini.clue -----------------------------------------------------------------------------
-
-  -- {
-  --   "echasnovski/mini.clue",
-  --   event = "VeryLazy",
-  --   version = false,
-  --
-  --   config = function()
-  --     local miniclue = require("mini.clue")
-  --
-  --     miniclue.setup({
-  --       clues = {
-  --         miniclue.gen_clues.builtin_completion(),
-  --         miniclue.gen_clues.g(),
-  --         miniclue.gen_clues.marks(),
-  --         miniclue.gen_clues.registers(),
-  --         miniclue.gen_clues.windows(),
-  --         miniclue.gen_clues.z(),
-  --
-  --         -- Description of Mapping Groups -------------------------------------------------
-  --
-  --         { mode = "n", keys = "<Leader>c", desc = "+Code" },
-  --         { mode = "n", keys = "<Leader>f", desc = "+Find" },
-  --         { mode = "n", keys = "<Leader>o", desc = "+Open" },
-  --         { mode = "n", keys = "<Leader>s", desc = "+Snacks" },
-  --         { mode = "n", keys = "<Leader>t", desc = "+Text" },
-  --
-  --         { mode = "n", keys = "<Leader>sg", desc = "+Git" },
-  --         { mode = "n", keys = "<Leader>st", desc = "+Toggle" },
-  --       },
-  --
-  --       -- Set the triggers that will show miniclue window.
-  --       triggers = {
-  --         -- Leader Triggers ---------------------------------------------------------------
-  --
-  --         { mode = "n", keys = "<Leader>" },
-  --         { mode = "x", keys = "<Leader>" },
-  --
-  --         -- Built-in Completion -----------------------------------------------------------
-  --
-  --         { mode = "i", keys = "<C-x>" },
-  --
-  --         -- `g` key -----------------------------------------------------------------------
-  --
-  --         { mode = "n", keys = "g" },
-  --         { mode = "x", keys = "g" },
-  --
-  --         -- Marks -------------------------------------------------------------------------
-  --
-  --         { mode = "n", keys = "\"" },
-  --         { mode = "n", keys = "`" },
-  --         { mode = "x", keys = "\"" },
-  --         { mode = "x", keys = "`" },
-  --
-  --         -- Registers ---------------------------------------------------------------------
-  --
-  --         { mode = "n", keys = "\"" },
-  --         { mode = "x", keys = "\"" },
-  --         { mode = "i", keys = "<C-r>" },
-  --         { mode = "c", keys = "<C-r>" },
-  --
-  --         -- Window Commands ---------------------------------------------------------------
-  --
-  --         { mode = "n", keys = "<C-w>" },
-  --
-  --         -- `z` key -----------------------------------------------------------------------
-  --
-  --         { mode = "n", keys = "z" },
-  --         { mode = "x", keys = "z" },
-  --       },
-  --
-  --       window = {
-  --         delay = 0,
-  --         config = miniclue_win_config,
-  --         scroll_down = "<C-f>",
-  --         scroll_up = "<C-b>",
-  --       },
-  --     })
-  --   end
-  -- },
-
   -- mini.completion -----------------------------------------------------------------------
 
-  -- {
-  --   "echasnovski/mini.completion",
-  --   lazy = false,
-  --   version = false,
-  --
-  --   opts = {
-  --     delay = {
-  --       completion = 1000
-  --     },
-  --
-  --     mappings = {
-  --       force_twostep =  "<C-Space>",
-  --       force_fallback = "<A-Space>",
-  --     },
-  --
-  --     lsp_completion = {
-  --       auto_setup = true,
-  --       source_func = "omnifunc",
-  --     }
-  --   }
-  -- },
+  {
+    "echasnovski/mini.completion",
+    lazy = false,
+    version = false,
+    dependencies = { "echasnovski/mini.snippets" },
+
+    opts = {},
+  },
 
   -- mini.diff -----------------------------------------------------------------------------
 
@@ -424,132 +302,23 @@ return {
     opts = { }
   },
 
-  -- mini.notify ---------------------------------------------------------------------------
+  -- mini.snippets -------------------------------------------------------------------------
 
-  -- {
-  --   "echasnovski/mini.notify",
-  --   lazy = false,
-  --   version = false,
-  --   opts = { },
-  --
-  --   config = function(_, opts)
-  --     local MiniNotify = require("mini.notify")
-  --     MiniNotify.setup(opts)
-  --     vim.notify = MiniNotify.make_notify()
-  --
-  --     -- Keymaps ---------------------------------------------------------------------------
-  --     vim.keymap.set(
-  --       "n",
-  --       "<Leader>sn",
-  --       "<Cmd>lua MiniNotify.show_history()<CR>",
-  --       {
-  --         desc = "Show Notifications",
-  --         silent = true,
-  --       }
-  --     )
-  --   end
-  -- },
+  {
+    "echasnovski/mini.snippets",
+    lazy = false,
+    version = false,
 
-  -- mini.pick -----------------------------------------------------------------------------
-
-  -- {
-  --   "echasnovski/mini.pick",
-  --   version = false,
-  --   cmd = "Pick",
-  --
-  --   dependencies = {
-  --     {
-  --       "echasnovski/mini.extra",
-  --       version = false,
-  --       opts = { }
-  --     }
-  --   },
-  --
-  --   keys = {
-  --     -- {
-  --     --   "<Leader>/",
-  --     --   function()
-  --     --     require("mini.extra").pickers.buf_lines({ scope = "current" })
-  --     --   end,
-  --     --   desc = "Fuzzily Search in Current Buffer",
-  --     --   silent = true,
-  --     -- },
-  --     -- {
-  --     --   "<Leader>.",
-  --     --   function()
-  --     --     require("mini.pick").builtin.files({ })
-  --     --   end,
-  --     --   desc = "Find Files in ./",
-  --     --   silent = true
-  --     -- },
-  --     -- {
-  --     --   "<Leader>f/",
-  --     --   function()
-  --     --     require("mini.extra").pickers.buf_lines({ scope = "all" })
-  --     --   end,
-  --     --   desc = "Find in Open Files",
-  --     --   silent = true,
-  --     -- },
-  --     -- {
-  --     --   "<Leader>fb",
-  --     --   function()
-  --     --     require("mini.pick").builtin.buffers({ })
-  --     --   end,
-  --     --   desc = "Find Existing Buffers",
-  --     --   silent = true
-  --     -- },
-  --     -- {
-  --     --   "<Leader>fd",
-  --     --   function()
-  --     --     require("mini.extra").pickers.diagnostic({ })
-  --     --   end,
-  --     --   desc = "Find Diagnostics",
-  --     --   silent = true
-  --     -- },
-  --     -- {
-  --     --   "<Leader>ff",
-  --     --   function()
-  --     --     require("mini.extra").pickers.explorer({
-  --     --       cwd = vim.fs.dirname(vim.fn.expand("%:p"))
-  --     --     })
-  --     --   end,
-  --     --   desc = "Open Explorer in the Current File Path",
-  --     --   silent = true
-  --     -- },
-  --     -- {
-  --     --   "<Leader>fh",
-  --     --   function()
-  --     --     require("mini.pick").builtin.help({ })
-  --     --   end,
-  --     --   desc = "Find Help",
-  --     --   silent = true
-  --     -- },
-  --     -- {
-  --     --   "<Leader>fi",
-  --     --   function()
-  --     --     require("mini.pick").builtin.grep_live({ })
-  --     --   end,
-  --     --   desc = "Find with Grep",
-  --     --   silent = true
-  --     -- },
-  --     -- {
-  --     --   "<Leader>fr",
-  --     --   function()
-  --     --     require("mini.extra").pickers.oldfiles({ })
-  --     --   end,
-  --     --   desc = "Find Recent Files",
-  --     --   silent = true
-  --     -- }
-  --   },
-  --
-  --   opts = {
-  --     window = {
-  --       config = {
-  --         border = "rounded"
-  --       }
-  --     }
-  --   }
-  -- },
+    config = function()
+      local gen_loader = require('mini.snippets').gen_loader
+      require('mini.snippets').setup({
+        snippets = {
+          gen_loader.from_lang(),
+        },
+      })
+      MiniSnippets.start_lsp_server()
+    end
+  },
 
   -- mini.statusline -----------------------------------------------------------------------
 
