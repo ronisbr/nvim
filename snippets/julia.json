@@ -10,7 +10,7 @@
       "xlabelsize         = 32,",
       "xminorgridvisible  = true,",
       "xminorgridwidth    = 2,",
-      "xminorticks        = Makie.IntervalsBetween(10),",
+      "xminorticks        = Makie.IntervalsBetween(5),",
       "xminorticksvisible = true,",
       "xminortickwidth    = 2,",
       "xticklabelsize     = 28,",
