@@ -71,11 +71,24 @@ return {
 
           -- Keymaps -------------------------------------------------------------------------
 
+          local function lsp_hover()
+            vim.lsp.buf.hover({
+                border = "rounded"
+            })
+          end
+
+          local function lsp_signature()
+            vim.lsp.buf.signature_help({
+                border    = "rounded",
+                title_pos = "left",
+            })
+          end
+
           map("n", "gd", Snacks.picker.lsp_definitions, "Goto Definition")
           map("n", "gr", Snacks.picker.lsp_references, "Goto References")
           map("n", "gI", Snacks.picker.lsp_implementations, "Goto Implementation")
           map("n", "gD", Snacks.picker.lsp_declarations, "Goto Declaration")
-          map("n", "K", vim.lsp.buf.hover, "Hover Documentation")
+          map("n", "K", lsp_hover, "Hover Documentation")
 
           map("n", "<Leader>cD", Snacks.picker.lsp_type_definitions, "Type Definition")
           map("n", "<Leader>cd", Snacks.picker.lsp_symbols, "Document Symbols")
@@ -83,17 +96,7 @@ return {
           map("n", "<Leader>cr", vim.lsp.buf.rename, "Rename")
           map("n", "<Leader>ca", vim.lsp.buf.code_action, "Action")
 
-          map(
-            "i",
-            "<C-s>",
-            function()vim.lsp.buf.signature_help(
-              {
-                border = "rounded",
-                title_pos = "left",
-              })
-            end,
-            "Signature Help"
-          )
+          map("i", "<C-s>", lsp_signature, "Signature Help")
         end
       })
 
