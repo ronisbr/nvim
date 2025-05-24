@@ -188,7 +188,7 @@ return {
     version = false,
     dependencies = { "echasnovski/mini.snippets" },
 
-    opts = {},
+    opts = { },
   },
 
   -- mini.diff -----------------------------------------------------------------------------
@@ -311,12 +311,46 @@ return {
 
     config = function()
       local gen_loader = require('mini.snippets').gen_loader
+
       require('mini.snippets').setup({
         snippets = {
           gen_loader.from_lang(),
         },
       })
+
       MiniSnippets.start_lsp_server()
+
+      -- Keymaps ---------------------------------------------------------------------------
+
+      local function mini_completion_map(mode, lhs, rhs)
+        vim.keymap.set(mode, lhs, rhs, { noremap = true, expr = true })
+      end
+
+      -- Use <Tab> and <S-Tab> to navigate through completion items.
+      mini_completion_map("i", "<Tab>",   "pumvisible() ? '<C-n>' : '<Tab>'")
+      mini_completion_map("i", "<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'")
+
+      -- Configure a more consistent behavior of <CR>.
+      local keys = {
+        ["cr"]        = vim.api.nvim_replace_termcodes("<CR>",      true, true, true),
+        ["ctrl-y"]    = vim.api.nvim_replace_termcodes("<C-y>",     true, true, true),
+        ["ctrl-y_cr"] = vim.api.nvim_replace_termcodes("<C-y><CR>", true, true, true),
+      }
+
+      _G.cr_action = function()
+        if vim.fn.pumvisible() ~= 0 then
+          -- If popup is visible, confirm selected item or add new line otherwise,
+          local item_selected = vim.fn.complete_info()['selected'] ~= -1
+          return item_selected and keys['ctrl-y'] or keys['ctrl-y_cr']
+        else
+          -- If popup is not visible, use plain `<CR>`. You might want to customize
+          -- according to other plugins. For example, to use 'mini.pairs', replace
+          -- next line with `return require('mini.pairs').cr()`.
+          return keys['cr']
+        end
+      end
+
+      mini_completion_map("i", "<CR>", "v:lua._G.cr_action()")
     end
   },
 
