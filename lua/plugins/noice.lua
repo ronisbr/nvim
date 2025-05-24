@@ -10,27 +10,21 @@ return {
   opts = {
     lsp = {
       override = {
-        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-        ["vim.lsp.util.stylize_markdown"] = true,
+        ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
+        ["vim.lsp.util.stylize_markdown"] = false,
       },
-      signature = {
-        auto_open = {
-          enabled = false
-        }
-      }
+      signature = { enabled = false }
     },
 
     presets = {
-      bottom_search = false,
-      command_palette = true,
+      bottom_search         = false,
+      command_palette       = true,
       long_message_to_split = true,
-      inc_rename = false,
-      lsp_doc_border = true,
+      inc_rename            = false,
+      lsp_doc_border        = true,
     },
 
-    popupmenu = {
-      enabled = false
-    },
+    popupmenu = { enabled = false },
 
     views = {
       cmdline_popup = {
