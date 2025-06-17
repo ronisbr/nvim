@@ -10,8 +10,15 @@
 
 -- mini.statusline -------------------------------------------------------------------------
 
+-- Return the color of the attribute `attr` of the highlight group `hl_group`.
 local function get_color(hl_group, attr)
-  return vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID(hl_group)), attr)
+  local hl = vim.api.nvim_get_hl(0, { name = hl_group })
+
+  if hl[attr] then
+    return "#" .. string.format("%06x", hl[attr])
+  end
+
+  return nil
 end
 
 -- Table with used to obtain the current mode and color.
@@ -214,8 +221,8 @@ return {
         0,
         "MiniHipatternsFixme",
         {
-          fg = get_color("Normal", "bg#"),
-          bg = get_color("Error", "fg#")
+          fg = get_color("Normal", "bg"),
+          bg = get_color("Error", "fg")
         }
       )
 
@@ -223,8 +230,8 @@ return {
         0,
         "MiniHipatternsHack",
         {
-          fg = get_color("Normal", "bg#"),
-          bg = get_color("Changed", "fg#")
+          fg = get_color("Normal", "bg"),
+          bg = get_color("Changed", "fg")
         }
       )
 
@@ -232,8 +239,8 @@ return {
         0,
         "MiniHipatternsTodo",
         {
-          fg = get_color("Normal", "bg#"),
-          bg = get_color("Todo", "fg#")
+          fg = get_color("Normal", "bg"),
+          bg = get_color("Todo", "fg")
         }
       )
 
@@ -241,8 +248,8 @@ return {
         0,
         "MiniHipatternsNote",
         {
-          fg = get_color("Normal", "bg#"),
-          bg = get_color("Comment", "fg#")
+          fg = get_color("Normal", "bg"),
+          bg = get_color("Comment", "fg")
         }
       )
 
@@ -401,8 +408,8 @@ return {
         0,
         "MiniStatuslineLocation",
         {
-          fg = get_color("Comment", "fg#"),
-          bg = get_color("StatusLine", "bg#")
+          fg = get_color("Comment", "fg"),
+          bg = get_color("StatusLine", "bg")
         }
       )
 
@@ -410,8 +417,8 @@ return {
         0,
         "MiniStatuslineMacro",
         {
-          fg = get_color("Special", "fg#"),
-          bg = get_color("StatusLine", "bg#")
+          fg = get_color("Special", "fg"),
+          bg = get_color("StatusLine", "bg")
         }
       )
 
@@ -419,8 +426,8 @@ return {
         0,
         "MiniStatuslineSearchInfo",
         {
-          fg = get_color("Special", "fg#"),
-          bg = get_color("StatusLine", "bg#")
+          fg = get_color("Special", "fg"),
+          bg = get_color("StatusLine", "bg")
         }
       )
 
@@ -428,8 +435,8 @@ return {
         0,
         "MiniStatuslineUpdates",
         {
-          fg = get_color("Special", "fg#"),
-          bg = get_color("StatusLine", "bg#")
+          fg = get_color("Special", "fg"),
+          bg = get_color("StatusLine", "bg")
         }
       )
 
@@ -437,8 +444,8 @@ return {
         0,
         "MiniStatuslineVisualSelection",
         {
-          fg = get_color("Special", "fg#"),
-          bg = get_color("StatusLine", "bg#")
+          fg = get_color("Special", "fg"),
+          bg = get_color("StatusLine", "bg")
         }
       )
 
