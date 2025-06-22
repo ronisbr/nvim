@@ -196,6 +196,23 @@ return {
     dependencies = { "echasnovski/mini.snippets" },
 
     opts = { },
+
+    config = function(_, opts)
+      require("mini.completion").setup(opts)
+
+      -- Disable completion in snacks inputs.
+      -- For more informaiton, see:
+      --   https://github.com/folke/snacks.nvim/issues/350#issuecomment-2677860901
+      vim.api.nvim_create_autocmd(
+        "FileType",
+        {
+          pattern = "snacks_picker_input",
+          callback = function()
+            vim.b.minicompletion_disable = true
+          end
+        }
+      )
+    end
   },
 
   -- mini.diff -----------------------------------------------------------------------------
