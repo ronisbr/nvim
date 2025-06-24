@@ -234,41 +234,41 @@ return {
     config = function(_, opts)
       local hipatterns = require("mini.hipatterns")
 
-      vim.api.nvim_set_hl(
-        0,
-        "MiniHipatternsFixme",
-        {
-          fg = get_color("Normal", "bg"),
-          bg = get_color("Error", "fg")
-        }
-      )
-
-      vim.api.nvim_set_hl(
-        0,
-        "MiniHipatternsHack",
-        {
-          fg = get_color("Normal", "bg"),
-          bg = get_color("Changed", "fg")
-        }
-      )
-
-      vim.api.nvim_set_hl(
-        0,
-        "MiniHipatternsTodo",
-        {
-          fg = get_color("Normal", "bg"),
-          bg = get_color("Todo", "fg")
-        }
-      )
-
-      vim.api.nvim_set_hl(
-        0,
-        "MiniHipatternsNote",
-        {
-          fg = get_color("Normal", "bg"),
-          bg = get_color("Comment", "fg")
-        }
-      )
+      -- vim.api.nvim_set_hl(
+      --   0,
+      --   "MiniHipatternsFixme",
+      --   {
+      --     fg = get_color("Normal", "bg"),
+      --     bg = get_color("Error", "fg")
+      --   }
+      -- )
+      --
+      -- vim.api.nvim_set_hl(
+      --   0,
+      --   "MiniHipatternsHack",
+      --   {
+      --     fg = get_color("Normal", "bg"),
+      --     bg = get_color("Changed", "fg")
+      --   }
+      -- )
+      --
+      -- vim.api.nvim_set_hl(
+      --   0,
+      --   "MiniHipatternsTodo",
+      --   {
+      --     fg = get_color("Normal", "bg"),
+      --     bg = get_color("Todo", "fg")
+      --   }
+      -- )
+      --
+      -- vim.api.nvim_set_hl(
+      --   0,
+      --   "MiniHipatternsNote",
+      --   {
+      --     fg = get_color("Normal", "bg"),
+      --     bg = get_color("Comment", "fg")
+      --   }
+      -- )
 
       hipatterns.setup({
         highlighters = {
@@ -423,6 +423,24 @@ return {
     config = function(_, opts)
       vim.api.nvim_set_hl(
         0,
+        "MiniStatuslineFileinfo",
+        {
+          fg = get_color("Comment", "fg"),
+          bg = get_color("StatusLine", "bg")
+        }
+      )
+
+      vim.api.nvim_set_hl(
+        0,
+        "MiniStatuslineFilename",
+        {
+          fg = get_color("Comment", "fg"),
+          bg = get_color("StatusLine", "bg")
+        }
+      )
+
+      vim.api.nvim_set_hl(
+        0,
         "MiniStatuslineLocation",
         {
           fg = get_color("Comment", "fg"),
@@ -435,6 +453,15 @@ return {
         "MiniStatuslineMacro",
         {
           fg = get_color("Special", "fg"),
+          bg = get_color("StatusLine", "bg")
+        }
+      )
+
+      vim.api.nvim_set_hl(
+        0,
+        "MiniStatuslineDevinfo",
+        {
+          fg = get_color("Comment", "fg"),
           bg = get_color("StatusLine", "bg")
         }
       )
