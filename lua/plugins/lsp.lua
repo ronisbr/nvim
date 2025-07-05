@@ -84,19 +84,20 @@ return {
             })
           end
 
-          map("n", "gd", Snacks.picker.lsp_definitions, "Goto Definition")
-          map("n", "gr", Snacks.picker.lsp_references, "Goto References")
-          map("n", "gI", Snacks.picker.lsp_implementations, "Goto Implementation")
-          map("n", "gD", Snacks.picker.lsp_declarations, "Goto Declaration")
-          map("n", "K", lsp_hover, "Hover Documentation")
-
-          map("n", "<Leader>cD", Snacks.picker.lsp_type_definitions, "Type Definition")
-          map("n", "<Leader>cd", Snacks.picker.lsp_symbols, "Document Symbols")
-          map("n", "<Leader>cw", Snacks.picker.lsp_workspace_symbols, "Workspace Symbols")
-          map("n", "<Leader>cr", vim.lsp.buf.rename, "Rename")
-          map("n", "<Leader>ca", vim.lsp.buf.code_action, "Action")
-
+          -- Change the mappings of default Neovim keybindings.
+          map("n", "gO", Snacks.picker.lsp_symbols, "Document Symbols")
+          map("n", "grD", Snacks.picker.lsp_declarations, "Goto Declaration")
+          map("n", "gra", vim.lsp.buf.code_action, "Code Action")
+          map("n", "grd", Snacks.picker.lsp_definitions, "Goto Definition")
+          map("n", "gri", Snacks.picker.lsp_implementations, "Goto Implementation")
+          map("n", "grn", vim.lsp.buf.rename, "Rename")
+          map("n", "grr", Snacks.picker.lsp_references, "Goto References")
+          map("n", "grt", Snacks.picker.lsp_type_definitions, "Type Definition")
+          map("n", "grw", Snacks.picker.lsp_workspace_symbols, "Workspace Symbols")
           map("i", "<C-s>", lsp_signature, "Signature Help")
+
+          -- Other mappings.
+          map("n", "K", lsp_hover, "Hover Documentation")
         end
       })
 
