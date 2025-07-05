@@ -8,6 +8,34 @@
 --                                    Local Functions                                     --
 --------------------------------------------------------------------------------------------
 
+-- mini.clue -------------------------------------------------------------------------------
+
+-- Compute the mini.clue window width dinamically.
+local function miniclue_compute_dynamic_width(buf_id)
+  local max_width = 0.4 * vim.o.columns
+  local widths = vim.tbl_map(
+    vim.fn.strdisplaywidth,
+    vim.api.nvim_buf_get_lines(buf_id, 0, -1, false)
+  )
+
+  table.sort(widths)
+
+  for i = #widths, 1, -1 do
+    if widths[i] <= max_width then
+      return widths[i]
+    end
+  end
+
+  return max_width
+end
+
+local function miniclue_win_config(buf_id)
+  return {
+    border = "rounded",
+    width = miniclue_compute_dynamic_width(buf_id)
+  }
+end
+
 -- mini.statusline -------------------------------------------------------------------------
 
 -- Return the color of the attribute `attr` of the highlight group `hl_group`.
@@ -185,6 +213,88 @@ return {
     version = false,
 
     opts = {}
+  },
+
+   -- mini.clue -----------------------------------------------------------------------------
+
+  {
+    "echasnovski/mini.clue",
+    event = "VeryLazy",
+    version = false,
+
+    config = function()
+      local miniclue = require("mini.clue")
+
+      miniclue.setup({
+        clues = {
+          miniclue.gen_clues.builtin_completion(),
+          miniclue.gen_clues.g(),
+          miniclue.gen_clues.marks(),
+          miniclue.gen_clues.registers(),
+          miniclue.gen_clues.windows(),
+          miniclue.gen_clues.z(),
+
+          -- Description of Mapping Groups -------------------------------------------------
+
+          { mode = "n", keys = "<Leader>c", desc = "+Code" },
+          { mode = "n", keys = "<Leader>f", desc = "+Find" },
+          { mode = "n", keys = "<Leader>o", desc = "+Open" },
+          { mode = "n", keys = "<Leader>s", desc = "+Snacks" },
+          { mode = "n", keys = "<Leader>t", desc = "+Text" },
+
+          { mode = "n", keys = "<Leader>sb", desc = "+Buffers" },
+          { mode = "n", keys = "<Leader>sg", desc = "+Git" },
+          { mode = "n", keys = "<Leader>st", desc = "+Toggle" },
+        },
+
+        -- Set the triggers that will show miniclue window.
+        triggers = {
+          -- Leader Triggers ---------------------------------------------------------------
+
+          { mode = "n", keys = "<Leader>" },
+          { mode = "x", keys = "<Leader>" },
+
+          -- Built-in Completion -----------------------------------------------------------
+
+          { mode = "i", keys = "<C-x>" },
+
+          -- `g` key -----------------------------------------------------------------------
+
+          { mode = "n", keys = "g" },
+          { mode = "x", keys = "g" },
+
+          -- Marks -------------------------------------------------------------------------
+
+          { mode = "n", keys = "\"" },
+          { mode = "n", keys = "`" },
+          { mode = "x", keys = "\"" },
+          { mode = "x", keys = "`" },
+
+          -- Registers ---------------------------------------------------------------------
+
+          { mode = "n", keys = "\"" },
+          { mode = "x", keys = "\"" },
+          { mode = "i", keys = "<C-r>" },
+          { mode = "c", keys = "<C-r>" },
+
+          -- Window Commands ---------------------------------------------------------------
+
+          { mode = "n", keys = "<C-w>" },
+
+          -- `z` key -----------------------------------------------------------------------
+
+          { mode = "n", keys = "z" },
+          { mode = "x", keys = "z" },
+        },
+
+        window = {
+          delay = 0,
+          config = miniclue_win_config,
+          scroll_down = "<C-f>",
+          scroll_up = "<C-b>",
+        },
+      })
+    end
   },
 
   -- mini.completion -----------------------------------------------------------------------
@@ -562,7 +672,7 @@ return {
         end
       })
     end
-  }
+  },
 }
 
 -- vim:ts=2:sts=2:sw=2:et
