@@ -36,6 +36,22 @@ local function miniclue_win_config(buf_id)
   }
 end
 
+-- mini.pick -------------------------------------------------------------------------------
+
+local minipick_window_config = function()
+  local height = math.floor(0.618 * vim.o.lines)
+  local width  = math.floor(0.618 * vim.o.columns)
+
+  return {
+    anchor = 'NW',
+    height = height,
+    width = width,
+    row = math.floor(0.5 * (vim.o.lines - height)),
+    col = math.floor(0.5 * (vim.o.columns - width)),
+    border = "rounded",
+  }
+end
+
 -- mini.statusline -------------------------------------------------------------------------
 
 -- Return the color of the attribute `attr` of the highlight group `hl_group`.
@@ -334,6 +350,93 @@ return {
     opts = { },
   },
 
+  -- mini.files ----------------------------------------------------------------------------
+
+  {
+    "echasnovski/mini.files",
+    lazy = false,
+    version = false,
+
+    config = function(_, opts)
+      require("mini.files").setup(opts)
+
+      vim.keymap.set(
+        "n",
+        "<Leader>ff",
+        MiniFiles.open,
+        {
+          desc    = "Open Explorer",
+          noremap = true,
+          silent  = true
+        }
+      )
+
+      -- Autocmd to configure the mini.files window.
+      vim.api.nvim_create_autocmd(
+        "User",
+        {
+          pattern = "MiniFilesWindowOpen",
+          callback = function(args)
+            local win_id     = args.data.win_id
+            local config     = vim.api.nvim_win_get_config(win_id)
+            config.border    = "rounded"
+            config.title_pos = "right"
+
+            vim.api.nvim_win_set_config(win_id, config)
+          end
+        }
+      )
+
+      -- Mapping to toggle hidden files in the mini.files window.
+      local show_hidden_files = true
+
+      local filter__show_hidden_files = function(fs_entry) return true end
+
+      local filter__hide_hidden_files = function(fs_entry)
+        return not vim.startswith(fs_entry.name, ".")
+      end
+
+      local toggle_hidden_files = function()
+        show_hidden_files = not show_hidden_files
+        local new_filter =
+          show_hidden_files and filter__show_hidden_files or filter__hide_hidden_files
+
+        MiniFiles.refresh({
+          content = {
+            filter = new_filter
+          }
+        })
+      end
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "MiniFilesBufferCreate",
+        callback = function(args)
+          local buf_id = args.data.buf_id
+
+          vim.keymap.set(
+            "n",
+            "g.",
+            toggle_hidden_files,
+            { buffer = buf_id }
+          )
+        end,
+      })
+
+      -- Always start the explorer without showing the hidden files.
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "MiniFilesExplorerOpen",
+        callback = function(args)
+          show_hidden_files = false
+          MiniFiles.refresh({
+            content = {
+              filter = filter__hide_hidden_files
+            }
+          })
+        end,
+      })
+    end
+  },
+
   -- mini.hipatters ------------------------------------------------------------------------
 
   {
@@ -434,6 +537,87 @@ return {
     lazy = false,
     version = false,
     opts = { }
+  },
+
+  -- mini.pick -----------------------------------------------------------------------------
+
+  {
+    "echasnovski/mini.pick",
+    version = false,
+    cmd = "Pick",
+
+    dependencies = {
+      {
+        "echasnovski/mini.extra",
+        version = false,
+        opts = { }
+      }
+    },
+
+    keys = {
+      {
+        "<Leader>/",
+        function()
+          require("mini.extra").pickers.buf_lines({ scope = "current" })
+        end,
+        desc = "Fuzzily Search in Current Buffer",
+        silent = true,
+      },
+      {
+        "<Leader><Space>",
+        function()
+          require("mini.pick").builtin.files({ })
+        end,
+        desc = "Find Files in ./",
+        silent = true
+      },
+      {
+        "<Leader>:",
+        function()
+          require("mini.extra").pickers.history({ scope = ":" })
+        end,
+        desc = "Find in Command History",
+        silent = true
+      },
+      {
+        "<Leader>fb",
+        function()
+          require("mini.pick").builtin.buffers({ })
+        end,
+        desc = "Find Existing Buffers",
+        silent = true
+      },
+      {
+        "<Leader>fh",
+        function()
+          require("mini.pick").builtin.help({ })
+        end,
+        desc = "Find Help",
+        silent = true
+      },
+      {
+        "<Leader>fi",
+        function()
+          require("mini.pick").builtin.grep_live({ })
+        end,
+        desc = "Find with Grep",
+        silent = true
+      },
+      {
+        "<Leader>fr",
+        function()
+          require("mini.extra").pickers.oldfiles({ })
+        end,
+        desc = "Find Recent Files",
+        silent = true
+      }
+    },
+
+    opts = {
+      window = {
+        config = minipick_window_config,
+      }
+    }
   },
 
   -- mini.snippets -------------------------------------------------------------------------

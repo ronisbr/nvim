@@ -179,20 +179,7 @@ return {
 
     -- picker ------------------------------------------------------------------------------
 
-    picker = {
-      enabled = true,
-
-      win = {
-        input = {
-          keys = {
-            -- We will close the dialogs if we press `<Esc>`.
-            ["<Esc>"] = { "close", mode = { "n", "i" } },
-            -- We will go to normal mode if we press `<C-c>`.
-            ["<C-c>"] = "close"
-          }
-        }
-      }
-    },
+    picker = { enabled = false, },
 
     -- scope -------------------------------------------------------------------------------
 
@@ -290,89 +277,6 @@ return {
       "<leader>sgl",
       function() Snacks.lazygit.log() end,
       desc = "Lazygit Log (cwd)"
-    },
-
-    -- Pickers -----------------------------------------------------------------------------
-
-    {
-      "<Leader>/",
-      function()
-        Snacks.picker.lines()
-      end,
-      desc = "Fuzzily Search in Current Buffer",
-      silent = true,
-    },
-    {
-      "<Leader><Space>",
-      function()
-        Snacks.picker.files()
-      end,
-      desc = "Find Files in ./",
-      silent = true
-    },
-    {
-      "<Leader>:",
-      function()
-        Snacks.picker.command_history()
-      end,
-      desc = "Find in Command History",
-      silent = true
-    },
-    {
-      "<Leader>fb",
-      function()
-        Snacks.picker.buffers()
-      end,
-      desc = "Find Opened Buffers",
-      silent = true
-    },
-    {
-      "<Leader>ff",
-      function()
-        Snacks.picker.explorer()
-      end,
-      desc = "Open File Explorer",
-      silent = true
-    },
-    {
-      "<Leader>fh",
-      function()
-        Snacks.picker.help()
-      end,
-      desc = "Find Help",
-      silent = true
-    },
-    {
-      "<Leader>fi",
-      function()
-        Snacks.picker.grep()
-      end,
-      desc = "Find with Grep",
-      silent = true
-    },
-    {
-      "<Leader>fl",
-      function()
-        Snacks.picker.grep_buffers()
-      end,
-      desc = "Find in Opened Buffer Lines",
-      silent = true
-    },
-    {
-      "<Leader>fr",
-      function()
-        Snacks.picker.recent()
-      end,
-      desc = "Find Recent Files",
-      silent = true
-    },
-    {
-      "<Leader>fz",
-      function()
-        Snacks.picker()
-      end,
-      desc = "Snacks Picker Builtin Commands",
-      silent = true
     },
 
     -- Terminal ----------------------------------------------------------------------------
