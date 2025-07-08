@@ -44,7 +44,7 @@ return {
             icon = " ",
             key = "f",
             desc = "Find File",
-            action = ":lua Snacks.picker.explorer()"
+            action = ":Pick files",
           },
           {
             icon = " ",
@@ -56,19 +56,19 @@ return {
             icon = " ",
             key = "t",
             desc = "Find Text",
-            action = ":lua Snacks.picker.grep()"
+            action = ":Pick grep_live"
           },
           {
             icon = " ",
             key = "r",
             desc = "Recent Files",
-            action = ":lua Snacks.picker.recent()"
+            action = ":Pick oldfiles"
           },
           {
             icon = " ",
             key = "c",
             desc = "Config",
-            action = ":lua Snacks.picker.explorer({cwd = vim.fn.stdpath('config')})"
+            action = ":lua MiniFiles.open('~/.config/nvim')"
           },
           {
             icon = " ",
