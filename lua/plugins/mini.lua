@@ -357,6 +357,12 @@ return {
     lazy = false,
     version = false,
 
+    opts = {
+      mappings = {
+        go_in_plus = "<Enter>"
+      }
+    },
+
     config = function(_, opts)
       require("mini.files").setup(opts)
 
