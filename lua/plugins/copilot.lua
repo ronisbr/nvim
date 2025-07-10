@@ -68,6 +68,7 @@ return {
 
   {
     "CopilotC-Nvim/CopilotChat.nvim",
+
     cmd = {
       "CopilotChat",
       "CopilotChatAgents",
@@ -81,11 +82,15 @@ return {
       "CopilotChatTests",
       "CopilotChatToggle",
     },
+
     dependencies = {
       { "github/copilot.vim" },
       { "nvim-lua/plenary.nvim", branch = "master" },
       { "echasnovski/mini.pick" }
     },
+
     build = "make tiktoken",
+
+    opts = { }
   },
 }
