@@ -616,6 +616,14 @@ return {
         end,
         desc = "Find Recent Files",
         silent = true
+      },
+      {
+        "z=",
+        function()
+          require("mini.extra").pickers.spellsuggest({ })
+        end,
+        desc = "Show Spelling Suggestions",
+        silent = true
       }
     },
 
