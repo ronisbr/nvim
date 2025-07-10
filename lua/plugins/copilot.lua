@@ -1,6 +1,6 @@
 -- Description -----------------------------------------------------------------------------
 --
--- Configuration of Github copilot.
+-- Configuration of GitHub Copilot.
 --
 -- -----------------------------------------------------------------------------------------
 
@@ -91,6 +91,13 @@ return {
 
     build = "make tiktoken",
 
-    opts = { }
+    opts = {
+      prompts = {
+        SpellingAndGrammar = {
+          prompt = "Please check the spelling and grammar for the selected code.",
+          description = "Spell and grammar check"
+        },
+      }
+    }
   },
 }
