@@ -1,6 +1,6 @@
 -- Description -----------------------------------------------------------------------------
 --
--- Configuration of GitHub Copilot.
+-- Configuration for GitHub Copilot.
 --
 -- -----------------------------------------------------------------------------------------
 
@@ -56,13 +56,13 @@ return {
   },
 
   -- It is recommended to install the luarocks package `tiktoken_core`. This can be done
-  -- by installing luarocks using `brew`, and then running:
+  -- by installing Luarocks using `brew`, and then running:
   --
   --     luarocks install --lua-version 5.1 tiktoken_core
   --
-  -- It is also necessary to update the `LUA_CPATH` environment variable to include the
-  -- path to the `tiktoken_core` library. This can be done by adding the following line
-  -- to your shell configuration file (e.g., `~/.bashrc`, `~/.zshrc`):
+  -- You also need to update the `LUA_CPATH` environment variable to include the path to the
+  -- `tiktoken_core` library. This can be done by adding the following line to your shell
+  -- configuration file (e.g., `~/.bashrc`, `~/.zshrc`):
   --
   --     export LUA_CPATH="./?.so;/usr/local/lib/lua/5.1/?.so;/opt/homebrew/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so;${HOME}/.luarocks/lib/lua/5.1/?.so"
 
@@ -94,8 +94,9 @@ return {
     opts = {
       prompts = {
         SpellingAndGrammar = {
-          prompt = "Please check the spelling and grammar for the selected code.",
-          description = "Spell and grammar check"
+          prompt = "Please check the spelling and grammar for the current buffer.",
+          description = "Spell and grammar check",
+          context = "buffer"
         },
       }
     }
