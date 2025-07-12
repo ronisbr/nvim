@@ -371,7 +371,7 @@ return {
         "<Leader>ff",
         MiniFiles.open,
         {
-          desc    = "Open Explorer",
+          desc    = "Open Mini.files",
           noremap = true,
           silent  = true
         }
@@ -591,6 +591,14 @@ return {
           require("mini.pick").builtin.buffers({ })
         end,
         desc = "Find Existing Buffers",
+        silent = true
+      },
+      {
+        "<Leader>fe",
+        function()
+          require("mini.extra").pickers.explorer({ })
+        end,
+        desc = "Find in Explorer",
         silent = true
       },
       {
