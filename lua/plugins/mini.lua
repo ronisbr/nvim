@@ -701,122 +701,122 @@ return {
 
   -- mini.statusline -----------------------------------------------------------------------
 
-  {
-    "echasnovski/mini.statusline",
-    lazy = false,
-    version = false,
-
-    opts = {
-      content = {
-        active = function()
-          local MiniStatusline = require("mini.statusline")
-          local LazyStatus     = require("lazy.status")
-
-          local macro         = ministatusline_macro_recording()
-          local mode, mode_hl = ministatusline_modes()
-          local git           = ministatusline_branch_name()
-          local diff          = MiniStatusline.section_diff({ trunc_width = 75 })
-          local filename      = MiniStatusline.section_filename({ trunc_width = 140 })
-          local fileinfo      = ministatusline_file_info()
-          local fileencoding  = ministatusline_file_encoding()
-          local location      = ministatusline_location()
-          local search        = ministatusline_search_count()
-          local visual_sel    = ministatusline_visual_selection_information()
-          local updates       = LazyStatus.has_updates() and LazyStatus.updates() or ""
-
-          return MiniStatusline.combine_groups({
-            { hl = mode_hl,                         strings = { mode } },
-            { hl = "MiniStatuslineMacro",           strings = { macro } },
-            { hl = "MiniStatuslineFileinfo",        strings = { fileinfo } },
-            { hl = "MiniStatuslineFilename",        strings = { filename } },
-            { hl = "MiniStatuslineDevinfo",         strings = { fileencoding, git, diff } },
-            '%<', -- Mark general truncate point
-            '%=', -- End left alignment
-            { hl = "MiniStatuslineVisualSelection", strings = { visual_sel } },
-            { hl = "MiniStatuslineSearchInfo",      strings = { search } },
-            { hl = "MiniStatuslineUpdates",         strings = { updates } },
-            { hl = "MiniStatuslineLocation",        strings = { location } },
-          })
-        end
-      }
-    },
-
-    config = function(_, opts)
-      vim.api.nvim_set_hl(
-        0,
-        "MiniStatuslineFileinfo",
-        {
-          fg = get_color("Comment", "fg"),
-          bg = get_color("StatusLine", "bg")
-        }
-      )
-
-      vim.api.nvim_set_hl(
-        0,
-        "MiniStatuslineFilename",
-        {
-          fg = get_color("Comment", "fg"),
-          bg = get_color("StatusLine", "bg")
-        }
-      )
-
-      vim.api.nvim_set_hl(
-        0,
-        "MiniStatuslineLocation",
-        {
-          fg = get_color("Comment", "fg"),
-          bg = get_color("StatusLine", "bg")
-        }
-      )
-
-      vim.api.nvim_set_hl(
-        0,
-        "MiniStatuslineMacro",
-        {
-          fg = get_color("Special", "fg"),
-          bg = get_color("StatusLine", "bg")
-        }
-      )
-
-      vim.api.nvim_set_hl(
-        0,
-        "MiniStatuslineDevinfo",
-        {
-          fg = get_color("Comment", "fg"),
-          bg = get_color("StatusLine", "bg")
-        }
-      )
-
-      vim.api.nvim_set_hl(
-        0,
-        "MiniStatuslineSearchInfo",
-        {
-          fg = get_color("Special", "fg"),
-          bg = get_color("StatusLine", "bg")
-        }
-      )
-
-      vim.api.nvim_set_hl(
-        0,
-        "MiniStatuslineUpdates",
-        {
-          fg = get_color("Special", "fg"),
-          bg = get_color("StatusLine", "bg")
-        }
-      )
-
-      vim.api.nvim_set_hl(
-        0,
-        "MiniStatuslineVisualSelection",
-        {
-          fg = get_color("Special", "fg"),
-          bg = get_color("StatusLine", "bg")
-        }
-      )
-
-      require("mini.statusline").setup(opts)
-    end
-  },
+  -- {
+  --   "echasnovski/mini.statusline",
+  --   lazy = false,
+  --   version = false,
+  --
+  --   opts = {
+  --     content = {
+  --       active = function()
+  --         local MiniStatusline = require("mini.statusline")
+  --         local LazyStatus     = require("lazy.status")
+  --
+  --         local macro         = ministatusline_macro_recording()
+  --         local mode, mode_hl = ministatusline_modes()
+  --         local git           = ministatusline_branch_name()
+  --         local diff          = MiniStatusline.section_diff({ trunc_width = 75 })
+  --         local filename      = MiniStatusline.section_filename({ trunc_width = 140 })
+  --         local fileinfo      = ministatusline_file_info()
+  --         local fileencoding  = ministatusline_file_encoding()
+  --         local location      = ministatusline_location()
+  --         local search        = ministatusline_search_count()
+  --         local visual_sel    = ministatusline_visual_selection_information()
+  --         local updates       = LazyStatus.has_updates() and LazyStatus.updates() or ""
+  --
+  --         return MiniStatusline.combine_groups({
+  --           { hl = mode_hl,                         strings = { mode } },
+  --           { hl = "MiniStatuslineMacro",           strings = { macro } },
+  --           { hl = "MiniStatuslineFileinfo",        strings = { fileinfo } },
+  --           { hl = "MiniStatuslineFilename",        strings = { filename } },
+  --           { hl = "MiniStatuslineDevinfo",         strings = { fileencoding, git, diff } },
+  --           '%<', -- Mark general truncate point
+  --           '%=', -- End left alignment
+  --           { hl = "MiniStatuslineVisualSelection", strings = { visual_sel } },
+  --           { hl = "MiniStatuslineSearchInfo",      strings = { search } },
+  --           { hl = "MiniStatuslineUpdates",         strings = { updates } },
+  --           { hl = "MiniStatuslineLocation",        strings = { location } },
+  --         })
+  --       end
+  --     }
+  --   },
+  --
+  --   config = function(_, opts)
+  --     vim.api.nvim_set_hl(
+  --       0,
+  --       "MiniStatuslineFileinfo",
+  --       {
+  --         fg = get_color("Comment", "fg"),
+  --         bg = get_color("StatusLine", "bg")
+  --       }
+  --     )
+  --
+  --     vim.api.nvim_set_hl(
+  --       0,
+  --       "MiniStatuslineFilename",
+  --       {
+  --         fg = get_color("Comment", "fg"),
+  --         bg = get_color("StatusLine", "bg")
+  --       }
+  --     )
+  --
+  --     vim.api.nvim_set_hl(
+  --       0,
+  --       "MiniStatuslineLocation",
+  --       {
+  --         fg = get_color("Comment", "fg"),
+  --         bg = get_color("StatusLine", "bg")
+  --       }
+  --     )
+  --
+  --     vim.api.nvim_set_hl(
+  --       0,
+  --       "MiniStatuslineMacro",
+  --       {
+  --         fg = get_color("Special", "fg"),
+  --         bg = get_color("StatusLine", "bg")
+  --       }
+  --     )
+  --
+  --     vim.api.nvim_set_hl(
+  --       0,
+  --       "MiniStatuslineDevinfo",
+  --       {
+  --         fg = get_color("Comment", "fg"),
+  --         bg = get_color("StatusLine", "bg")
+  --       }
+  --     )
+  --
+  --     vim.api.nvim_set_hl(
+  --       0,
+  --       "MiniStatuslineSearchInfo",
+  --       {
+  --         fg = get_color("Special", "fg"),
+  --         bg = get_color("StatusLine", "bg")
+  --       }
+  --     )
+  --
+  --     vim.api.nvim_set_hl(
+  --       0,
+  --       "MiniStatuslineUpdates",
+  --       {
+  --         fg = get_color("Special", "fg"),
+  --         bg = get_color("StatusLine", "bg")
+  --       }
+  --     )
+  --
+  --     vim.api.nvim_set_hl(
+  --       0,
+  --       "MiniStatuslineVisualSelection",
+  --       {
+  --         fg = get_color("Special", "fg"),
+  --         bg = get_color("StatusLine", "bg")
+  --       }
+  --     )
+  --
+  --     require("mini.statusline").setup(opts)
+  --   end
+  -- },
 
   -- mini.splitjoin ------------------------------------------------------------------------
 
@@ -834,15 +834,15 @@ return {
 
   -- mini.tabline --------------------------------------------------------------------------
 
-  {
-    "echasnovski/mini.tabline",
-    version = false,
-    lazy = false,
-
-    opts = {
-      tabpage_section = "right"
-    },
-  },
+  -- {
+  --   "echasnovski/mini.tabline",
+  --   version = false,
+  --   lazy = false,
+  --
+  --   opts = {
+  --     tabpage_section = "right"
+  --   },
+  -- },
 
   -- mini.trailspace -----------------------------------------------------------------------
 

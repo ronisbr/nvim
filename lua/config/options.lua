@@ -20,6 +20,7 @@ vim.opt.scrolloff = 10
 vim.opt.shiftwidth = 4
 vim.opt.showcmd = false
 vim.opt.showmode = false
+vim.opt.shortmess = vim.opt.shortmess + { q = true }
 vim.opt.signcolumn = 'yes'
 vim.opt.smartcase = true
 vim.opt.spelllang = "en_us,pt_br"

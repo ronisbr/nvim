@@ -113,5 +113,6 @@ require("config.autocmds")
 require("config.keymaps")
 
 require("misc.julia").setup()
+require("misc.winbar").setup()
 
 -- vim:ts=2:sts=2:sw=2:et
