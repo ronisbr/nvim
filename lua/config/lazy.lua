@@ -100,7 +100,7 @@ require("lazy").setup(
     },
 
     install = {
-      colorscheme = { "nano-theme" }
+      colorscheme = { "catppuccin" }
     },
 
     ui = {
