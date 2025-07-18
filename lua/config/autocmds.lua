@@ -34,8 +34,8 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Markdown --
 
-vim.api.nvim_create_autocmd({'BufRead', 'BufNewFile'}, {
-    pattern = { '*.md' },
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+    pattern = { "*.md" },
     callback = function()
       vim.fn.matchadd("Special", "#[^# ]\\+")
       vim.fn.matchadd("Special", "#[^#]\\+#")
