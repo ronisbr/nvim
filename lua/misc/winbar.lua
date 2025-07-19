@@ -47,6 +47,31 @@ local excluded_filetypes = {
 --                                   Private Functions                                    --
 --------------------------------------------------------------------------------------------
 
+-- Return a string with the names of the active LSP clients for the buffer `bufnr`.
+local function active_lsp_clients(bufnr)
+  local buf_ft       = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+  local clients      = vim.lsp.get_clients({ bufnr = bufnr })
+  local client_names = ""
+
+  if next(clients) == nil then
+    return client_names
+  end
+
+  for _, client in ipairs(clients) do
+    local filetypes = client.config and client.config.filetypes
+
+    if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+      if client_names ~= "" then
+        client_names = ", " .. client.name
+      else
+        client_names = client.name
+      end
+    end
+  end
+
+  return client_names
+end
+
 -- Return the color of the attribute `attr` of the highlight group `hl_group`.
 local function get_color(hl_group, attribute)
   local hl = vim.api.nvim_get_hl(0, { name = hl_group })
@@ -93,8 +118,6 @@ local function git_branch()
 
   return branch
 end
-
-function M.branch() return branch_cache end
 
 -- Configure the highlight groups used by the winbar.
 local function configure_hl_groups()
@@ -226,6 +249,17 @@ local function winbar__filetype()
   return string.format("%%#WinbarDefault#(%s%s%s)", fileicon, filetype, branch)
 end
 
+-- Active LSP servers.
+local function winbar__lsp_clients()
+  local clients = active_lsp_clients(0)
+
+  if clients == "" then
+    return ""
+  end
+
+  return "%#WinbarFaded#[" .. clients .. "]"
+end
+
 -- Cursor position.
 local function winbar__cursor_position()
   return "%#WinbarFaded# %v:%l (%P)"
@@ -293,6 +327,8 @@ local function winbar__render_active()
     winbar__filename(),
     winbar__space(),
     winbar__filetype(),
+    winbar__space(),
+    winbar__lsp_clients(),
     "%#WinbarDefault#%=",
     winbar__visual_selection_information(),
     winbar__space(),
@@ -419,6 +455,21 @@ function M.setup()
       pattern = "*",
       callback = function()
         require("misc.winbar").setup()
+      end,
+    }
+  )
+
+  -- Redraw the winbar when an LSP client is attached ou detached.
+  vim.api.nvim_create_autocmd(
+    {
+      "LspAttach",
+      "LspDetach"
+    },
+    {
+      pattern = "*",
+      callback = function()
+        -- We need to redraw the winbar because the LSP clients may have changed.
+        vim.api.nvim_command("redrawstatus")
       end,
     }
   )
