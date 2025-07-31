@@ -319,12 +319,25 @@ return {
     "echasnovski/mini.completion",
     lazy = false,
     version = false,
-    dependencies = { "echasnovski/mini.snippets" },
+    dependencies = {
+      -- We need to add this dependency here to ensure that the <Tab> behavior works as
+      -- intended, i.e., the <Tab> key will not complete the copilot suggestion.
+      "github/copilot.vim",
+      "echasnovski/mini.snippets"
+    },
 
     opts = { },
 
     config = function(_, opts)
       require("mini.completion").setup(opts)
+
+      local function mini_completion_map(mode, lhs, rhs)
+        vim.keymap.set(mode, lhs, rhs, { noremap = true, expr = true })
+      end
+
+      -- Use <Tab> and <S-Tab> to navigate through completion items.
+      mini_completion_map("i", "<Tab>",   "pumvisible() ? '<C-n>' : '<Tab>'")
+      mini_completion_map("i", "<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'")
 
       -- Disable completion in snacks inputs.
       -- For more informaiton, see:
@@ -667,14 +680,6 @@ return {
 
       -- Keymaps ---------------------------------------------------------------------------
 
-      local function mini_completion_map(mode, lhs, rhs)
-        vim.keymap.set(mode, lhs, rhs, { noremap = true, expr = true })
-      end
-
-      -- Use <Tab> and <S-Tab> to navigate through completion items.
-      mini_completion_map("i", "<Tab>",   "pumvisible() ? '<C-n>' : '<Tab>'")
-      mini_completion_map("i", "<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'")
-
       -- Configure a more consistent behavior of <CR>.
       local keys = {
         ["cr"]        = vim.api.nvim_replace_termcodes("<CR>",      true, true, true),
@@ -695,7 +700,7 @@ return {
         end
       end
 
-      mini_completion_map("i", "<CR>", "v:lua._G.cr_action()")
+      vim.keymap.set("i", "<CR>", "v:lua._G.cr_action()", { noremap = true, expr = true })
     end
   },
 
