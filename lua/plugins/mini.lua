@@ -599,7 +599,7 @@ return {
         silent = true
       },
       {
-        "<Leader>fb",
+        "<Leader>,",
         function()
           require("mini.pick").builtin.buffers({ })
         end,
