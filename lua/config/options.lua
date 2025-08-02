@@ -18,10 +18,10 @@ vim.opt.mouse = 'a'
 vim.opt.ruler = false
 vim.opt.scrolloff = 10
 vim.opt.shiftwidth = 4
+vim.opt.shortmess = vim.opt.shortmess + { c = true, q = true }
 vim.opt.showcmd = false
 vim.opt.showmode = false
-vim.opt.shortmess = vim.opt.shortmess + { q = true }
-vim.opt.signcolumn = 'yes'
+vim.opt.signcolumn = "yes"
 vim.opt.smartcase = true
 vim.opt.spelllang = "en_us,pt_br"
 vim.opt.splitbelow = true
@@ -30,6 +30,7 @@ vim.opt.tabstop = 4
 vim.opt.textwidth = 92
 vim.opt.undofile = true
 vim.opt.updatetime = 250
+vim.opt.virtualedit = "block"
 
 vim.opt.number = true
 vim.opt.relativenumber = true
