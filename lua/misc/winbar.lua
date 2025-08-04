@@ -128,7 +128,17 @@ local function configure_hl_groups()
     "WinbarDefault",
     {
       fg = get_color("Statusline", "fg"),
-      bg = statusline_bg
+      bg = statusline_bg,
+    }
+  )
+
+  vim.api.nvim_set_hl(
+    0,
+    "WinbarDefaultBold",
+    {
+      fg   = get_color("Statusline", "fg"),
+      bg   = statusline_bg,
+      bold = true,
     }
   )
 
@@ -224,7 +234,7 @@ local function winbar__filename()
     modified_str = "[+] "
   end
 
-  return "%#WinbarDefault#" .. modified_str .. "%t"
+  return "%#WinbarDefaultBold#" .. modified_str .. "%t"
 end
 
 -- File type.
@@ -440,10 +450,10 @@ end
 -- Setup the winbar.
 function M.setup()
   configure_hl_groups()
-  vim.opt.laststatus = 0
+  vim.opt.laststatus = 3
   vim.go.winbar =
     "%{" ..
-      "%(nvim_get_current_win()==#g:actual_curwin || &laststatus==3) ? " ..
+      "%(nvim_get_current_win()==#g:actual_curwin) ? " ..
         "v:lua.require(\"misc.winbar\").render(1) : " ..
         "v:lua.require(\"misc.winbar\").render(0) " ..
     "%}"
