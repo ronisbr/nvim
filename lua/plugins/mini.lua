@@ -381,6 +381,19 @@ return {
 
       vim.keymap.set(
         "n",
+        "<Leader>.",
+        function()
+          MiniFiles.open(vim.api.nvim_buf_get_name(0), false)
+        end,
+        {
+          desc    = "Open Mini.files in Current Dir.",
+          noremap = true,
+          silent  = true
+        }
+      )
+
+      vim.keymap.set(
+        "n",
         "<Leader>ff",
         MiniFiles.open,
         {
