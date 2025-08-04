@@ -99,6 +99,22 @@ return {
           context = "buffer"
         },
       }
-    }
+    },
+
+    config = function(_, opts)
+      require("CopilotChat").setup(opts)
+
+      vim.api.nvim_create_autocmd(
+        "BufEnter",
+        {
+          pattern = "copilot-*",
+          callback = function()
+            vim.opt_local.colorcolumn    = ""
+            vim.opt_local.number         = false
+            vim.opt_local.relativenumber = false
+          end,
+        })
+
+    end
   },
 }
