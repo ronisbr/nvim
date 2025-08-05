@@ -208,7 +208,6 @@ local function configure_hl_groups()
       bg = get_color("Special", "fg"),
     }
   )
-
 end
 
 -- Winbar Components -----------------------------------------------------------------------
@@ -327,20 +326,6 @@ local function winbar__visual_selection_information()
   return "%#WinbarSalient#[" .. tostring(lines) .. "L " .. tostring(columns) .. "C]"
 end
 
-local function winbar__tabs()
-  local tabs = vim.api.nvim_list_tabpages()
-  local current = vim.api.nvim_get_current_tabpage()
-  local tab_parts = {}
-
-  for i, tab in ipairs(tabs) do
-    local highlight = (tab == current) and "%#WinbarFaded#" or "%#WinbarDefault#"
-    table.insert(tab_parts, highlight .. tostring(i))
-  end
-
-  local content = "[" .. table.concat(tab_parts, " | ") .. "%*]"
-  return content
-end
-
 -- Render Functions ------------------------------------------------------------------------
 
 -- Default render function when the buffer is active.
@@ -356,7 +341,6 @@ local function winbar__render_active()
     winbar__lsp_clients(),
     "%#WinbarDefault#%=",
     winbar__visual_selection_information(),
-    winbar__tabs(),
     winbar__space(),
     winbar__cursor_position(),
   }
@@ -466,16 +450,13 @@ end
 -- Setup the winbar.
 function M.setup()
   configure_hl_groups()
-  vim.opt.laststatus = 0
-  vim.opt.showtabline = 2
-  -- vim.go.winbar =
-  --   "%{" ..
-  --     "%(nvim_get_current_win()==#g:actual_curwin) ? " ..
-  --       "v:lua.require(\"misc.winbar\").render(1) : " ..
-  --       "v:lua.require(\"misc.winbar\").render(0) " ..
-  --   "%}"
-  vim.go.statusline = "%#WinSeparator#%{repeat('─',winwidth('.'))}"
-  vim.go.tabline = "%{%(v:lua.require(\"misc.winbar\").render(1))%}"
+  vim.opt.laststatus = 3
+  vim.go.winbar =
+    "%{" ..
+      "%(nvim_get_current_win()==#g:actual_curwin) ? " ..
+        "v:lua.require(\"misc.winbar\").render(1) : " ..
+        "v:lua.require(\"misc.winbar\").render(0) " ..
+    "%}"
 
   -- Create an autocmd to setup the winbar when the coloscheme is changed.
   vim.api.nvim_create_autocmd(
