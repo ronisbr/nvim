@@ -15,6 +15,8 @@ vim.opt.lazyredraw = false
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.mouse = 'a'
+vim.opt.number = true
+vim.opt.relativenumber = true
 vim.opt.ruler = false
 vim.opt.scrolloff = 10
 vim.opt.shiftwidth = 4
@@ -31,9 +33,7 @@ vim.opt.textwidth = 92
 vim.opt.undofile = true
 vim.opt.updatetime = 250
 vim.opt.virtualedit = "block"
-
-vim.opt.number = true
-vim.opt.relativenumber = true
+vim.opt.winborder = "rounded"
 
 -- Neovide ---------------------------------------------------------------------------------
 
