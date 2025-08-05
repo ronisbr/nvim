@@ -23,6 +23,7 @@ vim.opt.shiftwidth = 4
 vim.opt.shortmess = vim.opt.shortmess + { c = true, q = true }
 vim.opt.showcmd = false
 vim.opt.showmode = false
+vim.opt.showtabline = 0
 vim.opt.signcolumn = "yes"
 vim.opt.smartcase = true
 vim.opt.spelllang = "en_us,pt_br"
