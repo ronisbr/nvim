@@ -1,6 +1,6 @@
 -- Description -----------------------------------------------------------------------------
 --
--- Winbar configuration.
+-- Statusline configuration.
 --
 --------------------------------------------------------------------------------------------
 
@@ -10,35 +10,35 @@ local M = {}
 --                                    Local Variables                                     --
 --------------------------------------------------------------------------------------------
 
--- Table with used to obtain the current mode and color.
-local ctrl_s = vim.api.nvim_replace_termcodes("<C-S>", true, true, true)
-local ctrl_v = vim.api.nvim_replace_termcodes("<C-V>", true, true, true)
+-- Table used to obtain the current mode and color.
+local ctrl_S = vim.api.nvim_replace_termcodes("<C-S>", true, true, true)
+local ctrl_V = vim.api.nvim_replace_termcodes("<C-V>", true, true, true)
 
 local modes = setmetatable(
   {
-    ["n"]    = { long = "Normal",   short = " N ", hl = "WinbarModeNormal" },
-    ["v"]    = { long = "Visual",   short = " V ", hl = "WinbarModeVisual" },
-    ["V"]    = { long = "V-Line",   short = "V/L", hl = "WinbarModeVisual" },
-    [ctrl_v] = { long = "V-Block",  short = "V/B", hl = "WinbarModeVisual" },
-    ["s"]    = { long = "Select",   short = " S ", hl = "WinbarModeVisual" },
-    ["S"]    = { long = "S-Line",   short = "S/L", hl = "WinbarModeVisual" },
-    [ctrl_s] = { long = "S-Block",  short = "S/B", hl = "WinbarModeVisual" },
-    ["i"]    = { long = "Insert",   short = " I ", hl = "WinbarModeInsert" },
-    ["ic"]   = { long = "Insert",   short = " I ", hl = "WinbarModeInsert" },
-    ["R"]    = { long = "Replace",  short = " R ", hl = "WinbarModeReplace" },
-    ["c"]    = { long = "Command",  short = " C ", hl = "WinbarModeNormal" },
-    ["r"]    = { long = "Prompt",   short = " P ", hl = "WinbarModeNormal" },
-    ["!"]    = { long = "Shell",    short = "Shl", hl = "WinbarModeNormal" },
-    ["t"]    = { long = "Terminal", short = " T ", hl = "WinbarModeNormal" },
+    ["n"]    = { long = "Normal",   short = " N ", hl = "StatuslineModeNormal" },
+    ["v"]    = { long = "Visual",   short = " V ", hl = "StatuslineModeVisual" },
+    ["V"]    = { long = "V-Line",   short = "V/L", hl = "StatuslineModeVisual" },
+    [ctrl_V] = { long = "V-Block",  short = "V/B", hl = "StatuslineModeVisual" },
+    ["s"]    = { long = "Select",   short = " S ", hl = "StatuslineModeVisual" },
+    ["S"]    = { long = "S-Line",   short = "S/L", hl = "StatuslineModeVisual" },
+    [ctrl_S] = { long = "S-Block",  short = "S/B", hl = "StatuslineModeVisual" },
+    ["i"]    = { long = "Insert",   short = " I ", hl = "StatuslineModeInsert" },
+    ["ic"]   = { long = "Insert",   short = " I ", hl = "StatuslineModeInsert" },
+    ["R"]    = { long = "Replace",  short = " R ", hl = "StatuslineModeReplace" },
+    ["c"]    = { long = "Command",  short = " C ", hl = "StatuslineModeNormal" },
+    ["r"]    = { long = "Prompt",   short = " P ", hl = "StatuslineModeNormal" },
+    ["!"]    = { long = "Shell",    short = "Shl", hl = "StatuslineModeNormal" },
+    ["t"]    = { long = "Terminal", short = " T ", hl = "StatuslineModeNormal" },
   },
   {
     __index = function()
-      return   { long = "Unknown",  short = " U ", hl = "WinbarModelNormal" }
+      return   { long = "Unknown",  short = " U ", hl = "StatuslineModeNormal" }
     end,
   }
 )
 
--- List of filetypes that will be excluded from setting a winbar.
+-- List of filetypes that will be excluded from setting a statusline.
 local excluded_filetypes = {
   "snacks_dashboard",
 }
@@ -49,27 +49,23 @@ local excluded_filetypes = {
 
 -- Return a string with the names of the active LSP clients for the buffer `bufnr`.
 local function active_lsp_clients(bufnr)
-  local buf_ft       = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+  local buf_ft       = vim.bo[bufnr].filetype
   local clients      = vim.lsp.get_clients({ bufnr = bufnr })
-  local client_names = ""
+  local client_names = {}
 
   if next(clients) == nil then
-    return client_names
+    return ""
   end
 
   for _, client in ipairs(clients) do
     local filetypes = client.config and client.config.filetypes
 
     if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-      if client_names ~= "" then
-        client_names = ", " .. client.name
-      else
-        client_names = client.name
-      end
+      table.insert(client_names, client.name)
     end
   end
 
-  return client_names
+  return table.concat(client_names, ", ")
 end
 
 -- Return the color of the attribute `attr` of the highlight group `hl_group`.
@@ -103,7 +99,7 @@ local function git_branch()
     return cache.branch
   end
 
-  -- We must run the git command in the directory of the file because the winbar can be
+  -- We must run the git command in the directory of the file because the statusline can be
   -- rendered before changing the directory.
   local branch = vim.fn.system(
     "git -C " ..
@@ -119,13 +115,13 @@ local function git_branch()
   return branch
 end
 
--- Configure the highlight groups used by the winbar.
+-- Configure the highlight groups used by the statusline.
 local function configure_hl_groups()
   local statusline_bg = get_color("Statusline", "bg")
 
   vim.api.nvim_set_hl(
     0,
-    "WinbarDefault",
+    "StatuslineDefault",
     {
       fg = get_color("Statusline", "fg"),
       bg = statusline_bg,
@@ -134,7 +130,7 @@ local function configure_hl_groups()
 
   vim.api.nvim_set_hl(
     0,
-    "WinbarDefaultBold",
+    "StatuslineDefaultBold",
     {
       fg   = get_color("Statusline", "fg"),
       bg   = statusline_bg,
@@ -144,7 +140,7 @@ local function configure_hl_groups()
 
   vim.api.nvim_set_hl(
     0,
-    "WinbarFaded",
+    "StatuslineFaded",
     {
       fg = get_color("Comment", "fg"),
       bg = statusline_bg
@@ -153,7 +149,7 @@ local function configure_hl_groups()
 
   vim.api.nvim_set_hl(
     0,
-    "WinbarPopout",
+    "StatuslinePopout",
     {
       fg = get_color("WarningMsg", "fg"),
       bg = statusline_bg
@@ -162,7 +158,7 @@ local function configure_hl_groups()
 
   vim.api.nvim_set_hl(
     0,
-    "WinbarSalient",
+    "StatuslineSalient",
     {
       fg = get_color("Special", "fg"),
       bg = statusline_bg
@@ -171,49 +167,49 @@ local function configure_hl_groups()
 
   -- Neovim Modes --------------------------------------------------------------------------
 
-  local winbar_default_bg = get_color("WinbarDefault", "bg")
+  local statusline_default_bg = get_color("StatuslineDefault", "bg")
 
   vim.api.nvim_set_hl(
     0,
-    "WinbarModeNormal",
+    "StatuslineModeNormal",
     {
-      fg = winbar_default_bg,
-      bg = get_color("WinbarDefault", "fg"),
+      fg = statusline_default_bg,
+      bg = get_color("StatuslineDefault", "fg"),
     }
   )
 
   vim.api.nvim_set_hl(
     0,
-    "WinbarModeInsert",
+    "StatuslineModeInsert",
     {
-      fg = winbar_default_bg,
+      fg = statusline_default_bg,
       bg = get_color("WarningMsg", "fg"),
     }
   )
 
   vim.api.nvim_set_hl(
     0,
-    "WinbarModeReplace",
+    "StatuslineModeReplace",
     {
-      fg = winbar_default_bg,
+      fg = statusline_default_bg,
       bg = get_color("ErrorMsg", "fg"),
     }
   )
 
   vim.api.nvim_set_hl(
     0,
-    "WinbarModeVisual",
+    "StatuslineModeVisual",
     {
-      fg = winbar_default_bg,
+      fg = statusline_default_bg,
       bg = get_color("Special", "fg"),
     }
   )
 end
 
--- Winbar Components -----------------------------------------------------------------------
+-- Statusline Components -----------------------------------------------------------------------
 
 -- Current Neovim mode.
-local function winbar__mode()
+local function statusline__mode()
   local mode      = vim.api.nvim_get_mode().mode
   local mode_info = modes[mode] or modes["n"]
 
@@ -221,24 +217,24 @@ local function winbar__mode()
 end
 
 -- Space between components.
-local function winbar__space()
-  return "%#WinbarDefault# "
+local function statusline__space()
+  return "%#StatuslineDefault# "
 end
 
 -- File name.
-local function winbar__filename()
-  local is_buffer_modified = vim.api.nvim_get_option_value("modified", {})
+local function statusline__filename()
+  local is_buffer_modified = vim.bo.modified
   local modified_str = ""
 
   if is_buffer_modified then
     modified_str = "[+] "
   end
 
-  return "%#WinbarDefaultBold#" .. modified_str .. "%t"
+  return "%#StatuslineDefaultBold#" .. modified_str .. "%t"
 end
 
 -- File type.
-local function winbar__filetype()
+local function statusline__filetype()
   local filetype = vim.bo.filetype
 
   if filetype == "" then
@@ -253,42 +249,64 @@ local function winbar__filetype()
   end
 
   if branch ~= "" then
-    branch = ", %#WinbarFaded##" .. branch .. "%#WinbarDefault#"
+    branch = ", %#StatuslineFaded##" .. vim.fn.escape(branch, "%#") .. "%#StatuslineDefault#"
   end
 
-  return string.format("%%#WinbarDefault#(%s%s%s)", fileicon, filetype, branch)
+  return string.format("%%#StatuslineDefault#(%s%s%s)", fileicon, filetype, branch)
 end
 
 -- Active LSP servers.
-local function winbar__lsp_clients()
+local function statusline__lsp_clients()
   local clients = active_lsp_clients(0)
 
   if clients == "" then
     return ""
   end
 
-  return "%#WinbarFaded#[" .. clients .. "]"
+  return "%#StatuslineFaded#[" .. clients .. "]"
+end
+
+-- Tabs.
+local function statusline__tabs()
+  local tabs = vim.api.nvim_list_tabpages()
+
+  if #tabs <= 1 then
+    return ""
+  end
+
+  local current   = vim.api.nvim_get_current_tabpage()
+  local tab_parts = {}
+
+  for i, tab in ipairs(tabs) do
+    if (tab == current) then
+      table.insert(tab_parts, "%#StatuslineDefault#" .. tostring(i) .. "%#StatuslineFaded#")
+    else
+      table.insert(tab_parts, tostring(i))
+    end
+  end
+
+  return "%#StatuslineFaded#[" .. table.concat(tab_parts, " | ") .. "]"
 end
 
 -- Cursor position.
-local function winbar__cursor_position()
-  return "%#WinbarFaded# %v:%l (%P)"
+local function statusline__cursor_position()
+  return "%#StatuslineFaded# %v:%l (%P)"
 end
 
 -- Return a string with the current macro being recorded or an empty string if we are not
 -- recording a macro.
-local function winbar__macro_recording()
+local function statusline__macro_recording()
   local reg_recording = vim.fn.reg_recording()
 
   if reg_recording == "" then
     return ""
   end
 
-  return "%#WinbarPopout#󰑊 " .. reg_recording .. " "
+  return "%#StatuslinePopout#󰑊 " .. reg_recording .. " "
 end
 
 -- Display the visual selection information (number of selected lines and columns).
-local function winbar__visual_selection_information()
+local function statusline__visual_selection_information()
   local mode = vim.api.nvim_get_mode().mode
 
   local is_visual_mode       = mode:find("[Vv]")
@@ -319,52 +337,54 @@ local function winbar__visual_selection_information()
 
   -- Assemble the text and return.
   if is_visual_mode then
-    return "%#WinbarSalient#[" .. tostring(lines) .. "L]"
+    return "%#StatuslineSalient#[" .. tostring(lines) .. "L]"
   end
 
   -- If we reach this point, we are in a visual block mode.
-  return "%#WinbarSalient#[" .. tostring(lines) .. "L " .. tostring(columns) .. "C]"
+  return "%#StatuslineSalient#[" .. tostring(lines) .. "L " .. tostring(columns) .. "C]"
 end
 
 -- Render Functions ------------------------------------------------------------------------
 
 -- Default render function when the buffer is active.
-local function winbar__render_active()
-  local winbar_components = {
-    winbar__mode(),
-    winbar__space(),
-    winbar__macro_recording(),
-    winbar__filename(),
-    winbar__space(),
-    winbar__filetype(),
-    winbar__space(),
-    winbar__lsp_clients(),
-    "%#WinbarDefault#%=",
-    winbar__visual_selection_information(),
-    winbar__space(),
-    winbar__cursor_position(),
+local function statusline__render_active()
+  local statusline_components = {
+    statusline__mode(),
+    statusline__space(),
+    statusline__macro_recording(),
+    statusline__filename(),
+    statusline__space(),
+    statusline__filetype(),
+    statusline__space(),
+    statusline__lsp_clients(),
+    "%#StatuslineDefault#%=",
+    statusline__visual_selection_information(),
+    statusline__space(),
+    statusline__tabs(),
+    statusline__space(),
+    statusline__cursor_position(),
   }
 
-  return table.concat(winbar_components, "")
+  return table.concat(statusline_components, "")
 end
 
 -- Default render function when the buffer is inactive.
-local function winbar__render_inactive()
-  return "%#WinbarDefault#      %#WinbarFaded#%t"
+local function statusline__render_inactive()
+  return "%#StatuslineDefault#      %#StatuslineFaded#%t"
 end
 
 -- Render function for read-only buffers when the buffer is active.
-local function winbar__render_read_only_buffer_active()
-  return "%#WinbarDefault#%h%q %f"
+local function statusline__render_read_only_buffer_active()
+  return "%#StatuslineDefault#%h%q %f"
 end
 
 -- Render function for read-only buffers when the buffer is inactive.
-local function winbar__render_read_only_buffer_inactive()
-  return "%#WinbarFaded#%h%q %f"
+local function statusline__render_read_only_buffer_inactive()
+  return "%#StatuslineFaded#%h%q %f"
 end
 
 -- Render function for quickfix buffers when the buffer is active.
-local function winbar__render_quickfix_active()
+local function statusline__render_quickfix_active()
   local fileicon       = ""
   local quickfix_title = vim.w.quickfix_title
 
@@ -373,17 +393,17 @@ local function winbar__render_quickfix_active()
   end
 
   return
-    "%#WinbarDefault#" ..
+    "%#StatuslineDefault#" ..
     fileicon ..
     "%q " ..
-    "%#WinbarSalient#" ..
+    "%#StatuslineSalient#" ..
     quickfix_title ..
     "%=" ..
-    "%#WinbarFaded#%l / %L (%p %%)"
+    "%#StatuslineFaded#%l / %L (%p %%)"
 end
 
 -- Render function for quickfix buffers when the buffer is inactive.
-local function winbar__render_quickfix_inactive()
+local function statusline__render_quickfix_inactive()
   local fileicon       = ""
   local quickfix_title = vim.w.quickfix_title
 
@@ -392,7 +412,7 @@ local function winbar__render_quickfix_inactive()
   end
 
   return
-    "%#WinbarFaded#" ..
+    "%#StatuslineFaded#" ..
     fileicon ..
     "[Quickfix List] " ..
     quickfix_title
@@ -402,7 +422,7 @@ end
 --                                    Public Functions                                    --
 --------------------------------------------------------------------------------------------
 
--- Render the winbar.
+-- Render the statusline.
 function M.render(active)
   -- Check if the current filetype must be excluded.
   local filetype    = vim.bo.filetype
@@ -421,55 +441,51 @@ function M.render(active)
 
   -- Check if the current buffer is a quickfix buffer.
   if vim.bo.buftype == "quickfix" then
-    if active == 0 then
-      return winbar__render_quickfix_inactive()
-    end
-
-    return winbar__render_quickfix_active()
+    return active == 0 and
+      statusline__render_quickfix_inactive() or
+      statusline__render_quickfix_active()
   end
 
   -- Check if the current buffer is read-only.
-  local is_read_only = vim.api.nvim_get_option_value("readonly", {})
+  local is_read_only = vim.bo.readonly
 
   if is_read_only then
-    if active == 0 then
-      return winbar__render_read_only_buffer_inactive()
-    end
-
-    return winbar__render_read_only_buffer_active()
+    return active == 0 and
+      statusline__render_read_only_buffer_inactive() or
+      statusline__render_read_only_buffer_active()
   end
 
-  -- Render the normal winbar.
-  if active == 0 then
-    return winbar__render_inactive()
-  end
-
-  return winbar__render_active()
+  -- Render the normal statusline.
+  return active == 0 and
+    statusline__render_inactive() or
+    statusline__render_active()
 end
 
--- Setup the winbar.
+-- Setup the statusline.
 function M.setup()
   configure_hl_groups()
   vim.opt.laststatus = 3
-  vim.go.winbar =
+  vim.opt.showtabline = 0
+
+  vim.go.statusline =
     "%{" ..
       "%(nvim_get_current_win()==#g:actual_curwin) ? " ..
-        "v:lua.require(\"misc.winbar\").render(1) : " ..
-        "v:lua.require(\"misc.winbar\").render(0) " ..
+        "v:lua.require('misc.statusline').render(1) : " ..
+        "v:lua.require('misc.statusline').render(0) " ..
     "%}"
 
-  -- Create an autocmd to setup the winbar when the coloscheme is changed.
+  -- Create an autocmd to setup the statusline when the colorscheme is changed.
   vim.api.nvim_create_autocmd(
     "ColorScheme",
     {
       pattern = "*",
       callback = function()
-        require("misc.winbar").setup()
+        configure_hl_groups()
       end,
     }
   )
 
-  -- Redraw the winbar when an LSP client is attached ou detached.
+  -- Redraw the statusline when an LSP client is attached or detached.
   vim.api.nvim_create_autocmd(
     {
       "LspAttach",
@@ -478,8 +494,8 @@ function M.setup()
     {
       pattern = "*",
       callback = function()
-        -- We need to redraw the winbar because the LSP clients may have changed.
-        vim.api.nvim_command("redrawstatus")
+        -- We need to redraw the statusline because the LSP clients may have changed.
+        vim.cmd("redrawstatus")
       end,
     }
   )
