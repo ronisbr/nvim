@@ -9,6 +9,7 @@ return {
     "github/copilot.vim",
     event = "BufEnter",
     config = function()
+      -- Prevent Copilot from mapping <Tab> globally.
       vim.g.copilot_no_tab_map = true
 
       vim.keymap.set(
@@ -18,40 +19,17 @@ return {
         {expr = true, replace_keycodes = false, silent = true}
       )
 
-      vim.keymap.set(
-        "i",
-        "<C-k>",
-        "<Plug>(copilot-accept-word)",
-        {silent = true}
-      )
+      local copilot_keymaps = {
+        { key = "<C-k>", cmd = "<Plug>(copilot-accept-word)", desc = "Accept Word"         },
+        { key = "<C-l>", cmd = "<Plug>(copilot-accept-line)", desc = "Accept Line"         },
+        { key = "<C-.>", cmd = "<Plug>(copilot-next)",        desc = "Next Suggestion"     },
+        { key = "<C-,>", cmd = "<Plug>(copilot-previous)",    desc = "Previous Suggestion" },
+        { key = "<C-/>", cmd = "<Plug>(copilot-dismiss)",     desc = "Dismiss Suggestion"  },
+      }
 
-      vim.keymap.set(
-        "i",
-        "<C-l>",
-        "<Plug>(copilot-accept-line)",
-        {silent = true}
-      )
-
-      vim.keymap.set(
-        "i",
-        "<C-.>",
-        "<Plug>(copilot-next)",
-        {silent = true}
-      )
-
-      vim.keymap.set(
-        "i",
-        "<C-,>",
-        "<Plug>(copilot-previous)",
-        {silent = true}
-      )
-
-      vim.keymap.set(
-        "i",
-        "<C-/>",
-        "<Plug>(copilot-dismiss)",
-        {silent = true}
-      )
+      for _, map in ipairs(copilot_keymaps) do
+        vim.keymap.set("i", map.key, map.cmd, { desc = map.desc, silent = true })
+      end
     end
   },
 
@@ -85,20 +63,29 @@ return {
 
     dependencies = {
       { "github/copilot.vim" },
-      { "nvim-lua/plenary.nvim", branch = "master" },
+      { "nvim-lua/plenary.nvim" },
       { "echasnovski/mini.pick" }
     },
 
     build = "make tiktoken",
 
     opts = {
+      headers = {
+        user = "👤 You: ",
+        assistant = "🤖 Copilot: ",
+        tool = "🔧 Tool: ",
+      },
+
       prompts = {
         SpellingAndGrammar = {
           prompt = "Please check the spelling and grammar for the current buffer.",
           description = "Spell and grammar check",
           context = "buffer"
         },
-      }
+      },
+
+      separator = '━━',
+      show_folds = false,
     },
 
     config = function(_, opts)
@@ -110,11 +97,11 @@ return {
           pattern = "copilot-*",
           callback = function()
             vim.opt_local.colorcolumn    = ""
+            vim.opt_local.conceallevel   = 0
             vim.opt_local.number         = false
             vim.opt_local.relativenumber = false
           end,
         })
-
     end
   },
 }
