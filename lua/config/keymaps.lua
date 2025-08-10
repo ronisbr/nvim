@@ -4,64 +4,29 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-local M = { }
+function map(mode, lhs, rhs)
+  return vim.keymap.set(mode, lhs, rhs, { silent = true })
+end
 
-local map = vim.keymap.set
+function map(mode, lhs, rhs, desc)
+  return vim.keymap.set(mode, lhs, rhs, { desc = desc, silent = true })
+end
 
-map("n", "<Esc>", "<Esc>:noh<CR>", { silent = true })
+function rmap(mode, lhs, rhs, desc)
+  return vim.keymap.set(mode, lhs, rhs, { desc = desc, remap = true, silent = true })
+end
+
+map("n", "<Esc>", "<Esc>:noh<CR>")
 
 -- Buffers ---------------------------------------------------------------------------------
 
-map(
-  "n",
-  "[b",
-  ":bprev<CR>",
-  {
-    desc = "Previous Buffer",
-    silent = true
-  }
-)
-
-map(
-  "n",
-  "]b",
-  ":bnext<CR>",
-  {
-    desc = "Next Buffer",
-    silent = true
-  }
-)
+map("n", "[b", ":bprev<CR>", "Previous Buffer")
+map("n", "]b", ":bnext<CR>", "Next Buffer")
 
 -- Tabs ------------------------------------------------------------------------------------
 
-map(
-  "n",
-  "[t",
-  ":tabprevious<CR>",
-  {
-    desc = "Previous Tab",
-    silent = true
-  }
-)
-
-map(
-  "n",
-  "]t",
-  ":tabnext<CR>",
-  {
-    desc = "Next Tab",
-    silent = true
-  }
-)
-
--- Terminal --------------------------------------------------------------------------------
-
--- map(
---   "t",
---   "<Esc>",
---   "<C-\\><C-n>",
---   { silent = true }
--- )
+map("n", "[t", ":tabprevious<CR>", "Previous Tab")
+map("n", "]t", ":tabnext<CR>", "Next Tab")
 
 -- Text Manipulation -----------------------------------------------------------------------
 
@@ -73,10 +38,7 @@ map(
   "mavy`]a<CR><Esc><Cmd>right<CR>k93PDd92|j0whv$hykP`]lDjdd`a" ..
   "<Cmd>set formatoptions+=ro<CR>" ..
   "<Cmd>set nolazyredraw<CR>",
-  {
-    desc = "Left Align with Character Under the Cursor",
-    silent = true
-  }
+  "Left Align with Character Under the Cursor"
 )
 
 map(
@@ -87,10 +49,7 @@ map(
   "`]a<CR><Esc><Cmd>right<CR>k93pDd92|j0whv$hykP`]lDjdd`a" ..
   "<Cmd>set formatoptions+=ro<CR>" ..
   "<Cmd>set nolazyredraw<CR>",
-  {
-    desc = "Left Align with Selected Pattern",
-    silent = true
-  }
+  "Left Align with Selected Pattern"
 )
 
 map(
@@ -99,10 +58,7 @@ map(
   "<Cmd>set lazyredraw<CR>" ..
   "vy93pDd92|" ..
   "<Cmd>set nolazyredraw<CR>",
-  {
-    desc = "Fill with Character Under the Cursor",
-    silent = true
-  }
+  "Fill with Character Under the Cursor"
 )
 
 map(
@@ -112,10 +68,7 @@ map(
   "<Cmd>set lazyredraw<CR>" ..
   "93pDd92|" ..
   "<Cmd>set nolazyredraw<CR>",
-  {
-    desc = "Fill with Selected Pattern",
-    silent = true
-  }
+  "Fill with Selected Pattern"
 )
 
 -- Create a text block given the following input:
@@ -130,56 +83,15 @@ map(
   "0v$hy93P\"_D\"_d92|j0<Cmd>center<CR>0R<C-R>0<Esc>o<Esc>P<Cmd>right<CR>khjllv$hykpkyyjpjdd0" ..
   "<Cmd>set formatoptions+=ro<CR>" ..
   "<Cmd>set nolazyredraw<CR>",
-  {
-    desc = "Convert to Block",
-    silent = true
-  }
+  "Convert to Block"
 )
 
 -- Placeholders <++> -----------------------------------------------------------------------
 
-map(
-  "n",
-  "<C-j>",
-  "/<++><CR>v3lc",
-  {
-    desc = "Change Next Placeholder",
-    silent = true,
-  }
-)
+map("n", "<C-j>", "/<++><CR>v3lc", "Change Next Placeholder")
+map("n", "<C-k>", "?<++><CR>v3lc", "Change Previous Placeholder")
 
-map(
-  "i",
-  "<C-j>",
-  "<Esc><C-j>",
-  {
-    desc = "Change Next Placeholder",
-    remap = true,
-    silent = true
-  }
-)
-
-map(
-  "n",
-  "<C-k>",
-  "?<++><CR>v3lc",
-  {
-    desc = "Change Previous Placeholder",
-    silent = true
-  }
-)
-
-map(
-  "i",
-  "<C-k>",
-  "<Esc><C-k>",
-  {
-    desc = "Change Previous Placeholder",
-    remap = true,
-    silent = true
-  }
-)
-
-return M
+rmap("i", "<C-j>", "<Esc><C-j>", "Change Next Placeholder")
+rmap("i", "<C-k>", "<Esc><C-k>", "Change Previous Placeholder")
 
 -- vim:ts=2:sts=2:sw=2:et

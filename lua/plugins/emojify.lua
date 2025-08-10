@@ -4,20 +4,18 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-return {
-  {
-    "ronisbr/emojify.nvim",
-    lazy = false,
-    version = false,
+MiniDeps.add({ source = "ronisbr/emojify.nvim" })
 
-    config = function ()
-      require("emojify").setup({
-        inlay = true
-      })
-      vim.cmd("Emojify")
-    end,
-  }
-}
+--------------------------------------------------------------------------------------------
+--                                         Setup                                          --
+--------------------------------------------------------------------------------------------
+
+MiniDeps.now(
+  function()
+    require("emojify").setup({ inlay = true })
+    vim.cmd("Emojify")
+  end
+)
 
 -- vim:ts=2:sts=2:sw=2:et
 
