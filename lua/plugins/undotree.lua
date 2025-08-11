@@ -4,16 +4,10 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-return {
-  {
-    "mbbill/undotree",
-    cmd = "UndotreeToggle",
-    version = false,
-
-    keys = {
-      { "<Leader>ou", ":UndotreeToggle<CR>", desc = "Open Undotree", silent = true }
-    }
-  }
-}
+MiniDeps.later(
+  function()
+    MiniDeps.add({ source = "mbbill/undotree" })
+  end
+)
 
 -- vim:ts=2:sts=2:sw=2:et
