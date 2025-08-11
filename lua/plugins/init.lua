@@ -19,3 +19,4 @@ require("plugins.lsp")
 require("plugins.treesitter")
 require("plugins.vimtex")
 require("plugins.undotree")
+
