@@ -12,12 +12,16 @@ local M = {}
 
 -- Local state of the floating terminal.
 local _floating_term = {
-  buf = nil, -- ........................................... Buffer for the floating terminal
-  win = nil  -- ........................................... Window for the floating terminal
+  buf   = nil, -- ......................................... Buffer for the floating terminal
+  win   = nil, -- ......................................... Window for the floating terminal
+  jobid = nil  -- .......................................... Job ID for the terminal process
 }
 
-local esc_timer = vim.loop.new_timer()
-local esc_timer_active = false
+-- The `<Esc>` key sequence to send to the terminal.
+local _esc_key = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
+
+-- Timer to check if the `<Esc>` key is pressed twice quickly.
+local _esc_timer = nil
 
 --------------------------------------------------------------------------------------------
 --                                    Local Functions                                     --
@@ -56,7 +60,6 @@ local function _toggle_floating_terminal()
 
   -- Check if we need to create a new buffer for the terminal.
   if _floating_term.buf == nil or not vim.api.nvim_buf_is_valid(_floating_term.buf) then
-
     _floating_term.buf = vim.api.nvim_create_buf(false, true)
 
     -- Create the window.
@@ -66,28 +69,51 @@ local function _toggle_floating_terminal()
       _terminal_window_opts()
     )
 
-    vim.fn.jobstart(vim.o.shell, { term = true })
+    _floating_term.jobid = vim.fn.jobstart(
+      vim.o.shell,
+      {
+        on_exit = function() _floating_term.jobid = nil end,
+        term = true
+      }
+    )
     vim.cmd.startinsert()
 
     -- Keymaps -----------------------------------------------------------------------------
 
-    -- vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { noremap = true, silent = true })
-    -- vim.keymap.set("t", "<Esc>", "<Esc>", { noremap = true, silent = true })
+    -- Pressing `<Esc>` once will send it to the terminal after 200 ms. If `<Esc>` is
+    -- pressed twice in this window, we exit to normal mode.
+    vim.keymap.set(
+      "t",
+      "<Esc>",
+      function()
+        _esc_timer = _esc_timer or vim.uv.new_timer()
 
-    vim.keymap.set('t', '<Esc>', function()
-      if esc_timer_active then
-        esc_timer:stop()
-        esc_timer_active = false
-        vim.cmd("stopinsert")  -- sai para modo normal
-      else
-        esc_timer:start(200, 0, function()
-          esc_timer_active = false
-          esc_timer:stop()
-        end)
-        esc_timer_active = true
-        return "<esc>"  -- envia Esc para o terminal
-      end
-    end, { expr = true, noremap = true, silent = true })
+        if _esc_timer:is_active() then
+          _esc_timer:stop()
+          vim.cmd.stopinsert()
+          return ""
+        else
+          _esc_timer:start(
+            200,
+            0,
+            function()
+              vim.schedule(
+                function()
+                  -- In the timeout, we send the `<Esc>` to the terminal.
+                  vim.fn.jobsend(_floating_term.jobid, _esc_key)
+                end
+              )
+            end
+          )
+          return ""
+        end
+      end,
+      {
+        expr    = true,
+        noremap = true,
+        silent  = true
+      }
+    )
 
     -- Autocmds ----------------------------------------------------------------------------
 

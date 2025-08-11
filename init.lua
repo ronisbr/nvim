@@ -6,5 +6,6 @@ require("config.options")
 
 require("misc.julia").setup()
 require("misc.statusline").setup()
+require("misc.floating_terminal").setup()
 
 -- vim:ts=2:sts=2:sw=2:et
