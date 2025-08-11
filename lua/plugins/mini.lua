@@ -127,7 +127,9 @@ MiniDeps.now(
   function()
     MiniDeps.add({ source = "echasnovski/mini.completion" })
 
-    require("mini.completion").setup({})
+    require("mini.completion").setup({
+      delay = { completion = 700, info = 300, signature = 200 },
+    })
 
     -- Keymaps -----------------------------------------------------------------------------
 
