@@ -127,7 +127,7 @@ MiniDeps.now(
   function()
     MiniDeps.add({ source = "echasnovski/mini.completion" })
 
-    require("mini.completion").setup(opts)
+    require("mini.completion").setup({})
 
     -- Keymaps -----------------------------------------------------------------------------
 
@@ -560,20 +560,5 @@ MiniDeps.later(
     mini_trailspace_map("<Leader>tl", MiniTrailspace.trim_last_lines, "Trim Lastlines")
   end
 )
-
---   -- mini.completion -----------------------------------------------------------------------
---
---   {
---     "echasnovski/mini.completion",
---     lazy = false,
---     version = false,
---     dependencies = {
---       -- We need to add this dependency here to ensure that the <Tab> behavior works as
---       -- intended, i.e., the <Tab> key will not complete the copilot suggestion.
---       "github/copilot.vim",
---       "echasnovski/mini.snippets"
---     },
---
---     opts = { },
 
 -- vim:ts=2:sts=2:sw=2:et
