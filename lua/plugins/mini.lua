@@ -62,6 +62,7 @@ MiniDeps.later(
         { mode = "n", keys = "<Leader>c", desc = "+Code" },
         { mode = "n", keys = "<Leader>f", desc = "+Find" },
         { mode = "n", keys = "<Leader>o", desc = "+Open" },
+        { mode = "n", keys = "<Leader>n", desc = "+Notifications" },
         { mode = "n", keys = "<Leader>s", desc = "+Snacks" },
         { mode = "n", keys = "<Leader>t", desc = "+Text" },
 
@@ -355,6 +356,37 @@ MiniDeps.later(
   end
 )
 
+-- mini.notify -----------------------------------------------------------------------------
+
+MiniDeps.later(
+  function()
+    MiniDeps.add({ source = "echasnovski/mini.notify" })
+
+    require("mini.notify").setup({})
+
+    vim.notify = require("mini.notify").make_notify({
+      ERROR = { duration = 10000 },
+    })
+
+    function mini_notify_map(lhs, rhs, desc)
+      return vim.keymap.set("n", lhs, rhs, { desc = desc, silent = true })
+    end
+
+    mini_notify_map("<leader>nd", MiniNotify.clear, "Dismiss All Notifications")
+    mini_notify_map("<leader>ns", MiniNotify.show_history, "Notification History")
+
+    -- Close the notification history buffer with `q`.
+    vim.api.nvim_create_autocmd(
+      "FileType",
+      {
+        pattern = { "mininotify-history" },
+        callback = function(event)
+          vim.keymap.set("n", "q", "<cmd>bd<cr>", { buffer = event.buf, silent = true })
+        end,
+    })
+  end
+)
+
 -- mini.pick -------------------------------------------------------------------------------
 
 MiniDeps.later(
@@ -362,7 +394,6 @@ MiniDeps.later(
     MiniDeps.add({ source = "echasnovski/mini.pick", depends = { "echasnovski/mini.extra" } })
 
     local MiniPick  = require("mini.pick")
-    local MiniExtra = require("mini.extra")
 
     local minipick_window_config = function()
       local height = math.floor(0.618 * vim.o.lines)

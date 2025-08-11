@@ -147,7 +147,7 @@ MiniDeps.now(
       -- notifier --------------------------------------------------------------------------
 
       notifier = {
-        enabled = true,
+        enabled = false,
         timeout = 3000,
         margin = { top = 1 },
       },
@@ -183,8 +183,6 @@ MiniDeps.now(
 
     local map = vim.keymap.set
 
-    map("n", "<leader>sd", Snacks.notifier.hide, { desc = "Dismiss All Notifications" })
-    map("n", "<leader>sn", Snacks.notifier.show_history, { desc = "Notification History" })
     map("n", "<leader>sr", Snacks.rename.rename_file, { desc = "Rename File" })
     map("n", "<leader>sS", Snacks.scratch.select, { desc = "Select Scratch Buffer" })
     map("n", "<leader>sz", Snacks.zen.zen, { desc = "Toggle Zen Mode" })
