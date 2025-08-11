@@ -4,15 +4,12 @@
 --
 -- -----------------------------------------------------------------------------------------
 
+-- copilot.vim -----------------------------------------------------------------------------
+
 MiniDeps.now(
   function()
     MiniDeps.add({ source = "github/copilot.vim" })
-    MiniDeps.add({
-      source = "CopilotC-Nvim/CopilotChat.nvim",
-      depends = { "nvim-lua/plenary.nvim", }
-    })
 
-    -- copilot.vim -------------------------------------------------------------------------
 
     -- Prevent Copilot from mapping <Tab> globally.
     vim.g.copilot_no_tab_map = true
@@ -57,7 +54,17 @@ MiniDeps.now(
 
     mini_completion_map("i", "<CR>", "v:lua.cr_action()")
 
-    -- CopilotChat.nvim --------------------------------------------------------------------
+  end
+)
+
+-- CopilotChat.nvim ------------------------------------------------------------------------
+
+MiniDeps.later(
+  function()
+    MiniDeps.add({
+      source = "CopilotC-Nvim/CopilotChat.nvim",
+      depends = { "nvim-lua/plenary.nvim", }
+    })
 
     -- It is recommended to install the luarocks package `tiktoken_core`. This can be done
     -- by installing Luarocks using `brew`, and then running:
