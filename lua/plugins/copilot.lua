@@ -4,48 +4,61 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-MiniDeps.add({ source = "github/copilot.vim" })
-MiniDeps.add({
-  source = "CopilotC-Nvim/CopilotChat.nvim",
-  depends = { "nvim-lua/plenary.nvim", }
-})
-
---------------------------------------------------------------------------------------------
---                                         Setup                                          --
---------------------------------------------------------------------------------------------
-
--- copilot.vim -----------------------------------------------------------------------------
-
 MiniDeps.now(
   function()
-      -- Prevent Copilot from mapping <Tab> globally.
-      vim.g.copilot_no_tab_map = true
+    MiniDeps.add({ source = "github/copilot.vim" })
+    MiniDeps.add({
+      source = "CopilotC-Nvim/CopilotChat.nvim",
+      depends = { "nvim-lua/plenary.nvim", }
+    })
 
-      vim.keymap.set(
-        "i",
-        "<C-g>",
-        "copilot#Accept(\"\")",
-        {expr = true, replace_keycodes = false, silent = true}
-      )
+    -- copilot.vim -------------------------------------------------------------------------
 
-      local copilot_keymaps = {
-        { key = "<C-k>", cmd = "<Plug>(copilot-accept-word)", desc = "Accept Word"         },
-        { key = "<C-l>", cmd = "<Plug>(copilot-accept-line)", desc = "Accept Line"         },
-        { key = "<C-.>", cmd = "<Plug>(copilot-next)",        desc = "Next Suggestion"     },
-        { key = "<C-,>", cmd = "<Plug>(copilot-previous)",    desc = "Previous Suggestion" },
-        { key = "<C-/>", cmd = "<Plug>(copilot-dismiss)",     desc = "Dismiss Suggestion"  },
-      }
+    -- Prevent Copilot from mapping <Tab> globally.
+    vim.g.copilot_no_tab_map = true
 
-      for _, map in ipairs(copilot_keymaps) do
-        vim.keymap.set("i", map.key, map.cmd, { desc = map.desc, silent = true })
-      end
-  end
-)
+    vim.keymap.set(
+      "i",
+      "<C-g>",
+      "copilot#Accept(\"\")",
+      {expr = true, replace_keycodes = false, silent = true}
+    )
 
--- CopilotChat.nvim ------------------------------------------------------------------------
+    -- Keymaps -----------------------------------------------------------------------------
 
-MiniDeps.later(
-  function()
+    local copilot_keymaps = {
+      { key = "<C-k>", cmd = "<Plug>(copilot-accept-word)", desc = "Accept Word"         },
+      { key = "<C-l>", cmd = "<Plug>(copilot-accept-line)", desc = "Accept Line"         },
+      { key = "<C-.>", cmd = "<Plug>(copilot-next)",        desc = "Next Suggestion"     },
+      { key = "<C-,>", cmd = "<Plug>(copilot-previous)",    desc = "Previous Suggestion" },
+      { key = "<C-/>", cmd = "<Plug>(copilot-dismiss)",     desc = "Dismiss Suggestion"  },
+    }
+
+    for _, map in ipairs(copilot_keymaps) do
+      vim.keymap.set("i", map.key, map.cmd, { desc = map.desc, silent = true })
+    end
+
+    -- We must configure the mini.completion behavior here because copilot overrides it.
+    local function mini_completion_map(mode, lhs, rhs)
+      vim.keymap.set(mode, lhs, rhs, { noremap = true, expr = true })
+    end
+
+    -- Use <Tab> and <S-Tab> to navigate through completion items.
+    mini_completion_map("i", "<Tab>",   "pumvisible() ? '<C-n>' : '<Tab>'")
+    mini_completion_map("i", "<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'")
+
+    -- Configure a more consistent behavior of <CR>.
+    _G.cr_action = function()
+      -- If there is selected item in popup, accept it with <C-y>
+      if vim.fn.complete_info()["selected"] ~= -1 then return '\25' end
+      -- Fall back to plain `<CR>`.
+      return "\r"
+    end
+
+    mini_completion_map("i", "<CR>", "v:lua.cr_action()")
+
+    -- CopilotChat.nvim --------------------------------------------------------------------
+
     -- It is recommended to install the luarocks package `tiktoken_core`. This can be done
     -- by installing Luarocks using `brew`, and then running:
     --

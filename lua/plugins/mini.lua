@@ -4,30 +4,12 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-MiniDeps.add({ source = "echasnovski/mini.align" })
-MiniDeps.add({ source = "echasnovski/mini.clue" })
-MiniDeps.add({ source = "echasnovski/mini.completion" })
-MiniDeps.add({ source = "echasnovski/mini.diff" })
-MiniDeps.add({ source = "echasnovski/mini.extra" })
-MiniDeps.add({ source = "echasnovski/mini.files" })
-MiniDeps.add({ source = "echasnovski/mini.hipatterns" })
-MiniDeps.add({ source = "echasnovski/mini.icons" })
-MiniDeps.add({ source = "echasnovski/mini.indentscope" })
-MiniDeps.add({ source = "echasnovski/mini.misc" })
-MiniDeps.add({ source = "echasnovski/mini.move" })
-MiniDeps.add({ source = "echasnovski/mini.pick", depends = { "echasnovski/mini.extra" } })
-MiniDeps.add({ source = "echasnovski/mini.snippets" })
-MiniDeps.add({ source = "echasnovski/mini.splitjoin" })
-MiniDeps.add({ source = "echasnovski/mini.trailspace" })
-
---------------------------------------------------------------------------------------------
---                                         Setup                                          --
---------------------------------------------------------------------------------------------
-
 -- mini.align ------------------------------------------------------------------------------
 
 MiniDeps.later(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.align" })
+
     require("mini.align").setup({})
   end
 )
@@ -36,6 +18,8 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.clue" })
+
     local miniclue = require("mini.clue")
 
     -- Compute the mini.clue window width dinamically.
@@ -140,6 +124,8 @@ MiniDeps.later(
 
 MiniDeps.now(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.completion" })
+
     require("mini.completion").setup(opts)
 
     -- Keymaps -----------------------------------------------------------------------------
@@ -168,6 +154,8 @@ MiniDeps.now(
 
 MiniDeps.later(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.diff" })
+
     require("mini.diff").setup({})
   end
 )
@@ -176,6 +164,8 @@ MiniDeps.later(
 
 MiniDeps.now(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.extra" })
+
     require("mini.extra").setup({})
   end
 )
@@ -184,6 +174,8 @@ MiniDeps.now(
 
 MiniDeps.later(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.files" })
+
     require("mini.files").setup({
       mappings = {
         go_in_plus = "<Enter>"
@@ -277,6 +269,8 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.hipatterns" })
+
     local hipatterns = require("mini.hipatterns")
 
     hipatterns.setup({
@@ -296,6 +290,8 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.icons" })
+
     require("mini.icons").setup({})
   end
 )
@@ -304,6 +300,8 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.indentscope" })
+
     require("mini.indentscope").setup({
       draw = { delay = 100, },
       symbol = "│"
@@ -330,6 +328,8 @@ MiniDeps.later(
 
 MiniDeps.now(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.misc" })
+
     local MiniMisc = require("mini.misc")
 
     MiniMisc.setup({})
@@ -349,6 +349,8 @@ MiniDeps.now(
 
 MiniDeps.later(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.move" })
+
     require("mini.move").setup({})
   end
 )
@@ -357,6 +359,8 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.pick", depends = { "echasnovski/mini.extra" } })
+
     local MiniPick  = require("mini.pick")
     local MiniExtra = require("mini.extra")
 
@@ -466,6 +470,8 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.snippets" })
+
     local gen_loader = require('mini.snippets').gen_loader
 
     require('mini.snippets').setup({
@@ -480,6 +486,8 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.splitjoin" })
+
     require("mini.splitjoin").setup({
       detect = { separator = "[,;]" }
     })
@@ -490,6 +498,8 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
+    MiniDeps.add({ source = "echasnovski/mini.trailspace" })
+
     require("mini.trailspace").setup({})
 
     -- HACK: We need to disabel the mini.trailspace and enable when a new buffer is

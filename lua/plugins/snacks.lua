@@ -4,29 +4,24 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-MiniDeps.add({ source = "folke/snacks.nvim" })
-
-local M = {}
-
-function M.toggle_terminal()
-  Snacks.terminal.toggle(
-    "/bin/zsh",
-    {
-      win = {
-        border = "rounded",
-        height = 0.8,
-        width = 0.8
-      }
-    }
-  )
-end
-
---------------------------------------------------------------------------------------------
---                                         Setup                                          --
---------------------------------------------------------------------------------------------
-
 MiniDeps.now(
   function()
+    MiniDeps.add({ source = "folke/snacks.nvim" })
+
+    function toggle_terminal()
+      Snacks.terminal.toggle(
+        "/bin/zsh",
+        {
+          win = {
+            border = "rounded",
+            height = 0.8,
+            width = 0.8
+          }
+        }
+      )
+    end
+
+
     require("snacks").setup({
       -- bigfile ---------------------------------------------------------------------------
 
@@ -80,14 +75,6 @@ MiniDeps.now(
               key = "g",
               desc = "LazyGit",
               action = ":lua Snacks.lazygit()",
-              enabled = package.loaded.lazy ~= nil
-            },
-            {
-              icon = "󰒲 ",
-              key = "L",
-              desc = "Lazy",
-              action = ":Lazy",
-              enabled = package.loaded.lazy ~= nil
             },
             {
               icon = " ",
@@ -218,8 +205,8 @@ MiniDeps.now(
 
     -- Terminal ............................................................................
 
-    map("n", "<leader>stt", M.toggle_terminal, { desc = "Toggle Floating Terminal" })
-    map({"n", "i"}, "<F5>", M.toggle_terminal, { desc = "Toggle Floating Terminal" })
+    map("n", "<leader>stt", toggle_terminal, { desc = "Toggle Floating Terminal" })
+    map({"n", "i"}, "<F5>", toggle_terminal, { desc = "Toggle Floating Terminal" })
     map("t", "<F5>", "<C-\\><C-n>:lua require('snacks').terminal.toggle('/bin/zsh')<CR>")
 
     -- Toggle Mappings .....................................................................

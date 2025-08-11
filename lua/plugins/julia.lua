@@ -4,14 +4,10 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-MiniDeps.add({ source = "JuliaEditorSupport/julia-vim" })
-
---------------------------------------------------------------------------------------------
---                                         Setup                                          --
---------------------------------------------------------------------------------------------
-
 MiniDeps.now(
   function()
+    MiniDeps.add({ source = "JuliaEditorSupport/julia-vim" })
+
     vim.g.latex_to_unicode_tab = false
     vim.g.latex_to_unicode_auto = true
 

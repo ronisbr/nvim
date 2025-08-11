@@ -4,20 +4,16 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-MiniDeps.add({
-  source = "neovim/nvim-lspconfig",
-  dependencies = {
-    "echasnovski/mini.completion",
-    "echasnovski/mini.extra",
-  }
-})
-
---------------------------------------------------------------------------------------------
---                                         Setup                                          --
---------------------------------------------------------------------------------------------
-
 MiniDeps.now(
   function()
+    MiniDeps.add({
+      source = "neovim/nvim-lspconfig",
+      dependencies = {
+        "echasnovski/mini.completion",
+        "echasnovski/mini.extra",
+      }
+    })
+
     -- Configuration of the LSP Clients ----------------------------------------------------
 
     vim.lsp.config("*", { capabilities = MiniCompletion.get_lsp_capabilities() })

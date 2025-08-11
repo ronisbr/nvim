@@ -4,12 +4,10 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-MiniDeps.add({
-  source = "sainnhe/gruvbox-material",
-})
-
 MiniDeps.now(
   function()
+    MiniDeps.add({ source = "sainnhe/gruvbox-material", })
+
     vim.g.gruvbox_material_background           = "medium"
     vim.g.gruvbox_material_better_performance   = true
     vim.g.gruvbox_material_dim_inactive_windows = true
