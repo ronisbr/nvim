@@ -10,9 +10,13 @@ MiniDeps.now(
   function()
     MiniDeps.add({ source = "github/copilot.vim" })
 
-
     -- Prevent Copilot from mapping <Tab> globally.
     vim.g.copilot_no_tab_map = true
+
+    -- Disable Copilot inline suggestions because it can slow down the editor significantly.
+    vim.cmd("Copilot disable")
+
+    -- Keymaps -----------------------------------------------------------------------------
 
     vim.keymap.set(
       "i",
@@ -21,9 +25,8 @@ MiniDeps.now(
       {expr = true, replace_keycodes = false, silent = true}
     )
 
-    -- Keymaps -----------------------------------------------------------------------------
-
     local copilot_keymaps = {
+      { key = "<M-/>", cmd = "<Plug>(copilot-suggest)",     desc = "Show Suggestion"     },
       { key = "<C-k>", cmd = "<Plug>(copilot-accept-word)", desc = "Accept Word"         },
       { key = "<C-l>", cmd = "<Plug>(copilot-accept-line)", desc = "Accept Line"         },
       { key = "<C-.>", cmd = "<Plug>(copilot-next)",        desc = "Next Suggestion"     },
