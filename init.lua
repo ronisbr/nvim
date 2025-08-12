@@ -5,7 +5,8 @@ require("config.keymaps")
 require("config.options")
 
 require("misc.julia").setup()
+require("misc.lazygit").setup()
 require("misc.statusline").setup()
-require("misc.floating_terminal").setup()
+require("misc.terminal").setup()
 
 -- vim:ts=2:sts=2:sw=2:et
