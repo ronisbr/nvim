@@ -164,6 +164,8 @@ function M.setup()
   update_lazygit_theme(lazygit_theme_path)
   update_lazygit_config(lazygit_config_path)
 
+  vim.api.nvim_create_user_command("LazyGit", open_lazygit, {})
+
   -- Keymaps -------------------------------------------------------------------------------
 
   vim.keymap.set(
