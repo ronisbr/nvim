@@ -59,6 +59,7 @@ MiniDeps.later(
 
         -- Description of Mapping Groups -------------------------------------------------
 
+        { mode = "n", keys = "<Leader>b", desc = "+Buffer" },
         { mode = "n", keys = "<Leader>c", desc = "+Code" },
         { mode = "n", keys = "<Leader>f", desc = "+Find" },
         { mode = "n", keys = "<Leader>o", desc = "+Open" },
@@ -69,6 +70,8 @@ MiniDeps.later(
         { mode = "n", keys = "<Leader>sb", desc = "+Buffers" },
         { mode = "n", keys = "<Leader>sg", desc = "+Git" },
         { mode = "n", keys = "<Leader>st", desc = "+Toggle" },
+
+        { mode = "v", keys = "<Leader>b", desc = "+Buffer" },
       },
 
       -- Set the triggers that will show miniclue window.
