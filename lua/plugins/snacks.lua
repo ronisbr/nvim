@@ -30,7 +30,7 @@ MiniDeps.now(
       -- dashboard -------------------------------------------------------------------------
 
       dashboard = {
-        enabled = true,
+        enabled = false,
 
         preset = {
           keys = {

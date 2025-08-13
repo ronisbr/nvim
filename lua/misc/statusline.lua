@@ -41,6 +41,7 @@ local modes = setmetatable(
 -- List of filetypes that will be excluded from setting a statusline.
 local excluded_filetypes = {
   "snacks_dashboard",
+  "ministarter"
 }
 
 --------------------------------------------------------------------------------------------

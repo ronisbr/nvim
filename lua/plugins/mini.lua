@@ -4,6 +4,15 @@
 --
 -- -----------------------------------------------------------------------------------------
 
+local neovim_logo = [[
+███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
+██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
+]] .. tostring(vim.version())
+
 -- mini.align ------------------------------------------------------------------------------
 
 MiniDeps.later(
@@ -527,6 +536,141 @@ MiniDeps.later(
     require("mini.splitjoin").setup({
       detect = { separator = "[,;]" }
     })
+  end
+)
+
+-- mini.starter ----------------------------------------------------------------------------
+
+MiniDeps.now(
+  function()
+    MiniDeps.add({ source = "echasnovski/mini.starter" })
+
+    -- Auxiliary Functions -----------------------------------------------------------------
+
+    local function center_header(content)
+      -- Compute the maximum width of the lines in the content.
+      local max_width = 0
+
+      for _, line in ipairs(content) do
+        for _, unit in ipairs(line) do
+          local width = vim.fn.strdisplaywidth(unit.string)
+
+          if width > max_width then
+            max_width = width
+          end
+        end
+      end
+
+      -- Detect header lines and pad them for center alignment
+      local coords = {}
+      vim.list_extend(coords, MiniStarter.content_coords(content, "header"))
+      vim.list_extend(coords, MiniStarter.content_coords(content, "footer"))
+
+      for _, c in ipairs(coords) do
+        local line = content[c.line]
+
+        -- Get total length of this header line.
+        local line_width = 0
+
+        for _, unit in ipairs(line) do
+          line_width = line_width + vim.fn.strdisplaywidth(unit.string)
+        end
+
+        local pad = math.max(math.floor((max_width - line_width) / 2), 0)
+
+        -- Add left padding on first unit
+        local left_pad = #line > 0 and string.rep(" ", pad) or ""
+
+        -- Insert the padding in the line as an empty item.
+        table.insert(
+          line,
+          1,
+          {
+            string = left_pad,
+            type = "empty"
+          }
+        )
+      end
+
+      return content
+    end
+
+    -- Return the footer for the mini.starter.
+    local function mini_starter_footer()
+      local tbl_footer = {}
+
+      -- Startup Time ----------------------------------------------------------------------
+
+      local started = _G.__nvim_start_time
+      if not started then return "" end
+      local dt_ns = vim.uv.hrtime() - started
+      local ms = math.floor(dt_ns / 1e6 + 0.5)
+
+      table.insert(tbl_footer, string.format("Startup : %d ms", ms))
+
+      -- Footer ----------------------------------------------------------------------------
+
+      return "\n" .. table.concat(tbl_footer, "\n")
+    end
+
+    -- Setup -------------------------------------------------------------------------------
+
+    local starter = require("mini.starter")
+
+    local items = {
+      { name = "Find File",    action = ":Pick files",                           section = "Actions" },
+      { name = "New File",     action = ":ene | startinsert",                    section = "Actions" },
+      { name = "Find Text",    action = ":Pick grep_live",                       section = "Actions" },
+      { name = "Recent Files", action = ":Pick oldfiles",                        section = "Actions" },
+      { name = "Config",       action = ":lua MiniFiles.open('~/.config/nvim')", section = "Actions" },
+      { name = "LazyGit",      action = ":LazyGit",                              section = "Actions" },
+      { name = "Quit",         action = ":qa",                                   section = "Actions" },
+      starter.sections.recent_files(10, false, true),
+    }
+
+    starter.setup({
+      header = neovim_logo .. "\n\n",
+      items  = items,
+      footer = mini_starter_footer,
+      content_hooks = {
+        starter.gen_hook.adding_bullet(),
+        center_header,
+        starter.gen_hook.aligning("center", "center"),
+      }
+    })
+
+    -- Autocmds ----------------------------------------------------------------------------
+
+    -- Create the an event to refresh the mini.starter after the `UIEnter`, updating the
+    -- startupt time.
+    vim.api.nvim_create_autocmd(
+      "UIEnter",
+      {
+        once     = true,
+        callback = function() MiniStarter.refresh() end,
+      }
+    )
+
+    vim.api.nvim_create_autocmd(
+      "User",
+      {
+        pattern = {
+          "MiniStarterOpened"
+        },
+        callback = function()
+          -- Remove characters at the end of buffer.
+          vim.opt_local.fillchars = "eob: "
+
+          -- Hide the status line by changing its highlight group.
+          local ns = vim.api.nvim_create_namespace("mini_starter_statusline_ns")
+          vim.api.nvim_set_hl(ns, "StatusLine",   { link = "Normal" })
+          vim.api.nvim_set_hl(ns, "StatusLineNC", { link = "Normal" })
+
+          -- Apply the namespace to the current window (which shows the Starter buffer).
+          vim.api.nvim_win_set_hl_ns(0, ns)
+        end
+      }
+    )
   end
 )
 
