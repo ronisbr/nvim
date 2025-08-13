@@ -121,6 +121,7 @@ local function toggle_floating_terminal()
         end
       end,
       {
+        buffer  = floating_term.buf,
         expr    = true,
         noremap = true,
         silent  = true
@@ -129,11 +130,14 @@ local function toggle_floating_terminal()
 
     -- Autocmds ----------------------------------------------------------------------------
 
+    local group_id = vim.api.nvim_create_augroup("FloatingTerminal", { clear = true } )
+
     -- Close the window if the buffer is deleted.
     vim.api.nvim_create_autocmd(
       "BufWipeout",
       {
-        buffer = floating_term.buf,
+        buffer   = floating_term.buf,
+        group    = group_id,
         callback = function()
           if floating_term.win and vim.api.nvim_win_is_valid(floating_term.win) then
             vim.api.nvim_win_close(floating_term.win, true)
@@ -191,15 +195,28 @@ local function toggle_bottom_terminal()
 
   -- Keymaps -------------------------------------------------------------------------------
 
-  vim.keymap.set('t', '<C-w>h', "<C-\\><C-n><C-w>h", { noremap = true, silent = true })
-  vim.keymap.set('t', '<C-w>j', "<C-\\><C-n><C-w>j", { noremap = true, silent = true })
-  vim.keymap.set('t', '<C-w>k', "<C-\\><C-n><C-w>k", { noremap = true, silent = true })
-  vim.keymap.set('t', '<C-w>l', "<C-\\><C-n><C-w>l", { noremap = true, silent = true })
+  function bottom_term_map(lhs, rhs)
+    vim.keymap.set(
+      "t",
+      lhs,
+      rhs,
+      {
+        buffer  = bottom_term.buf,
+        noremap = true,
+        silent  = true
+      }
+    )
+  end
 
-  vim.keymap.set('t', '<C-w><Left>',  "<C-\\><C-n><C-w>h", { noremap = true, silent = true })
-  vim.keymap.set('t', '<C-w><Down>',  "<C-\\><C-n><C-w>j", { noremap = true, silent = true })
-  vim.keymap.set('t', '<C-w><Up>',    "<C-\\><C-n><C-w>k", { noremap = true, silent = true })
-  vim.keymap.set('t', '<C-w><Right>', "<C-\\><C-n><C-w>l", { noremap = true, silent = true })
+  bottom_term_map("<C-w>h", "<C-\\><C-n><C-w>h")
+  bottom_term_map("<C-w>j", "<C-\\><C-n><C-w>j")
+  bottom_term_map("<C-w>k", "<C-\\><C-n><C-w>k")
+  bottom_term_map("<C-w>l", "<C-\\><C-n><C-w>l")
+
+  bottom_term_map("<C-w><Left>",  "<C-\\><C-n><C-w>h")
+  bottom_term_map("<C-w><Down>",  "<C-\\><C-n><C-w>j")
+  bottom_term_map("<C-w><Up>",    "<C-\\><C-n><C-w>k")
+  bottom_term_map("<C-w><Right>", "<C-\\><C-n><C-w>l")
 
   -- Pressing `<Esc>` once will send it to the terminal after 200 ms. If `<Esc>` is
   -- pressed twice in this window, we exit to normal mode.
@@ -230,6 +247,7 @@ local function toggle_bottom_terminal()
       end
     end,
     {
+      buffer  = bottom_term.buf,
       expr    = true,
       noremap = true,
       silent  = true
@@ -238,11 +256,14 @@ local function toggle_bottom_terminal()
 
   -- Autocmds ----------------------------------------------------------------------------
 
+  local group_id = vim.api.nvim_create_augroup("BottomTerminal", { clear = true } )
+
   -- Close the window if the buffer is deleted.
   vim.api.nvim_create_autocmd(
     "BufWipeout",
     {
-      buffer = bottom_term.buf,
+      buffer   = bottom_term.buf,
+      group    = group_id,
       callback = function()
         if bottom_term.win and vim.api.nvim_win_is_valid(bottom_term.win) then
           vim.api.nvim_win_close(bottom_term.win, true)
@@ -252,20 +273,69 @@ local function toggle_bottom_terminal()
     }
   )
 
+  -- Always start in insert mode when entering the terminal.
   vim.api.nvim_create_autocmd(
     "BufEnter",
     {
-      buffer = bottom_term.buf,
+      buffer   = bottom_term.buf,
+      group    = group_id,
       callback = function() vim.cmd.startinsert() end
+    })
+
+  -- Close Neovim if the bottom terminal is the only remaining window.
+  vim.api.nvim_create_autocmd(
+    "WinClosed",
+    {
+      group    = group_id,
+      callback = function(args)
+        -- Skip if the bottom terminal buffer isn’t defined or valid.
+        if not (bottom_term and bottom_term.buf and vim.api.nvim_buf_is_valid(bottom_term.buf)) then
+          return nil
+        end
+
+        -- ID of the window that is being closed (string -> number).
+        local closing_win = tonumber(args.match)
+        if not closing_win then return nil end
+
+        -- List current windows and count how many will remain after this one closes.
+        local wins = vim.api.nvim_list_wins()
+
+        -- If after closing there will be exactly 1 window left.
+        if #wins - 1 == 1 then
+          -- Find that remaining window (the one that is not the closing window)
+          local remaining_win = nil
+
+          for _, w in ipairs(wins) do
+            if w ~= closing_win then
+              remaining_win = w
+              break
+            end
+          end
+
+          if not remaining_win or not vim.api.nvim_win_is_valid(remaining_win) then
+            return nil
+          end
+
+          local remaining_buf = vim.api.nvim_win_get_buf(remaining_win)
+
+          -- If the only remaining window would show the bottom terminal, quit Neovim.
+          if remaining_buf == bottom_term.buf then
+            -- Try graceful quit; if blocked (unsaved buffers), Neovim will prompt
+            pcall(vim.cmd, "qa")
+          end
+        end
+      end,
   })
 
   return nil
 end
 
+--- Send the given text to the bottom terminal.
+-- @param text string: The text to send to the terminal.
 local function send_to_bottom_term(text)
   -- Ensure if the bottom terminal is running.
   if not (
-    bottom_term and bottom_term.jobid and vim.fn.jobwait({ bottom_term.jobid }, 0)[0] == -1
+    bottom_term and bottom_term.jobid and vim.fn.jobwait({ bottom_term.jobid }, 0)[1] == -1
   ) then
     vim.notify("Bottom terminal is not running.", vim.log.levels.ERROR)
     return nil
@@ -273,75 +343,61 @@ local function send_to_bottom_term(text)
 
   -- Send to terminal job.
   vim.fn.chansend(bottom_term.jobid, text)
+
+  -- Update the terminal so that the cursor is at its end.
+  vim.api.nvim_win_set_cursor(
+    bottom_term.win,
+    { vim.api.nvim_buf_line_count(bottom_term.buf), 0 }
+  )
 end
 
+--- Sends the entire current buffer to the bottom terminal.
+local function send_buffer_to_bottom_term()
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local text  = table.concat(lines, "\n") .. "\n"
+  send_to_bottom_term(text)
+end
+
+--- Sends the visually selected text to the bottom terminal.
 local function send_visual_to_bottom_term()
-  -- Detect selection mode: 'v' = charwise, 'V' = linewise, CTRL-V = blockwise
-  local mode = vim.fn.visualmode()
-
-  -- Get start and end positions (line, col)
+  -- Get the start and end of the visual selection.
   local start_pos = vim.fn.getpos("v")
-  local end_pos   = vim.fn.getpos(".")
+  local end_pos = vim.fn.getpos(".")
 
-  local start_line, start_col = start_pos[2], start_pos[3]
-  local end_line, end_col     = end_pos[2],   end_pos[3]
+  -- Figure out the active visual mode.
+  local mode = vim.fn.mode()
 
-  -- Normalize positions if selection is backwards
-  if start_line > end_line or (start_line == end_line and start_col > end_col) then
-    start_line, end_line = end_line, start_line
-    start_col, end_col   = end_col, start_col
-  end
+  -- Use getregion to get selected lines as a table of strings.
+  local lines = vim.fn.getregion(start_pos, end_pos, {type = mode})
 
-  -- Get all selected lines
-  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
-
-  if mode == "v" then
-    -- Characterwise: trim first and last lines to column boundaries
-    if #lines == 1 then
-      lines[1] = string.sub(lines[1], start_col, end_col)
-    else
-      lines[1]   = string.sub(lines[1], start_col)
-      lines[#lines] = string.sub(lines[#lines], 1, end_col)
-    end
-  elseif mode == "\22" then
-    -- Blockwise (<C-v>): extract only the block range
-    for i, line in ipairs(lines) do
-      lines[i] = string.sub(line, start_col, end_col)
-    end
-  elseif mode == "V" then
-    -- Linewise: keep full lines as-is (no column trimming)
-    -- nothing to trim
-  end
-
-  -- Add newline so the terminal executes immediately
+  -- Concatenate the text to be sent to the terminal.
   local text = table.concat(lines, "\n") .. "\n"
 
   send_to_bottom_term(text)
 end
 
--- Map it in isual mode
-vim.keymap.set("v", "<leader>s", send_visual_to_bottom_term, { desc = "Send selection to bottom terminal" })
-
 --------------------------------------------------------------------------------------------
 --                                    Public Functions                                    --
 --------------------------------------------------------------------------------------------
 
---- Setup the floating terminal plugin.
--- Create the user command and keymaps for toggling the floating terminal.
+--- Setup the terminal plugin.
 function M.setup()
   -- Create the user command to toggle the floating terminal.
   vim.api.nvim_create_user_command("ToggleFloatingTerminal", toggle_floating_terminal, {})
+  vim.api.nvim_create_user_command("ToggleBottomTerminal",   toggle_bottom_terminal,   {})
 
   -- Keymaps -------------------------------------------------------------------------------
 
-  local function float_term_map(mode, lhs, rhs, desc)
+  local function term_map(mode, lhs, rhs, desc)
     vim.keymap.set(mode, lhs, rhs, { desc = desc, silent = true })
   end
 
-  float_term_map("n", "<F5>", toggle_floating_terminal, "Toggle Float Terminal")
-  float_term_map("t", "<F5>", toggle_floating_terminal, "Toggle Float Terminal")
-  float_term_map("n", "<F6>", toggle_bottom_terminal, "Toggle Float Terminal")
-  float_term_map("t", "<F6>", toggle_bottom_terminal, "Toggle Float Terminal")
+  term_map("n", "<F5>",       toggle_floating_terminal,   "Toggle Float Terminal")
+  term_map("t", "<F5>",       toggle_floating_terminal,   "Toggle Float Terminal")
+  term_map("n", "<F6>",       toggle_bottom_terminal,     "Toggle Float Terminal")
+  term_map("t", "<F6>",       toggle_bottom_terminal,     "Toggle Float Terminal")
+  term_map("n", "<Leader>bs", send_buffer_to_bottom_term, "Send Buffer to Bottom Terminal")
+  term_map("v", "<Leader>bs", send_visual_to_bottom_term, "Send Selection to Bottom Terminal")
 end
 
 return M
