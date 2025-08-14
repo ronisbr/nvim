@@ -17,6 +17,7 @@ local ctrl_V = vim.api.nvim_replace_termcodes("<C-V>", true, true, true)
 local modes = setmetatable(
   {
     ["n"]    = { long = "Normal",   short = " N ", hl = "StatuslineModeNormal" },
+    ["nt"]   = { long = "Normal",   short = " N ", hl = "StatuslineModeNormal" },
     ["v"]    = { long = "Visual",   short = " V ", hl = "StatuslineModeVisual" },
     ["V"]    = { long = "V-Line",   short = "V/L", hl = "StatuslineModeVisual" },
     [ctrl_V] = { long = "V-Block",  short = "V/B", hl = "StatuslineModeVisual" },
