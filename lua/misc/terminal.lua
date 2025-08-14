@@ -109,6 +109,10 @@ local function toggle_floating_terminal()
         if esc_timer_ft:is_active() then
           esc_timer_ft:stop()
           vim.cmd.stopinsert()
+
+          -- Consume the next keypress that would be sent to the terminal.
+          vim.schedule(function() vim.fn.getchar(0) end)
+
           return ""
         else
           esc_timer_ft:start(
@@ -241,6 +245,10 @@ local function toggle_bottom_terminal()
       if esc_timer_bt:is_active() then
         esc_timer_bt:stop()
         vim.cmd.stopinsert()
+
+        -- Consume the next keypress that would be sent to the terminal.
+        vim.schedule(function() vim.fn.getchar(0) end)
+
         return ""
       else
         esc_timer_bt:start(
