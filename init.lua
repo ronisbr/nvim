@@ -12,4 +12,13 @@ require("misc.lazygit").setup()
 require("misc.statusline").setup()
 require("misc.terminal").setup()
 
+MiniDeps.later(
+  function()
+    local num_plugins = #MiniDeps.get_session()
+    _G.__nvim_num_loaded_plugins = num_plugins
+
+    vim.cmd("doautocmd User MiniDepsFinished")
+  end
+)
+
 -- vim:ts=2:sts=2:sw=2:et

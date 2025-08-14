@@ -597,20 +597,32 @@ MiniDeps.now(
 
     -- Return the footer for the mini.starter.
     local function mini_starter_footer()
-      local tbl_footer = {}
+
+      local num_plugins_str = ""
+
+      if _G.__nvim_num_loaded_plugins then
+        num_plugins_str = string.format("Loaded Plugins : %d", _G.__nvim_num_loaded_plugins)
+      end
 
       -- Startup Time ----------------------------------------------------------------------
 
-      local started = _G.__nvim_start_time
-      if not started then return "" end
-      local dt_ns = vim.uv.hrtime() - started
-      local ms = math.floor(dt_ns / 1e6 + 0.5)
-
-      table.insert(tbl_footer, string.format("Startup : %d ms", ms))
+      local startup_time_str = ""
+      if _G.__nvim_startup_time then
+        startup_time_str = string.format("Startup Time   : %d ms", _G.__nvim_startup_time)
+      end
 
       -- Footer ----------------------------------------------------------------------------
 
-      return "\n" .. table.concat(tbl_footer, "\n")
+      -- Apply padding to make the centering nicer.
+      local np_width     = vim.fn.strdisplaywidth(num_plugins_str)
+      local st_width     = vim.fn.strdisplaywidth(startup_time_str)
+      local max_width    = math.max(np_width, st_width)
+      local np_right_pad = string.rep(" ", max_width - np_width)
+      local st_right_pad = string.rep(" ", max_width - st_width)
+
+      return "\n" ..
+        num_plugins_str  .. np_right_pad .. "\n" ..
+        startup_time_str .. st_right_pad .. "\n"
     end
 
     -- Setup -------------------------------------------------------------------------------
@@ -644,10 +656,21 @@ MiniDeps.now(
     -- Create the an event to refresh the mini.starter after the `UIEnter`, updating the
     -- startupt time.
     vim.api.nvim_create_autocmd(
-      "UIEnter",
+      "User",
       {
+        pattern  = "MiniDepsFinished",
         once     = true,
-        callback = function() MiniStarter.refresh() end,
+        callback = function() 
+          if not _G.__nvim_startup_time then
+            local started = _G.__nvim_start_time
+            if not started then return "" end
+            local dt_ns = vim.uv.hrtime() - started
+            local ms = math.floor(dt_ns / 1e6 + 0.5)
+            _G.__nvim_startup_time = ms
+          end
+
+          MiniStarter.refresh()
+        end,
       }
     )
 
