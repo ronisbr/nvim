@@ -18,14 +18,14 @@ local esc_timer_ft = nil
 local esc_timer_bt = nil
 
 -- Local state of the floating terminal.
-local floating_term = {
+M.floating_term = {
   buf   = nil, -- ......................................... Buffer for the floating terminal
   win   = nil, -- ......................................... Window for the floating terminal
   jobid = nil  -- .......................................... Job ID for the terminal process
 }
 
 -- Local state of the bottom terminal.
-local bottom_term = {
+M.bottom_term = {
   buf   = nil, -- ......................................... Buffer for the floating terminal
   win   = nil, -- ......................................... Window for the floating terminal
   jobid = nil  -- .......................................... Job ID for the terminal process
@@ -64,33 +64,33 @@ end
 -- If the terminal is open, it hides it. Otherwise, it creates or shows the floating
 -- terminal. Handles buffer/window/job creation, keymaps, and autocmds for the terminal.
 local function toggle_floating_terminal()
-  if floating_term.win ~= nil and vim.api.nvim_win_is_valid(floating_term.win) then
+  if M.floating_term.win ~= nil and vim.api.nvim_win_is_valid(M.floating_term.win) then
     -- If the floating window is open, we hide it.
-    vim.api.nvim_win_hide(floating_term.win)
+    vim.api.nvim_win_hide(M.floating_term.win)
     return nil
   end
 
   -- Check if we need to create a new buffer for the terminal.
-  if floating_term.buf == nil or not vim.api.nvim_buf_is_valid(floating_term.buf) then
-    floating_term.buf = vim.api.nvim_create_buf(false, true)
+  if M.floating_term.buf == nil or not vim.api.nvim_buf_is_valid(M.floating_term.buf) then
+    M.floating_term.buf = vim.api.nvim_create_buf(false, true)
 
     -- Create the window.
-    floating_term.win = vim.api.nvim_open_win(
-      floating_term.buf,
+    M.floating_term.win = vim.api.nvim_open_win(
+      M.floating_term.buf,
       true,
       terminal_window_opts()
     )
 
-    floating_term.jobid = vim.fn.jobstart(
+    M.floating_term.jobid = vim.fn.jobstart(
       vim.o.shell,
       {
-        on_exit = function() floating_term.jobid = nil end,
+        on_exit = function() M.floating_term.jobid = nil end,
         term = true
       }
     )
 
     vim.api.nvim_buf_call(
-      floating_term.buf,
+      M.floating_term.buf,
       function() vim.cmd.setfiletype("terminal") end
     )
 
@@ -118,7 +118,7 @@ local function toggle_floating_terminal()
               vim.schedule(
                 function()
                   -- In the timeout, we send the `<Esc>` to the terminal.
-                  vim.fn.chansend(floating_term.jobid, esc_key)
+                  vim.fn.chansend(M.floating_term.jobid, esc_key)
                 end
               )
             end
@@ -127,7 +127,7 @@ local function toggle_floating_terminal()
         end
       end,
       {
-        buffer  = floating_term.buf,
+        buffer  = M.floating_term.buf,
         expr    = true,
         noremap = true,
         silent  = true
@@ -142,12 +142,12 @@ local function toggle_floating_terminal()
     vim.api.nvim_create_autocmd(
       "BufWipeout",
       {
-        buffer   = floating_term.buf,
+        buffer   = M.floating_term.buf,
         group    = group_id,
         callback = function()
-          if floating_term.win and vim.api.nvim_win_is_valid(floating_term.win) then
-            vim.api.nvim_win_close(floating_term.win, true)
-            floating_term.win = nil
+          if M.floating_term.win and vim.api.nvim_win_is_valid(M.floating_term.win) then
+            vim.api.nvim_win_close(M.floating_term.win, true)
+            M.floating_term.win = nil
           end
         end,
       }
@@ -158,7 +158,7 @@ local function toggle_floating_terminal()
 
   -- If we reach this point, the buffer already exists, so we just need to open the window.
   local opts = terminal_window_opts()
-  floating_term.win = vim.api.nvim_open_win(floating_term.buf, true, opts)
+  M.floating_term.win = vim.api.nvim_open_win(M.floating_term.buf, true, opts)
   vim.cmd.startinsert()
 
   return nil
@@ -168,38 +168,38 @@ end
 -- If the terminal is open, it hides it. Otherwise, it creates or shows the floating
 -- terminal. Handles buffer/window/job creation, keymaps, and autocmds for the terminal.
 local function toggle_bottom_terminal()
-  if bottom_term.win ~= nil and vim.api.nvim_win_is_valid(bottom_term.win) then
+  if M.bottom_term.win ~= nil and vim.api.nvim_win_is_valid(M.bottom_term.win) then
     -- If the bottom window is open, we hide it.
-    vim.api.nvim_win_hide(bottom_term.win)
+    vim.api.nvim_win_hide(M.bottom_term.win)
     return nil
   end
 
   -- Check if we need to create a new buffer for the terminal.
-  if bottom_term.buf and vim.api.nvim_buf_is_valid(bottom_term.buf) then
+  if M.bottom_term.buf and vim.api.nvim_buf_is_valid(M.bottom_term.buf) then
     vim.cmd("botright 15split")
-    bottom_term.win = vim.api.nvim_get_current_win()
-    vim.api.nvim_win_set_buf(bottom_term.win, bottom_term.buf)
+    M.bottom_term.win = vim.api.nvim_get_current_win()
+    vim.api.nvim_win_set_buf(M.bottom_term.win, M.bottom_term.buf)
     vim.cmd.startinsert()
     return nil
   end
 
   -- If we reach this point, we need to open a new terminal.
   vim.cmd("botright 15split")
-  bottom_term.win = vim.api.nvim_get_current_win()
-  bottom_term.buf = vim.api.nvim_create_buf(false, true)
+  M.bottom_term.win = vim.api.nvim_get_current_win()
+  M.bottom_term.buf = vim.api.nvim_create_buf(false, true)
 
-  vim.api.nvim_win_set_buf(bottom_term.win, bottom_term.buf)
+  vim.api.nvim_win_set_buf(M.bottom_term.win, M.bottom_term.buf)
 
-  bottom_term.jobid = vim.fn.jobstart(
+  M.bottom_term.jobid = vim.fn.jobstart(
     vim.o.shell,
     {
-      on_exit = function() bottom_term.jobid = nil end,
+      on_exit = function() M.bottom_term.jobid = nil end,
       term = true
     }
   )
 
   vim.api.nvim_buf_call(
-    bottom_term.buf,
+    M.bottom_term.buf,
     function() vim.cmd.setfiletype("terminal") end
   )
 
@@ -213,7 +213,7 @@ local function toggle_bottom_terminal()
       lhs,
       rhs,
       {
-        buffer  = bottom_term.buf,
+        buffer  = M.bottom_term.buf,
         noremap = true,
         silent  = true
       }
@@ -250,7 +250,7 @@ local function toggle_bottom_terminal()
             vim.schedule(
               function()
                 -- In the timeout, we send the `<Esc>` to the terminal.
-                vim.fn.chansend(bottom_term.jobid, esc_key)
+                vim.fn.chansend(M.bottom_term.jobid, esc_key)
               end
             )
           end
@@ -259,7 +259,7 @@ local function toggle_bottom_terminal()
       end
     end,
     {
-      buffer  = bottom_term.buf,
+      buffer  = M.bottom_term.buf,
       expr    = true,
       noremap = true,
       silent  = true
@@ -274,12 +274,12 @@ local function toggle_bottom_terminal()
   vim.api.nvim_create_autocmd(
     "BufWipeout",
     {
-      buffer   = bottom_term.buf,
+      buffer   = M.bottom_term.buf,
       group    = group_id,
       callback = function()
-        if bottom_term.win and vim.api.nvim_win_is_valid(bottom_term.win) then
-          vim.api.nvim_win_close(bottom_term.win, true)
-          bottom_term.win = nil
+        if M.bottom_term.win and vim.api.nvim_win_is_valid(M.bottom_term.win) then
+          vim.api.nvim_win_close(M.bottom_term.win, true)
+          M.bottom_term.win = nil
         end
       end,
     }
@@ -289,7 +289,7 @@ local function toggle_bottom_terminal()
   vim.api.nvim_create_autocmd(
     "BufEnter",
     {
-      buffer   = bottom_term.buf,
+      buffer   = M.bottom_term.buf,
       group    = group_id,
       callback = function() vim.cmd.startinsert() end
     })
@@ -301,7 +301,7 @@ local function toggle_bottom_terminal()
       group    = group_id,
       callback = function(args)
         -- Skip if the bottom terminal buffer isn’t defined or valid.
-        if not (bottom_term and bottom_term.buf and vim.api.nvim_buf_is_valid(bottom_term.buf)) then
+        if not (bottom_term and M.bottom_term.buf and vim.api.nvim_buf_is_valid(M.bottom_term.buf)) then
           return nil
         end
 
@@ -331,7 +331,7 @@ local function toggle_bottom_terminal()
           local remaining_buf = vim.api.nvim_win_get_buf(remaining_win)
 
           -- If the only remaining window would show the bottom terminal, quit Neovim.
-          if remaining_buf == bottom_term.buf then
+          if remaining_buf == M.bottom_term.buf then
             -- Try graceful quit; if blocked (unsaved buffers), Neovim will prompt
             pcall(vim.cmd, "qa")
           end
@@ -347,19 +347,19 @@ end
 local function send_to_bottom_term(text)
   -- Ensure if the bottom terminal is running.
   if not (
-    bottom_term and bottom_term.jobid and vim.fn.jobwait({ bottom_term.jobid }, 0)[1] == -1
+    bottom_term and M.bottom_term.jobid and vim.fn.jobwait({ M.bottom_term.jobid }, 0)[1] == -1
   ) then
     vim.notify("Bottom terminal is not running.", vim.log.levels.ERROR)
     return nil
   end
 
   -- Send to terminal job.
-  vim.fn.chansend(bottom_term.jobid, text)
+  vim.fn.chansend(M.bottom_term.jobid, text)
 
   -- Update the terminal so that the cursor is at its end.
   vim.api.nvim_win_set_cursor(
-    bottom_term.win,
-    { vim.api.nvim_buf_line_count(bottom_term.buf), 0 }
+    M.bottom_term.win,
+    { vim.api.nvim_buf_line_count(M.bottom_term.buf), 0 }
   )
 end
 
@@ -373,8 +373,8 @@ end
 --- Sends the current buffer to the bottom terminal and focuses its window.
 local function send_buffer_to_bottom_term_with_focus()
   send_buffer_to_bottom_term()
-  if bottom_term.win and vim.api.nvim_win_is_valid(bottom_term.win) then
-    vim.api.nvim_set_current_win(bottom_term.win)
+  if M.bottom_term.win and vim.api.nvim_win_is_valid(M.bottom_term.win) then
+    vim.api.nvim_set_current_win(M.bottom_term.win)
   end
 end
 
@@ -400,8 +400,9 @@ end
 --- Sends the visually selected text to the bottom terminal and focuses its window.
 local function send_visual_to_bottom_term_with_focus()
   send_visual_to_bottom_term()
-  if bottom_term.win and vim.api.nvim_win_is_valid(bottom_term.win) then
-    vim.api.nvim_set_current_win(bottom_term.win)
+  if M.bottom_term.win and vim.api.nvim_win_is_valid(M.bottom_term.win) then
+    vim.api.nvim_set_current_win(M.bottom_term.win)
+    vim.api.nvim_feedkeys(esc_key, "n", false)
   end
 end
 
