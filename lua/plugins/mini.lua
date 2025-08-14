@@ -670,7 +670,7 @@ MiniDeps.now(
             _G.__nvim_startup_time = ms
           end
 
-          MiniStarter.refresh()
+          if vim.bo.filetype == "ministarter" then MiniStarter.refresh() end
         end,
       }
     )
