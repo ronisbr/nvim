@@ -88,6 +88,12 @@ local function toggle_floating_terminal()
         term = true
       }
     )
+
+    vim.api.nvim_buf_call(
+      floating_term.buf,
+      function() vim.cmd.setfiletype("terminal") end
+    )
+
     vim.cmd.startinsert()
 
     -- Keymaps -----------------------------------------------------------------------------
@@ -191,6 +197,12 @@ local function toggle_bottom_terminal()
       term = true
     }
   )
+
+  vim.api.nvim_buf_call(
+    bottom_term.buf,
+    function() vim.cmd.setfiletype("terminal") end
+  )
+
   vim.cmd.startinsert()
 
   -- Keymaps -------------------------------------------------------------------------------
