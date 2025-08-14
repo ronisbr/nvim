@@ -351,11 +351,19 @@ local function send_to_bottom_term(text)
   )
 end
 
---- Sends the entire current buffer to the bottom terminal.
+--- Sends the current buffer to the bottom terminal.
 local function send_buffer_to_bottom_term()
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-  local text  = table.concat(lines, "\n") .. "\n"
+  local text  = table.concat(lines, "\n"):gsub("[\r\n]+$", "") .. "\n"
   send_to_bottom_term(text)
+end
+
+--- Sends the current buffer to the bottom terminal and focuses its window.
+local function send_buffer_to_bottom_term_with_focus()
+  send_buffer_to_bottom_term()
+  if bottom_term.win and vim.api.nvim_win_is_valid(bottom_term.win) then
+    vim.api.nvim_set_current_win(bottom_term.win)
+  end
 end
 
 --- Sends the visually selected text to the bottom terminal.
@@ -370,10 +378,19 @@ local function send_visual_to_bottom_term()
   -- Use getregion to get selected lines as a table of strings.
   local lines = vim.fn.getregion(start_pos, end_pos, {type = mode})
 
-  -- Concatenate the text to be sent to the terminal.
-  local text = table.concat(lines, "\n") .. "\n"
+  -- Concatenate the text to be sent to the terminal. We will remove all trailing newline
+  -- characters.
+  local text = table.concat(lines, "\n"):gsub("[\r\n]+$", "") .. "\n"
 
   send_to_bottom_term(text)
+end
+
+--- Sends the visually selected text to the bottom terminal and focuses its window.
+local function send_visual_to_bottom_term_with_focus()
+  send_visual_to_bottom_term()
+  if bottom_term.win and vim.api.nvim_win_is_valid(bottom_term.win) then
+    vim.api.nvim_set_current_win(bottom_term.win)
+  end
 end
 
 --------------------------------------------------------------------------------------------
@@ -392,12 +409,16 @@ function M.setup()
     vim.keymap.set(mode, lhs, rhs, { desc = desc, silent = true })
   end
 
-  term_map("n", "<F5>",       toggle_floating_terminal,   "Toggle Float Terminal")
-  term_map("t", "<F5>",       toggle_floating_terminal,   "Toggle Float Terminal")
-  term_map("n", "<F6>",       toggle_bottom_terminal,     "Toggle Float Terminal")
-  term_map("t", "<F6>",       toggle_bottom_terminal,     "Toggle Float Terminal")
-  term_map("n", "<Leader>bs", send_buffer_to_bottom_term, "Send Buffer to Bottom Terminal")
-  term_map("v", "<Leader>bs", send_visual_to_bottom_term, "Send Selection to Bottom Terminal")
+  term_map("n", "<F5>",       toggle_floating_terminal,              "Toggle Float Terminal")
+  term_map("t", "<F5>",       toggle_floating_terminal,              "Toggle Float Terminal")
+  term_map("i", "<F5>",       "<Esc>:ToggleFloatingTerminal<CR>",    "Toogle Float Terminal")
+  term_map("n", "<F6>",       toggle_bottom_terminal,                "Toggle Bottom Terminal")
+  term_map("t", "<F6>",       toggle_bottom_terminal,                "Toggle Bottom Terminal")
+  term_map("i", "<F6>",       "<Esc>:ToggleBottomTerminal<CR>",      "Toogle Bottom Terminal")
+  term_map("n", "<Leader>bs", send_buffer_to_bottom_term,            "Send Buffer to Bottom Terminal")
+  term_map("v", "<Leader>bs", send_visual_to_bottom_term,            "Send Selection to Bottom Terminal")
+  term_map("n", "<Leader>bi", send_buffer_to_bottom_term_with_focus, "Send Buffer to Bottom Terminal with Focus")
+  term_map("v", "<Leader>bi", send_visual_to_bottom_term_with_focus, "Send Selection to Bottom Terminal with Focus")
 end
 
 return M
