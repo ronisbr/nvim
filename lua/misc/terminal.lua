@@ -342,32 +342,11 @@ local function toggle_bottom_terminal()
   return nil
 end
 
---- Send the given text to the bottom terminal.
--- @param text string: The text to send to the terminal.
-local function send_to_bottom_term(text)
-  -- Ensure if the bottom terminal is running.
-  if not (
-    bottom_term and M.bottom_term.jobid and vim.fn.jobwait({ M.bottom_term.jobid }, 0)[1] == -1
-  ) then
-    vim.notify("Bottom terminal is not running.", vim.log.levels.ERROR)
-    return nil
-  end
-
-  -- Send to terminal job.
-  vim.fn.chansend(M.bottom_term.jobid, text)
-
-  -- Update the terminal so that the cursor is at its end.
-  vim.api.nvim_win_set_cursor(
-    M.bottom_term.win,
-    { vim.api.nvim_buf_line_count(M.bottom_term.buf), 0 }
-  )
-end
-
 --- Sends the current buffer to the bottom terminal.
 local function send_buffer_to_bottom_term()
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local text  = table.concat(lines, "\n"):gsub("[\r\n]+$", "") .. "\n"
-  send_to_bottom_term(text)
+  M.send_to_bottom_term(text)
 end
 
 --- Sends the current buffer to the bottom terminal and focuses its window.
@@ -394,7 +373,7 @@ local function send_visual_to_bottom_term()
   -- characters.
   local text = table.concat(lines, "\n"):gsub("[\r\n]+$", "") .. "\n"
 
-  send_to_bottom_term(text)
+  M.send_to_bottom_term(text)
 end
 
 --- Sends the visually selected text to the bottom terminal and focuses its window.
@@ -432,6 +411,30 @@ function M.setup()
   term_map("v", "<Leader>bs", send_visual_to_bottom_term,            "Send Selection to Bottom Terminal")
   term_map("n", "<Leader>bi", send_buffer_to_bottom_term_with_focus, "Send Buffer to Bottom Terminal with Focus")
   term_map("v", "<Leader>bi", send_visual_to_bottom_term_with_focus, "Send Selection to Bottom Terminal with Focus")
+end
+
+--- Send the given text to the bottom terminal.
+---
+--- @param text string: The text to send to the terminal.
+function M.send_to_bottom_term(text)
+  -- Ensure if the bottom terminal is running.
+  if not (
+    M.bottom_term and M.bottom_term.jobid and vim.fn.jobwait({ M.bottom_term.jobid }, 0)[1] == -1
+  ) then
+    vim.notify("Bottom terminal is not running.", vim.log.levels.ERROR)
+    return nil
+  end
+
+  -- Send to terminal job.
+  vim.fn.chansend(M.bottom_term.jobid, text)
+
+  -- Update the terminal so that the cursor is at its end, if the window is valid.
+  if vim.api.nvim_win_is_valid(M.bottom_term.win) then
+    vim.api.nvim_win_set_cursor(
+      M.bottom_term.win,
+      { vim.api.nvim_buf_line_count(M.bottom_term.buf), 0 }
+    )
+  end
 end
 
 return M
