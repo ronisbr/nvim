@@ -1,3 +1,9 @@
+-- Description -----------------------------------------------------------------------------
+--
+-- Configure mini.deps.
+--
+-- -----------------------------------------------------------------------------------------
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
 
@@ -18,3 +24,5 @@ end
 require("mini.deps").setup({ path = { package = path_package } })
 
 require("plugins")
+
+-- vim:ts=2:sts=2:sw=2:et
