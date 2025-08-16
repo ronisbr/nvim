@@ -36,6 +36,16 @@ MiniDeps.now(
 
       highlight = { enable = true, },
 
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection    = "gni",
+          node_decremental  = "gnd",
+          node_incremental  = "gnn",
+          scope_incremental = "gns",
+        },
+      },
+
       ignore_install = { "gitcommit" },
 
       indent = {

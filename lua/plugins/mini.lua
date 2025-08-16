@@ -94,6 +94,8 @@ MiniDeps.later(
         { mode = "n", keys = "g" },
         { mode = "x", keys = "g" },
 
+        { mode = "n", keys = "gn",  desc = "+Tree-sitter" },
+
         -- Marks -------------------------------------------------------------------------
 
         { mode = "n", keys = "\"" },
