@@ -73,12 +73,7 @@ MiniDeps.later(
         { mode = "n", keys = "<Leader>f", desc = "+Find" },
         { mode = "n", keys = "<Leader>o", desc = "+Open" },
         { mode = "n", keys = "<Leader>n", desc = "+Notifications" },
-        { mode = "n", keys = "<Leader>s", desc = "+Snacks" },
         { mode = "n", keys = "<Leader>t", desc = "+Text" },
-
-        { mode = "n", keys = "<Leader>sb", desc = "+Buffers" },
-        { mode = "n", keys = "<Leader>sg", desc = "+Git" },
-        { mode = "n", keys = "<Leader>st", desc = "+Toggle" },
 
         { mode = "v", keys = "<Leader>b", desc = "+Buffer" },
       },
@@ -705,23 +700,6 @@ MiniDeps.later(
     MiniDeps.add({ source = "echasnovski/mini.trailspace" })
 
     require("mini.trailspace").setup({})
-
-    -- HACK: We need to disabel the mini.trailspace and enable when a new buffer is
-    -- created to avoid interference with the dashboard snacks.nvim. See:
-    --
-    --  https://github.com/echasnovski/mini.nvim/issues/1395
-    --
-    --  TODO: Can we improve this?
-    vim.g.minitrailspace_disable = true
-
-    vim.api.nvim_create_autocmd(
-      "VimEnter",
-      {
-        callback = function()
-          vim.g.minitrailspace_disable = false
-        end
-      }
-    )
 
     -- Keymaps -----------------------------------------------------------------------------
 
