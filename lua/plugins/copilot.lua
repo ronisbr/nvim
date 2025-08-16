@@ -13,9 +13,6 @@ MiniDeps.now(
     -- Prevent Copilot from mapping <Tab> globally.
     vim.g.copilot_no_tab_map = true
 
-    -- Disable Copilot inline suggestions because it can slow down the editor significantly.
-    vim.cmd("Copilot disable")
-
     -- Keymaps -----------------------------------------------------------------------------
 
     vim.keymap.set(
