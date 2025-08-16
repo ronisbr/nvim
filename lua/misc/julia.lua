@@ -246,6 +246,14 @@ local function create_julia_func_doc(input)
   return output
 end
 
+--- Include the current file in the bottom terminal.
+local function include_file_in_bottom_term()
+  local filepath = vim.api.nvim_buf_get_name(0)
+  local cmd      = "include(\"" .. filepath .. "\")\n"
+
+  require("misc.terminal").send_to_bottom_term(cmd)
+end
+
 --------------------------------------------------------------------------------------------
 --                                    Public Functions                                    --
 --------------------------------------------------------------------------------------------
@@ -282,6 +290,22 @@ function M.setup()
     end,
     { range = true }
   )
+
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "julia",
+    callback = function()
+      vim.keymap.set(
+        "n",
+        "<Leader>bf",
+        include_file_in_bottom_term,
+        {
+          buffer = true,
+          desc   = "Include File in Bottom Terminal",
+          silent = true
+        }
+      )
+    end,
+  })
 end
 
 return M

@@ -1,17 +1,23 @@
---escription -----------------------------------------------------------------------------
+-- Description -----------------------------------------------------------------------------
 --
 -- Configuration of plugins related to treesitter.
 --
 -- -----------------------------------------------------------------------------------------
 
-return {
-  {
-    "nvim-treesitter/nvim-treesitter",
-    event = "VeryLazy",
-    build = ":TSUpdate",
-    version = false,
+MiniDeps.now(
+  function()
+    MiniDeps.add({
+      source = "nvim-treesitter/nvim-treesitter",
+      hooks = {
+        post_checkout =
+          function()
+            vim.cmd("TSUpdate")
+          end
+      }
+    })
 
-    opts = {
+    require("nvim-treesitter.install").prefer_git = true
+    require("nvim-treesitter.configs").setup({
       additional_vim_regex_highlighting = false,
 
       auto_install = true,
@@ -28,27 +34,16 @@ return {
         "vimdoc"
       },
 
-      highlight = {
-        enable = true,
-      },
+      highlight = { enable = true, },
 
-      ignore_install = {
-        "gitcommit"
-      },
+      ignore_install = { "gitcommit" },
 
       indent = {
         enable = true,
-        disable = {
-          "markdown"
-        },
+        disable = { "markdown" },
       }
-    },
-
-    config = function(_, opts)
-      require("nvim-treesitter.install").prefer_git = true
-      require("nvim-treesitter.configs").setup(opts)
-    end
-  }
-}
+    })
+  end
+)
 
 -- vim: ts=2 sts=2 sw=2 et
