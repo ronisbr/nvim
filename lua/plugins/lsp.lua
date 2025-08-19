@@ -64,6 +64,7 @@ MiniDeps.now(
             vim.keymap.set("n", lhs, rhs, { buffer = event.buf, desc = desc })
           end
 
+          nmap("K",   vim.lsp.buf.hover, "Hover Documentation")
           nmap("gra", vim.lsp.buf.code_action, "Code Actions")
           nmap("grd", vim.lsp.buf.definition, "Definition")
           nmap("grD", vim.lsp.buf.declaration, "Declaration")
