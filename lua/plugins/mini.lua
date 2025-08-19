@@ -153,7 +153,7 @@ MiniDeps.now(
     -- Configure a more consistent behavior of <CR>.
     _G.cr_action = function()
       -- If there is selected item in popup, accept it with <C-y>
-      if vim.fn.complete_info()["selected"] ~= -1 then return '\25' end
+      if vim.fn.complete_info()["selected"] ~= -1 then return "\25" end
       -- Fall back to plain `<CR>`.
       return "\r"
     end
@@ -658,7 +658,7 @@ MiniDeps.now(
       {
         pattern  = "MiniDepsFinished",
         once     = true,
-        callback = function() 
+        callback = function()
           if not _G.__nvim_startup_time then
             local started = _G.__nvim_start_time
             if not started then return "" end
