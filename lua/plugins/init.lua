@@ -13,8 +13,8 @@ require("plugins.copilot")
 require("plugins.mini")
 
 require("plugins.julia")
+require("plugins.lensline")
 require("plugins.lsp")
 require("plugins.treesitter")
-require("plugins.vimtex")
 require("plugins.undotree")
-
+require("plugins.vimtex")
