@@ -123,8 +123,8 @@ MiniDeps.later(
       window = {
         delay = 0,
         config = miniclue_win_config,
-        scroll_down = "<C-f>",
-        scroll_up = "<C-b>",
+        scroll_down = "",
+        scroll_up = "",
       },
     })
   end
