@@ -17,7 +17,7 @@ local neovim_logo = [[
 
 MiniDeps.later(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.align" })
+    MiniDeps.add({ source = "nvim-mini/mini.align" })
 
     require("mini.align").setup({})
   end
@@ -27,7 +27,7 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.clue" })
+    MiniDeps.add({ source = "nvim-mini/mini.clue" })
 
     local miniclue = require("mini.clue")
 
@@ -131,7 +131,7 @@ MiniDeps.later(
 
 MiniDeps.now(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.completion" })
+    MiniDeps.add({ source = "nvim-mini/mini.completion" })
 
     require("mini.completion").setup({
       delay = { completion = 700, info = 300, signature = 200 },
@@ -163,7 +163,7 @@ MiniDeps.now(
 
 MiniDeps.later(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.diff" })
+    MiniDeps.add({ source = "nvim-mini/mini.diff" })
 
     require("mini.diff").setup({})
   end
@@ -173,7 +173,7 @@ MiniDeps.later(
 
 MiniDeps.now(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.extra" })
+    MiniDeps.add({ source = "nvim-mini/mini.extra" })
 
     require("mini.extra").setup({})
   end
@@ -181,14 +181,17 @@ MiniDeps.now(
 
 -- mini.files ------------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniDeps.now(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.files" })
+    MiniDeps.add({ source = "nvim-mini/mini.files" })
 
     require("mini.files").setup({
       mappings = {
         go_in_plus = "<Enter>"
-      }
+      },
+      options = {
+        use_as_default_explorer = true,
+      },
     })
 
     -- Keymaps -----------------------------------------------------------------------------
@@ -201,7 +204,7 @@ MiniDeps.later(
       "n",
       "<Leader>.",
       function()
-        MiniFiles.open(vim.api.nvim_buf_get_name(0), false)
+        MiniFiles.open(vim.fn.expand("%:p:h"), false)
       end,
       "Open Mini.files in Current Dir."
     )
@@ -278,7 +281,7 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.hipatterns" })
+    MiniDeps.add({ source = "nvim-mini/mini.hipatterns" })
 
     local hipatterns = require("mini.hipatterns")
 
@@ -299,7 +302,7 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.icons" })
+    MiniDeps.add({ source = "nvim-mini/mini.icons" })
 
     require("mini.icons").setup({})
   end
@@ -309,7 +312,7 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.indentscope" })
+    MiniDeps.add({ source = "nvim-mini/mini.indentscope" })
 
     require("mini.indentscope").setup({
       draw = { delay = 100, },
@@ -338,7 +341,7 @@ MiniDeps.later(
 
 MiniDeps.now(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.misc" })
+    MiniDeps.add({ source = "nvim-mini/mini.misc" })
 
     local MiniMisc = require("mini.misc")
 
@@ -359,7 +362,7 @@ MiniDeps.now(
 
 MiniDeps.later(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.move" })
+    MiniDeps.add({ source = "nvim-mini/mini.move" })
 
     require("mini.move").setup({})
   end
@@ -369,7 +372,7 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.notify" })
+    MiniDeps.add({ source = "nvim-mini/mini.notify" })
 
     require("mini.notify").setup({})
 
@@ -400,7 +403,10 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.pick", depends = { "echasnovski/mini.extra" } })
+    MiniDeps.add({
+      source = "nvim-mini/mini.pick",
+      depends = { "nvim-mini/mini.extra" }
+    })
 
     local MiniPick  = require("mini.pick")
 
@@ -510,7 +516,7 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.snippets" })
+    MiniDeps.add({ source = "nvim-mini/mini.snippets" })
 
     local gen_loader = require('mini.snippets').gen_loader
 
@@ -526,7 +532,7 @@ MiniDeps.later(
 
 MiniDeps.later(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.splitjoin" })
+    MiniDeps.add({ source = "nvim-mini/mini.splitjoin" })
 
     require("mini.splitjoin").setup({
       detect = { separator = "[,;]" }
@@ -538,7 +544,7 @@ MiniDeps.later(
 
 MiniDeps.now(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.starter" })
+    MiniDeps.add({ source = "nvim-mini/mini.starter" })
 
     -- Auxiliary Functions -----------------------------------------------------------------
 
@@ -696,7 +702,7 @@ MiniDeps.now(
 
 MiniDeps.later(
   function()
-    MiniDeps.add({ source = "echasnovski/mini.trailspace" })
+    MiniDeps.add({ source = "nvim-mini/mini.trailspace" })
 
     require("mini.trailspace").setup({})
 

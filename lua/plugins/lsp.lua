@@ -9,8 +9,8 @@ MiniDeps.now(
     MiniDeps.add({
       source = "neovim/nvim-lspconfig",
       dependencies = {
-        "echasnovski/mini.completion",
-        "echasnovski/mini.extra",
+        "nvim-mini/mini.completion",
+        "nvim-mini/mini.extra",
       }
     })
 
