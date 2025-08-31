@@ -18,6 +18,10 @@ MiniDeps.now(
 
     vim.lsp.config("*", { capabilities = MiniCompletion.get_lsp_capabilities() })
 
+    -- C++ ..............................................................................
+
+    vim.lsp.config("clangd", {})
+
     -- Julia ...............................................................................
 
     vim.lsp.config("julials", {})
@@ -77,6 +81,7 @@ MiniDeps.now(
 
     -- Enable LSP Clients ----------------------------------------------------------------
 
+    vim.lsp.enable("clangd")
     vim.lsp.enable("julials")
     vim.lsp.enable("lua_ls")
   end
