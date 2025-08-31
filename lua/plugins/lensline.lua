@@ -12,8 +12,7 @@ MiniDeps.later(
       providers = {
         {
           name = "references",
-          enabled = true,
-          quiet_lsp = true,
+          enabled = false,
         },
         {
           name = "last_author",
