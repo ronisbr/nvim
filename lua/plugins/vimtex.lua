@@ -4,7 +4,7 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniDeps.now(
   function()
     MiniDeps.add({ source = "lervag/vimtex" })
 
