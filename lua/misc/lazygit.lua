@@ -161,6 +161,10 @@ end
 --- Setup function for the LazyGit integration.
 -- Sets up theme/config, keymaps, and autocmds.
 function M.setup()
+  if vim.fn.isdirectory(vim.fn.stdpath("cache")) == 0 then
+    vim.fn.mkdir(vim.fn.stdpath("cache"), "p")
+  end
+
   update_lazygit_theme(lazygit_theme_path)
   update_lazygit_config(lazygit_config_path)
 
