@@ -9,26 +9,29 @@ MiniDeps.later(
     MiniDeps.add({ source = 'oribarilan/lensline.nvim' })
 
     require('lensline').setup({
-      providers = {
+      profiles = {
         {
-          name = "references",
-          enabled = false,
-        },
-        {
-          name = "last_author",
-          enabled = true,
-          cache_max_files = 50,
-        },
-        {
-          name = "diagnostics",
-          enabled = true,
-          min_level = "WARN",
-        },
-        {
-          name = "complexity",
-          enabled = true,
-          min_level = "L",
-        },
+          name = "default",
+          providers = {
+            {
+              name = "usages",
+              enabled = true
+            },
+            {
+              name = "last_author",
+              enabled = true
+            },
+            {
+              name = "diagnostics",
+              enabled = true,
+            },
+            {
+              name = "complexity",
+              enabled = true,
+              min_level = "L"
+            },
+          },
+        }
       }
     })
   end
