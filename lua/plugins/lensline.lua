@@ -15,7 +15,7 @@ MiniDeps.later(
           providers = {
             {
               name = "usages",
-              enabled = true
+              enabled = false
             },
             {
               name = "last_author",
