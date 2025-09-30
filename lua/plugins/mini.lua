@@ -68,6 +68,7 @@ MiniDeps.later(
 
         -- Description of Mapping Groups -------------------------------------------------
 
+        { mode = "n", keys = "<Leader>a", desc = "+AI" },
         { mode = "n", keys = "<Leader>b", desc = "+Buffer" },
         { mode = "n", keys = "<Leader>c", desc = "+Code" },
         { mode = "n", keys = "<Leader>f", desc = "+Find" },
@@ -91,6 +92,10 @@ MiniDeps.later(
 
         -- `g` key -----------------------------------------------------------------------
 
+        { mode = "n", keys = "g" },
+        { mode = "x", keys = "g" },
+
+        { mode = "n", keys = "gc",  desc = "+Comment" },
         { mode = "n", keys = "gn",  desc = "+Tree-sitter" },
 
         -- Marks -------------------------------------------------------------------------
