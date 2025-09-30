@@ -18,6 +18,10 @@ MiniDeps.now(
 
     vim.lsp.config("*", { capabilities = MiniCompletion.get_lsp_capabilities() })
 
+    -- Copilot .............................................................................
+
+    vim.lsp.config("copilot", {})
+
     -- C++ ..............................................................................
 
     vim.lsp.config("clangd", {})
@@ -30,29 +34,19 @@ MiniDeps.now(
 
     vim.lsp.config('lua_ls', {
       on_init = function(client)
+        -- Early return if workspace has existing config
         if client.workspace_folders then
           local path = client.workspace_folders[1].name
-          if
-            path ~= vim.fn.stdpath('config')
-            and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
-          then
+          if path ~= vim.fn.stdpath('config') and
+             (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
             return
           end
         end
 
+        -- Optimized settings merge
         client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-          runtime = {
-            version = 'LuaJIT',
-            path = {
-              'lua/?.lua',
-              'lua/?/init.lua',
-            },
-          },
-
-          workspace = {
-            checkThirdParty = false,
-            library = { vim.env.VIMRUNTIME }
-          }
+          runtime = { version = 'LuaJIT', path = { 'lua/?.lua', 'lua/?/init.lua' } },
+          workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } }
         })
       end,
       settings = { Lua = {} }
@@ -82,6 +76,7 @@ MiniDeps.now(
     -- Enable LSP Clients ----------------------------------------------------------------
 
     vim.lsp.enable("clangd")
+    vim.lsp.enable("copilot")
     vim.lsp.enable("julials")
     vim.lsp.enable("lua_ls")
   end
