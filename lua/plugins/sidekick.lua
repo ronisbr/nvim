@@ -14,7 +14,15 @@ MiniDeps.later(
   function()
     MiniDeps.add({ source = "folke/sidekick.nvim" })
 
-    require("sidekick").setup({ })
+    require("sidekick").setup({
+      cli = {
+        prompts = {
+          improve  = "Can you please improve the code in {file}?",
+          optimize = "Can you please optimize the code in {file}?",
+          spell    = "Can you please fix the spelling mistakes in {file}?",
+        }
+      }
+    })
 
     -- Keymaps -----------------------------------------------------------------------------
 
@@ -23,11 +31,15 @@ MiniDeps.later(
     end
 
     nmap(
-      "<leader>oa",
-      function()
-        require("sidekick.cli").focus({ name = "copilot" })
-      end,
+      "<Leader>oa",
+      function() require("sidekick.cli").focus({ name = "copilot" }) end,
       "Open / Focus Sidekick (Copilot)"
+    )
+
+    nmap(
+      "<Leader>ap",
+      function() require("sidekick.cli").prompt() end,
+      "Sidekick Prompt Picker"
     )
   end
 )
