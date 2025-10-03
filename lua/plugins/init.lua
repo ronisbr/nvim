@@ -13,7 +13,6 @@ require("plugins.copilot")
 require("plugins.mini")
 
 require("plugins.julia")
-require("plugins.lensline")
 require("plugins.lsp")
 require("plugins.sidekick")
 require("plugins.treesitter")
