@@ -31,6 +31,12 @@ MiniDeps.later(
     end
 
     nmap(
+      "<C-g>",
+      function() require("sidekick").nes_jump_or_apply() end,
+      "Goto/Apply Next Edit Suggestion"
+    )
+
+    nmap(
       "<Leader>oa",
       function() require("sidekick.cli").focus({ name = "copilot" }) end,
       "Open / Focus Sidekick (Copilot)"
