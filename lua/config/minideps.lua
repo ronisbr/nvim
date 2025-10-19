@@ -23,6 +23,10 @@ end
 
 require("mini.deps").setup({ path = { package = path_package } })
 
-require("plugins")
+if not vim.g.vscode then
+  require("plugins")
+else
+  require("vscode-plugins")
+end
 
 -- vim:ts=2:sts=2:sw=2:et

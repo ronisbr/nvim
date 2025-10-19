@@ -94,4 +94,24 @@ map("n", "<C-k>", "?<++><CR>v3lc", "Change Previous Placeholder")
 rmap("i", "<C-j>", "<Esc><C-j>", "Change Next Placeholder")
 rmap("i", "<C-k>", "<Esc><C-k>", "Change Previous Placeholder")
 
+-- Visual Code -----------------------------------------------------------------------------
+
+if vim.g.vscode then
+  local vscode = require("vscode")
+
+  -- See:
+  --
+  --   https://github.com/vscode-neovim/vscode-neovim/issues/1874
+  map("n", "gq",  "gq",  "")
+  map("v", "gq",  "gq",  "")
+  map("n", "gqq", "gqq", "")
+
+  map(
+    "n",
+    "gf",
+    function() vscode.call("seito-openfile.openFileFromText") end,
+    "Open File Under the Cursor"
+  )
+end
+
 -- vim:ts=2:sts=2:sw=2:et
