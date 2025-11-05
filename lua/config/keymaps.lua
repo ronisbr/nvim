@@ -91,9 +91,6 @@ map(
 map("n", "<C-j>", "/<++><CR>v3lc", "Change Next Placeholder")
 map("n", "<C-k>", "?<++><CR>v3lc", "Change Previous Placeholder")
 
-rmap("i", "<C-j>", "<Esc><C-j>", "Change Next Placeholder")
-rmap("i", "<C-k>", "<Esc><C-k>", "Change Previous Placeholder")
-
 -- Visual Code -----------------------------------------------------------------------------
 
 if vim.g.vscode then
