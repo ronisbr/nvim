@@ -8,6 +8,7 @@ vim.opt.breakindent = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
+vim.opt.scrolloff = 10
 vim.opt.shiftwidth = 4
 vim.opt.smartcase = true
 vim.opt.spelllang = "en_us,pt_br"
@@ -25,7 +26,6 @@ if not vim.g.vscode then
   vim.opt.number = true
   vim.opt.relativenumber = true
   vim.opt.ruler = false
-  vim.opt.scrolloff = 10
   vim.opt.shortmess = vim.opt.shortmess + { c = true, q = true }
   vim.opt.showcmd = false
   vim.opt.showmode = false
