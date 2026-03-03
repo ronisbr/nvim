@@ -32,7 +32,7 @@ MiniDeps.now(
 
     -- Lua .................................................................................
 
-    vim.lsp.config('lua_ls', {
+    vim.lsp.config("lua_ls", {
       on_init = function(client)
         -- Early return if workspace has existing config
         if client.workspace_folders then
@@ -73,12 +73,17 @@ MiniDeps.now(
       }
     )
 
+    -- Typst ...............................................................................
+
+    vim.lsp.config("tinymist", {})
+
     -- Enable LSP Clients ----------------------------------------------------------------
 
     vim.lsp.enable("clangd")
     vim.lsp.enable("copilot")
     vim.lsp.enable("julials")
     vim.lsp.enable("lua_ls")
+    vim.lsp.enable("tinymist")
   end
 )
 
