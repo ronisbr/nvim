@@ -14,13 +14,7 @@ MiniDeps.now(
     vim.g.copilot_no_tab_map = true
 
     -- Keymaps -----------------------------------------------------------------------------
-
-    vim.keymap.set(
-      "i",
-      "<C-g>",
-      "copilot#Accept(\"\")",
-      {expr = true, replace_keycodes = false, silent = true}
-    )
+    -- Note: <Tab> mapping is handled in mini.lua to integrate with mini.completion
 
     local copilot_keymaps = {
       { key = "<M-/>", cmd = "<Plug>(copilot-suggest)",     desc = "Show Suggestion"     },
@@ -34,26 +28,6 @@ MiniDeps.now(
     for _, map in ipairs(copilot_keymaps) do
       vim.keymap.set("i", map.key, map.cmd, { desc = map.desc, silent = true })
     end
-
-    -- We must configure the mini.completion behavior here because copilot overrides it.
-    local function mini_completion_map(mode, lhs, rhs)
-      vim.keymap.set(mode, lhs, rhs, { noremap = true, expr = true })
-    end
-
-    -- Use <Tab> and <S-Tab> to navigate through completion items.
-    mini_completion_map("i", "<Tab>",   "pumvisible() ? '<C-n>' : '<Tab>'")
-    mini_completion_map("i", "<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'")
-
-    -- Configure a more consistent behavior of <CR>.
-    _G.cr_action = function()
-      -- If there is selected item in popup, accept it with <C-y>
-      if vim.fn.complete_info()["selected"] ~= -1 then return '\25' end
-      -- Fall back to plain `<CR>`.
-      return "\r"
-    end
-
-    mini_completion_map("i", "<CR>", "v:lua.cr_action()")
-
   end
 )
 

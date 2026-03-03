@@ -14,7 +14,7 @@ require("plugins.mini")
 
 require("plugins.julia")
 require("plugins.lsp")
-require("plugins.sidekick")
 require("plugins.treesitter")
 require("plugins.undotree")
 require("plugins.vimtex")
+require("plugins.sidekick")

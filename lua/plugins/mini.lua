@@ -134,35 +134,108 @@ MiniDeps.later(
 
 -- mini.completion -------------------------------------------------------------------------
 
-MiniDeps.now(
-  function()
-    MiniDeps.add({ source = "nvim-mini/mini.completion" })
+MiniDeps.now(function()
+  MiniDeps.add({ source = "nvim-mini/mini.completion" })
 
-    require("mini.completion").setup({
-      delay = { completion = 700, info = 300, signature = 200 },
-    })
+  require("mini.completion").setup({
+    delay = { completion = 700, info = 300, signature = 200 },
+  })
 
-    -- Keymaps -----------------------------------------------------------------------------
+  -- Keymaps -------------------------------------------------------------------------------
 
-    local function mini_completion_map(mode, lhs, rhs)
-      vim.keymap.set(mode, lhs, rhs, { noremap = true, expr = true })
-    end
-
-    -- Use <Tab> and <S-Tab> to navigate through completion items.
-    mini_completion_map("i", "<Tab>",   "pumvisible() ? '<C-n>' : '<Tab>'")
-    mini_completion_map("i", "<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'")
-
-    -- Configure a more consistent behavior of <CR>.
-    _G.cr_action = function()
-      -- If there is selected item in popup, accept it with <C-y>
-      if vim.fn.complete_info()["selected"] ~= -1 then return "\25" end
-      -- Fall back to plain `<CR>`.
-      return "\r"
-    end
-
-    mini_completion_map("i", "<CR>", "v:lua.cr_action()")
+  local function mini_completion_map(mode, lhs, rhs)
+    vim.keymap.set(mode, lhs, rhs, { noremap = true, expr = true, silent = true })
   end
-)
+
+  -- Smart <Tab>: navigate completion menu if visible, otherwise accept Copilot, else Tab or
+  -- expand/jump mini.snippets.
+  vim.keymap.set(
+    "i",
+    "<Tab>",
+    function()
+      if vim.fn.pumvisible() == 1 then
+        return vim.api.nvim_replace_termcodes("<C-n>", true, true, true)
+      end
+
+      -- Accept Copilot suggestion if available.
+      local copilot_accept = vim.fn["copilot#Accept"]("")
+      if copilot_accept ~= "" then
+        return copilot_accept
+      end
+
+      -- If mini.snippets is expandable or jumpable, use it.
+      local can_expand = #MiniSnippets.expand({ insert = false }) > 0
+      if can_expand then
+        return vim.api.nvim_replace_termcodes(
+          "<Cmd>lua require('mini.snippets').expand()<CR>",
+          true,
+          true,
+          true
+        )
+      end
+
+      local is_active = MiniSnippets.session.get() ~= nil
+      if is_active then
+        return MiniSnippets.session.jump("next")
+      end
+
+      return vim.api.nvim_replace_termcodes("<Tab>", true, true, true)
+    end,
+    {
+      expr = true,
+      replace_keycodes = false,
+      silent = true
+    }
+  )
+
+  -- Use <S-Tab> to navigate backward through completion items or jump backward in snippet.
+  vim.keymap.set(
+    "i",
+    "<S-Tab>",
+    function()
+      if vim.fn.pumvisible() == 1 then
+        return vim.api.nvim_replace_termcodes("<C-p>", true, true, true)
+      end
+
+      -- If mini.snippets is active, jump to the previous position.
+      local is_active = MiniSnippets.session.get() ~= nil
+      if is_active then
+        return MiniSnippets.session.jump("prev")
+      end
+
+      return vim.api.nvim_replace_termcodes("<S-Tab>", true, true, true)
+    end,
+    {
+      expr = true,
+      replace_keycodes = false,
+      silent = true
+    }
+  )
+
+  -- Configure a more consistent behavior of <CR>.
+  _G.cr_action = function()
+    -- If there is selected item in popup, accept it with <C-y>
+    if vim.fn.complete_info()["selected"] ~= -1 then
+      return vim.api.nvim_replace_termcodes("<C-y>", true, true, true)
+    end
+
+    -- If mini.snippets can expand, do so.
+    local can_expand = #MiniSnippets.expand({ insert = false }) > 0
+    if can_expand then
+      return vim.api.nvim_replace_termcodes(
+        "<Cmd>lua require('mini.snippets').expand()<CR>",
+        true,
+        true,
+        true
+      )
+    end
+
+    -- Fall back to plain `<CR>`.
+    return vim.api.nvim_replace_termcodes("\r", true, true, true)
+  end
+
+  mini_completion_map("i", "<CR>", "v:lua.cr_action()")
+end)
 
 -- mini.diff -------------------------------------------------------------------------------
 

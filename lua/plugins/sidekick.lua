@@ -19,33 +19,87 @@ MiniDeps.later(
         prompts = {
           improve  = "Can you please improve the code in {file}?",
           optimize = "Can you please optimize the code in {file}?",
-          spell    = "Can you please fix the spelling mistakes in {file}?",
+          spell    = "Can you please fix the spelling and grammar mistakes in {file}?",
         }
       }
     })
 
     -- Keymaps -----------------------------------------------------------------------------
 
-    local function nmap(lhs, rhs, desc)
-      vim.keymap.set("n", lhs, rhs, { desc = desc })
+    local function keymap(lhs, rhs, desc, mode)
+      vim.keymap.set(mode, lhs, rhs, { desc = desc })
     end
 
-    nmap(
-      "<C-g>",
-      function() require("sidekick").nes_jump_or_apply() end,
-      "Goto/Apply Next Edit Suggestion"
+    keymap(
+      "<Tab>",
+      function()
+        require("sidekick").nes_jump_or_apply()
+      end,
+      "Goto/Apply Next Edit Suggestion",
+      { "n" }
     )
 
-    nmap(
-      "<Leader>oa",
-      function() require("sidekick.cli").focus({ name = "copilot" }) end,
-      "Open / Focus Sidekick (Copilot)"
-    )
-
-    nmap(
+    keymap(
       "<Leader>ap",
-      function() require("sidekick.cli").prompt() end,
-      "Sidekick Prompt Picker"
+      function()
+        require("sidekick.cli").prompt()
+      end,
+      "Sidekick Prompt Picker",
+      "n"
+    )
+
+    keymap(
+      "<C-.>",
+      function()
+        require("sidekick.cli").toggle({ filter = { installed = true }})
+      end,
+      "Sidekick Toggle",
+      { "n", "t", "i", "x" }
+    )
+
+    keymap(
+      "<leader>at",
+      function()
+        require("sidekick.cli").send({
+          filter = { installed = true },
+          msg    = "{this}"
+        })
+      end,
+      "Send This",
+      { "x", "n" }
+    )
+
+    keymap(
+      "<leader>af",
+      function()
+        require("sidekick.cli").send({
+          filter = { installed = true },
+          msg    = "{file}"
+        })
+      end,
+      "Send File",
+      "n"
+    )
+
+    keymap(
+      "<leader>av",
+      function()
+        require("sidekick.cli").send({
+          filter = { installed = true },
+          msg    = "{selection}"
+        })
+      end,
+      "Send Visual Selection",
+      "x"
+    )
+
+    keymap(
+      "<leader>ap",
+      function()
+        require("sidekick.cli").prompt()
+      end,
+      "Sidekick Select Prompt",
+      { "n", "x" }
     )
   end
 )

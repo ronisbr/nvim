@@ -30,8 +30,10 @@ MiniDeps.now(
         "lua",
         "luadoc",
         "markdown",
+        "markdown_inline",
         "vim",
-        "vimdoc"
+        "vimdoc",
+        "yaml"
       },
 
       highlight = { enable = true, },
