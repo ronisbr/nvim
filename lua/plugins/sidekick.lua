@@ -16,12 +16,16 @@ MiniDeps.later(
 
     require("sidekick").setup({
       cli = {
+        mux = {
+          enabled = true,
+          backend = "tmux"
+        },
         prompts = {
           improve  = "Can you please improve the code in {file}?",
           optimize = "Can you please optimize the code in {file}?",
           spell    = "Can you please fix the spelling and grammar mistakes in {file}?",
         }
-      }
+      },
     })
 
     -- Keymaps -----------------------------------------------------------------------------
