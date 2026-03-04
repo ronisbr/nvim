@@ -26,6 +26,11 @@ MiniDeps.later(
           spell    = "Can you please fix the spelling and grammar mistakes in {file}?",
         }
       },
+      nes = {
+        diff = {
+          inline = false
+        }
+      }
     })
 
     -- Keymaps -----------------------------------------------------------------------------
