@@ -157,26 +157,43 @@ MiniDeps.now(function()
         return vim.api.nvim_replace_termcodes("<C-n>", true, true, true)
       end
 
+      -- For Julia files, directly substitute a \sequence with its Unicode equivalent.
+      if vim.bo.filetype == "julia" then
+        local col       = vim.fn.col(".") - 1
+        local before    = vim.fn.getline("."):sub(1, col)
+        local latex_seq = before:match("(\\%S+)$")
+
+        if latex_seq then
+          local symbols = vim.g.l2u_symbols_dict
+          local unicode = symbols and symbols[latex_seq]
+
+          if unicode then
+            local bs = vim.api.nvim_replace_termcodes("<BS>", true, true, true)
+            return string.rep(bs, #latex_seq) .. unicode
+          end
+        end
+      end
+
       -- Accept Copilot suggestion if available.
       local copilot_accept = vim.fn["copilot#Accept"]("")
       if copilot_accept ~= "" then
         return copilot_accept
       end
 
+      local is_active = MiniSnippets.session.get() ~= nil
+      if is_active then
+        return MiniSnippets.session.jump("next")
+      end
+
       -- If mini.snippets is expandable or jumpable, use it.
-      local can_expand = #MiniSnippets.expand({ insert = false }) > 0
-      if can_expand then
+      local can_uniquely_expand = #MiniSnippets.expand({ insert = false }) == 1
+      if can_uniquely_expand then
         return vim.api.nvim_replace_termcodes(
           "<Cmd>lua require('mini.snippets').expand()<CR>",
           true,
           true,
           true
         )
-      end
-
-      local is_active = MiniSnippets.session.get() ~= nil
-      if is_active then
-        return MiniSnippets.session.jump("next")
       end
 
       return vim.api.nvim_replace_termcodes("<Tab>", true, true, true)
@@ -217,17 +234,6 @@ MiniDeps.now(function()
     -- If there is selected item in popup, accept it with <C-y>
     if vim.fn.complete_info()["selected"] ~= -1 then
       return vim.api.nvim_replace_termcodes("<C-y>", true, true, true)
-    end
-
-    -- If mini.snippets can expand, do so.
-    local can_expand = #MiniSnippets.expand({ insert = false }) > 0
-    if can_expand then
-      return vim.api.nvim_replace_termcodes(
-        "<Cmd>lua require('mini.snippets').expand()<CR>",
-        true,
-        true,
-        true
-      )
     end
 
     -- Fall back to plain `<CR>`.
@@ -599,6 +605,9 @@ MiniDeps.later(
     local gen_loader = require('mini.snippets').gen_loader
 
     require('mini.snippets').setup({
+      mappings = {
+        expand = ""
+      },
       snippets = { gen_loader.from_lang() }
     })
 
