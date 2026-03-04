@@ -246,11 +246,12 @@ local mode_sep_r = "\238\130\180"
 local function statusline__mode()
   local mode      = vim.api.nvim_get_mode().mode
   local mode_info = modes[mode] or modes["n"]
+  local mode_str  = (mode_info.long):upper()
   local cap_hl    = mode_info.hl .. "Cap"
 
   return
     "%#" .. cap_hl .. "#" .. mode_sep_l ..
-    "%#" .. mode_info.hl .. "# " .. center_string(mode_info.long, mode_name_width) .. " " ..
+    "%#" .. mode_info.hl .. "# " .. center_string(mode_str, mode_name_width) .. " " ..
     "%#" .. cap_hl .. "#" .. mode_sep_r
 end
 
