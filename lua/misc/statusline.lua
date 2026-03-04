@@ -206,16 +206,52 @@ local function configure_hl_groups()
       bg = get_color("Special", "fg"),
     }
   )
+
+  -- Mode caps (for the rounded separators on each side of the mode indicator).
+  for _, hl_name in ipairs({
+    "StatuslineModeNormal",
+    "StatuslineModeInsert",
+    "StatuslineModeReplace",
+    "StatuslineModeVisual",
+  }) do
+    vim.api.nvim_set_hl(
+      0,
+      hl_name .. "Cap",
+      {
+        fg = get_color(hl_name, "bg"),
+        bg = statusline_bg,
+      }
+    )
+  end
 end
 
 -- Statusline Components -----------------------------------------------------------------------
+
+-- Center a string within a given width by padding with spaces.
+local function center_string(str, width)
+  local len   = #str
+  local left  = math.floor((width - len) / 2)
+  local right = width - len - left
+  return string.rep(" ", left) .. str .. string.rep(" ", right)
+end
+
+-- Width of the mode name area (based on the longest mode name: "Terminal").
+local mode_name_width = 8
+
+-- Nerd Font rounded separators (U+E0B6 left, U+E0B4 right).
+local mode_sep_l = "\238\130\182"
+local mode_sep_r = "\238\130\180"
 
 -- Current Neovim mode.
 local function statusline__mode()
   local mode      = vim.api.nvim_get_mode().mode
   local mode_info = modes[mode] or modes["n"]
+  local cap_hl    = mode_info.hl .. "Cap"
 
-  return string.format("%%#%s# %s ", mode_info.hl, mode_info.short)
+  return
+    "%#" .. cap_hl .. "#" .. mode_sep_l ..
+    "%#" .. mode_info.hl .. "# " .. center_string(mode_info.long, mode_name_width) .. " " ..
+    "%#" .. cap_hl .. "#" .. mode_sep_r
 end
 
 -- Space between components.
