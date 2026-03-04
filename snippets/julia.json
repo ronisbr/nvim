@@ -27,6 +27,38 @@
       "ytickwidth         = 4,"
     ],
     "description": "Default configuration for Makie Axis"
+  },
+  "desc" : {
+    "prefix": "desc",
+    "body": [
+      "## Description #############################################################################",
+      "#",
+      "# ${1:Description of the code}",
+      "#",
+      "############################################################################################",
+      "$0"
+    ],
+    "description": "Description section for code files"
+  },
+  "inpe-header" : {
+    "prefix": "inpe-header",
+    "body": [
+      "#############################################################################################",
+      "#",
+      "#                                          Instituto Nacional de Pesquisas Espaciais - INPE",
+      "#                    Coordenação-Geral de Engenharia, Tecnologia e Ciência Espaciais - CGCE",
+      "#                                                      Divisão de Sistemas Espaciais - DISEP",
+      "#",
+      "# Author: Ronan Arraes Jardim Chagas <ronan.arraes@inpe.br>",
+      "#",
+      "## Description #############################################################################",
+      "#",
+      "# ${1:Description of the project}",
+      "#",
+      "############################################################################################",
+      "$0"
+    ],
+    "description": "Header for INPE projects"
   }
 }
 
