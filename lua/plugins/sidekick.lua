@@ -27,6 +27,7 @@ MiniDeps.later(
         }
       },
       nes = {
+        enabled = false,
         diff = {
           inline = false
         }
@@ -39,14 +40,14 @@ MiniDeps.later(
       vim.keymap.set(mode, lhs, rhs, { desc = desc })
     end
 
-    keymap(
-      "<Tab>",
-      function()
-        require("sidekick").nes_jump_or_apply()
-      end,
-      "Goto/Apply Next Edit Suggestion",
-      { "n" }
-    )
+    -- keymap(
+    --   "<Tab>",
+    --   function()
+    --     require("sidekick").nes_jump_or_apply()
+    --   end,
+    --   "Goto/Apply Next Edit Suggestion",
+    --   { "n" }
+    -- )
 
     keymap(
       "<Leader>ap",

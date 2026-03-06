@@ -175,9 +175,9 @@ MiniDeps.now(function()
       end
 
       -- Accept Copilot suggestion if available.
-      local copilot_accept = vim.fn["copilot#Accept"]("")
-      if copilot_accept ~= "" then
-        return copilot_accept
+      local copilot_suggestion = require("copilot.suggestion")
+      if require("copilot.suggestion").is_visible() then
+        return copilot_suggestion.accept()
       end
 
       local is_active = MiniSnippets.session.get() ~= nil
