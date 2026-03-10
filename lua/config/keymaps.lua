@@ -16,7 +16,7 @@ function rmap(mode, lhs, rhs, desc)
   return vim.keymap.set(mode, lhs, rhs, { desc = desc, remap = true, silent = true })
 end
 
-map("n", "<Esc>", "<Esc>:noh<CR>")
+map("n", "<Esc>", "<Esc><Cmd>noh<CR>")
 
 -- Buffers ---------------------------------------------------------------------------------
 

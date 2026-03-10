@@ -50,8 +50,7 @@ vim.api.nvim_create_autocmd(
   }
 )
 
--- Reload files changed outside of Neovim --
-
+-- Reload files changed outside of Neovim.
 vim.api.nvim_create_autocmd(
   { "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" },
   {

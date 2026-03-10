@@ -35,7 +35,6 @@ MiniDeps.later(
     })
 
     local aiwaku_misc = require("misc.aiwaku")
-    local opts = { noremap = true, silent = true }
 
     vim.keymap.set(
       "n",
@@ -50,7 +49,7 @@ MiniDeps.later(
 
     vim.keymap.set(
       "n",
-      "<C-i>",
+      "<C-.>",
       function()
         aiwaku_misc.prompt_and_send()
       end,
@@ -63,7 +62,7 @@ MiniDeps.later(
 
     vim.keymap.set(
       "v",
-      "<C-i>",
+      "<C-.>",
       function()
         -- '< and '> are not updated yet in a Lua visual mapping. Hence, we read the live
         -- selection positions now while still in visual mode..
