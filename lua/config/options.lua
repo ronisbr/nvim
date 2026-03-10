@@ -4,6 +4,7 @@
 --
 -- -----------------------------------------------------------------------------------------
 
+vim.opt.autoread = true
 vim.opt.breakindent = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.expandtab = true

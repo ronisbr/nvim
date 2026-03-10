@@ -50,6 +50,21 @@ vim.api.nvim_create_autocmd(
   }
 )
 
+-- Reload files changed outside of Neovim --
+
+vim.api.nvim_create_autocmd(
+  { "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" },
+  {
+    group = autocmd_groups,
+    desc = "Check if file changed on disk",
+    callback = function()
+      if vim.fn.mode() ~= "c" then
+        vim.cmd("checktime")
+      end
+    end,
+  }
+)
+
 -- Syntax ----------------------------------------------------------------------------------
 
 -- Markdown --
