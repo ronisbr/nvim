@@ -329,7 +329,7 @@ end
 
 -- Cursor position.
 local function statusline__cursor_position()
-  return "%#StatuslineFaded# %v:%l (%P)"
+  return "%#StatuslineFaded# %4v:%-5l (%P)"
 end
 
 -- Return a string with the current macro being recorded or an empty string if we are not
