@@ -12,10 +12,12 @@ require("plugins.copilot")
 
 require("plugins.mini")
 
+require("plugins.aiwaku")
 require("plugins.julia")
 require("plugins.lsp")
 require("plugins.treesitter")
 require("plugins.undotree")
 require("plugins.vimtex")
-require("plugins.sidekick")
 require("plugins.typst")
+
+require("plugins.none-ls")

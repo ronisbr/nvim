@@ -4,6 +4,8 @@
 --
 -- -----------------------------------------------------------------------------------------
 
+local autocmd_groups = vim.api.nvim_create_augroup("ronisbr_autocmds", { clear = true })
+
 -- Buffer ----------------------------------------------------------------------------------
 
 -- Close some buffers with specific filetypes using `q`.
@@ -11,7 +13,7 @@
 vim.api.nvim_create_autocmd(
   "FileType",
   {
-    group = vim.api.nvim_create_augroup("ronisbr_close_with_q", { clear = true }),
+    group = autocmd_groups,
     pattern = {
       "PlenaryTestPopup",
       "checkhealth",
@@ -33,6 +35,17 @@ vim.api.nvim_create_autocmd(
     end,
   }
 )
+
+-- Automatically close terminal buffers when the process exits with status 0.
+vim.api.nvim_create_autocmd({ 'TermClose' }, {
+  group = autocmd_groups,
+  desc = "Auto-close terminal buffer on successful exit",
+  callback = function(args)
+    if vim.v.event.status == 0 then
+      vim.cmd({ cmd = "bdelete", args = { args.buf }, bang = true })
+    end
+  end,
+})
 
 -- Syntax ----------------------------------------------------------------------------------
 

@@ -1,0 +1,108 @@
+-- Description -----------------------------------------------------------------------------
+--
+-- Utility functions for aiwaku.nvim.
+--
+-- -----------------------------------------------------------------------------------------
+
+local M = {}
+
+--- Prompt the user for input and send it to the active aiwaku session terminal.
+--
+-- If `ls` and `le` are provided, the file reference appended to the prompt will be a line
+-- range (`filepath:ls-le`). Otherwise, the reference will be the current cursor line
+-- (`filepath:line`). The final string sent to the terminal has the form
+-- `[input] filepath:ref\n`.
+--
+--- @param ls number|nil Start line of the visual selection (1-indexed).
+--- @param le number|nil End line of the visual selection (1-indexed).
+function M.prompt_and_send(ls, le)
+  local filepath = vim.api.nvim_buf_get_name(0)
+  if filepath == "" then
+    vim.notify("[aiwaku] Buffer has no file name", vim.log.levels.WARN)
+    return
+  end
+
+  local ref
+  if ls and le then
+    if ls > le then ls, le = le, ls end
+    ref = filepath .. ":" .. ls .. "-" .. le
+  else
+    ref = filepath .. ":" .. vim.api.nvim_win_get_cursor(0)[1]
+  end
+
+  vim.ui.input({ prompt = "Prompt: " }, function(input)
+    if not input then return end
+
+    local state   = require("aiwaku.state")
+    local session = require("aiwaku.session")
+    local window  = require("aiwaku.window")
+
+    local session_name    = state.current_session
+    local current_session = session_name and session.find_session(session_name)
+    if not current_session then
+      vim.notify("[aiwaku] No active aiwaku session", vim.log.levels.WARN)
+      return
+    end
+
+    if not window.win_visible(state.win_id) then
+      session.open_session(current_session)
+    end
+
+    local bufnr = state.session_bufnrs[session_name]
+    if not bufnr then
+      vim.notify("[aiwaku] Session buffer is nil", vim.log.levels.WARN)
+      return
+    end
+
+    local job_id = vim.b[bufnr].terminal_job_id
+    if not job_id then
+      vim.notify("[aiwaku] Sidebar terminal has no job channel", vim.log.levels.WARN)
+      return
+    end
+
+    local content = (input ~= "" and (input .. " ") or "") .. ref .. "\n"
+    vim.api.nvim_chan_send(job_id, content)
+    vim.api.nvim_set_current_win(state.win_id)
+  end)
+end
+
+--- Pre-configured AI CLI options available for selection.
+local AI_CMDS = {
+  { label = "Claude (claude)",   cmd = { "claude"  } },
+  { label = "Copilot (copilot)", cmd = { "copilot" } },
+  { label = "ChatGPT (codex)",   cmd = { "codex"   } },
+}
+
+--- Open a selection dialog to change the active aiwaku CLI command.
+--
+-- Presents a list of pre-configured AI CLIs and updates
+-- `require("aiwaku.state").config.cmd` with the chosen value.
+function M.select_cmd()
+  local labels = vim.tbl_map(
+    function(entry)
+      return entry.label
+    end,
+    AI_CMDS
+  )
+
+  vim.ui.select(
+    labels,
+    { prompt = "Select AI CLI:" },
+    function(_, idx)
+      if not idx then return end
+
+      local chosen = AI_CMDS[idx]
+      local state  = require("aiwaku.state")
+
+      if not state.config then
+        vim.notify("[aiwaku] State config is not initialised", vim.log.levels.WARN)
+        return
+      end
+
+      state.config.cmd = chosen.cmd
+      vim.notify("[aiwaku] CLI changed to: " .. chosen.label, vim.log.levels.INFO)
+    end
+  )
+end
+
+return M
