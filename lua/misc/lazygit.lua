@@ -128,7 +128,7 @@ local function open_lazygit_window(cmd)
     cmd,
     {
       on_exit = function()
-        if vim.api.nvim_buf_is_valid(bufnr) then
+        if vim.api.nvim_win_is_valid(win_id) then
           vim.api.nvim_win_close(win_id, true)
         end
       end,
