@@ -66,43 +66,4 @@ function M.prompt_and_send(ls, le)
   end)
 end
 
---- Pre-configured AI CLI options available for selection.
-local AI_CMDS = {
-  { label = "Claude (claude)",   cmd = { "claude"  } },
-  { label = "Copilot (copilot)", cmd = { "copilot" } },
-  { label = "ChatGPT (codex)",   cmd = { "codex"   } },
-}
-
---- Open a selection dialog to change the active aiwaku CLI command.
---
--- Presents a list of pre-configured AI CLIs and updates
--- `require("aiwaku.state").config.cmd` with the chosen value.
-function M.select_cmd()
-  local labels = vim.tbl_map(
-    function(entry)
-      return entry.label
-    end,
-    AI_CMDS
-  )
-
-  vim.ui.select(
-    labels,
-    { prompt = "Select AI CLI:" },
-    function(_, idx)
-      if not idx then return end
-
-      local chosen = AI_CMDS[idx]
-      local state  = require("aiwaku.state")
-
-      if not state.config then
-        vim.notify("[aiwaku] State config is not initialised", vim.log.levels.WARN)
-        return
-      end
-
-      state.config.cmd = chosen.cmd
-      vim.notify("[aiwaku] CLI changed to: " .. chosen.label, vim.log.levels.INFO)
-    end
-  )
-end
-
 return M

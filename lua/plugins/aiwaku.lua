@@ -10,7 +10,9 @@ MiniDeps.later(
 
     require("aiwaku").setup({
       cmd = {
-        "claude"
+        { name = "Claude",  cmd = "claude" },
+        { name = "Copilot", cmd = "copilot" },
+        { name = "Codex",   cmd = "codex" }
       },
       lsp_code_actions = {
         { title = "Send to Aiwaku" },
@@ -35,17 +37,6 @@ MiniDeps.later(
     })
 
     local aiwaku_misc = require("misc.aiwaku")
-
-    vim.keymap.set(
-      "n",
-      "<leader>ac",
-      function() aiwaku_misc.select_cmd() end,
-      {
-        desc    = "Aiwaku: select AI CLI",
-        noremap = true,
-        silent  = true
-      }
-    )
 
     vim.keymap.set(
       "n",
