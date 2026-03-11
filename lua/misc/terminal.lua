@@ -17,11 +17,17 @@ local esc_key = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
 local esc_timer_ft = nil
 local esc_timer_bt = nil
 
+-- Padding for the floating terminal: 1 row top/bottom, 4 columns left/right.
+local ft_pad_v = 1
+local ft_pad_h = 3
+
 -- Local state of the floating terminal.
 M.floating_term = {
-  buf   = nil, -- ......................................... Buffer for the floating terminal
-  win   = nil, -- ......................................... Window for the floating terminal
-  jobid = nil  -- .......................................... Job ID for the terminal process
+  buf          = nil, -- .................................. Buffer for the floating terminal
+  win          = nil, -- .................................. Window for the floating terminal
+  jobid        = nil, -- ................................... Job ID for the terminal process
+  backdrop_buf = nil, -- .................................... Buffer for the backdrop window
+  backdrop_win = nil  -- ................................. Window for the backdrop (padding)
 }
 
 -- Local state of the bottom terminal.
@@ -35,9 +41,31 @@ M.bottom_term = {
 --                                    Local Functions                                     --
 --------------------------------------------------------------------------------------------
 
---- Return the window options for the floating terminal.
--- Calculates the size and position of the floating window based on the current UI size.
--- @return table: Window options for nvim_open_win.
+--- Update the FloatingTermBg highlight group based on the current Normal background.
+-- Lightens the background for dark themes, darkens it for light themes.
+local function update_floating_term_bg()
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+  local bg = normal.bg
+
+  if not bg then return end
+
+  local r = bit.rshift(bit.band(bg, 0xFF0000), 16)
+  local g = bit.rshift(bit.band(bg, 0x00FF00), 8)
+  local b = bit.band(bg, 0x0000FF)
+
+  -- Determine if the theme is light or dark based on perceived luminance.
+  local luminance = 0.299 * r + 0.587 * g + 0.114 * b
+  local offset = luminance < 128 and 15 or -10
+
+  r = math.max(0, math.min(255, r + offset))
+  g = math.max(0, math.min(255, g + offset))
+  b = math.max(0, math.min(255, b + offset))
+
+  vim.api.nvim_set_hl(0, "FloatingTermBg", { bg = string.format("#%02x%02x%02x", r, g, b) })
+end
+
+--- Return the window options for the floating terminal backdrop (outer) and terminal (inner).
+-- @return table, table: Backdrop options and terminal options for nvim_open_win.
 local function terminal_window_opts()
   -- Notice that we are removing two lines to take into account the status line and command
   -- line.
@@ -47,17 +75,60 @@ local function terminal_window_opts()
   local col    = math.floor((ui.width - width) / 2)
   local row    = math.floor(((ui.height - 2) - height) / 2)
 
-  local opts = {
-    border   = "rounded",
+  local backdrop_opts = {
+    border   = "none",
     col      = col,
     height   = height,
     relative = "editor",
     row      = row,
     style    = "minimal",
     width    = width,
+    focusable = false,
+    zindex   = 10,
   }
 
-  return opts
+  local term_opts = {
+    border   = "none",
+    col      = col + ft_pad_h,
+    height   = height - 2 * ft_pad_v,
+    relative = "editor",
+    row      = row + ft_pad_v,
+    style    = "minimal",
+    width    = width - 2 * ft_pad_h,
+    zindex   = 11,
+  }
+
+  return backdrop_opts, term_opts
+end
+
+--- Open the backdrop window for the floating terminal.
+local function open_backdrop(backdrop_opts)
+  if not (
+    M.floating_term.backdrop_buf and vim.api.nvim_buf_is_valid(M.floating_term.backdrop_buf)
+  ) then
+    M.floating_term.backdrop_buf = vim.api.nvim_create_buf(false, true)
+  end
+
+  M.floating_term.backdrop_win = vim.api.nvim_open_win(
+    M.floating_term.backdrop_buf,
+    false,
+    backdrop_opts
+  )
+  vim.api.nvim_set_option_value(
+    "winhl",
+    "Normal:FloatingTermBg",
+    { win = M.floating_term.backdrop_win }
+  )
+end
+
+--- Close the backdrop window for the floating terminal.
+local function close_backdrop()
+  if (
+    M.floating_term.backdrop_win and vim.api.nvim_win_is_valid(M.floating_term.backdrop_win)
+  ) then
+    vim.api.nvim_win_close(M.floating_term.backdrop_win, true)
+    M.floating_term.backdrop_win = nil
+  end
 end
 
 --- Toggle the floating terminal window.
@@ -67,6 +138,7 @@ local function toggle_floating_terminal()
   if M.floating_term.win ~= nil and vim.api.nvim_win_is_valid(M.floating_term.win) then
     -- If the floating window is open, we hide it.
     vim.api.nvim_win_hide(M.floating_term.win)
+    close_backdrop()
     return nil
   end
 
@@ -74,24 +146,47 @@ local function toggle_floating_terminal()
   if M.floating_term.buf == nil or not vim.api.nvim_buf_is_valid(M.floating_term.buf) then
     M.floating_term.buf = vim.api.nvim_create_buf(false, true)
 
-    -- Create the window.
+    update_floating_term_bg()
+    local backdrop_opts, term_opts = terminal_window_opts()
+
+    -- Open the backdrop first, then the terminal on top.
+    open_backdrop(backdrop_opts)
+
     M.floating_term.win = vim.api.nvim_open_win(
       M.floating_term.buf,
       true,
-      terminal_window_opts()
+      term_opts
+    )
+    vim.api.nvim_set_option_value(
+      "winhl",
+      "Normal:FloatingTermBg",
+      { win = M.floating_term.win }
     )
 
     M.floating_term.jobid = vim.fn.jobstart(
       vim.o.shell,
       {
-        on_exit = function() M.floating_term.jobid = nil end,
+        on_exit = function()
+          M.floating_term.jobid = nil
+          vim.schedule(
+            function()
+              if M.floating_term.win and vim.api.nvim_win_is_valid(M.floating_term.win) then
+                vim.api.nvim_win_close(M.floating_term.win, true)
+                M.floating_term.win = nil
+              end
+              close_backdrop()
+            end
+          )
+        end,
         term = true
       }
     )
 
     vim.api.nvim_buf_call(
       M.floating_term.buf,
-      function() vim.cmd.setfiletype("terminal") end
+      function()
+        vim.cmd.setfiletype("terminal")
+      end
     )
 
     vim.cmd.startinsert()
@@ -111,7 +206,11 @@ local function toggle_floating_terminal()
           vim.cmd.stopinsert()
 
           -- Consume the next keypress that would be sent to the terminal.
-          vim.schedule(function() vim.fn.getchar(0) end)
+          vim.schedule(
+            function()
+              vim.fn.getchar(0)
+            end
+          )
 
           return ""
         else
@@ -142,7 +241,7 @@ local function toggle_floating_terminal()
 
     local group_id = vim.api.nvim_create_augroup("FloatingTerminal", { clear = true } )
 
-    -- Close the window if the buffer is deleted.
+    -- Close the window and backdrop if the buffer is deleted.
     vim.api.nvim_create_autocmd(
       "BufWipeout",
       {
@@ -153,6 +252,21 @@ local function toggle_floating_terminal()
             vim.api.nvim_win_close(M.floating_term.win, true)
             M.floating_term.win = nil
           end
+          close_backdrop()
+        end,
+      }
+    )
+
+    -- Close the backdrop when the terminal window is closed (e.g., shell exits).
+    vim.api.nvim_create_autocmd(
+      "WinClosed",
+      {
+        group    = group_id,
+        callback = function(args)
+          if tonumber(args.match) == M.floating_term.win then
+            M.floating_term.win = nil
+            close_backdrop()
+          end
         end,
       }
     )
@@ -161,8 +275,15 @@ local function toggle_floating_terminal()
   end
 
   -- If we reach this point, the buffer already exists, so we just need to open the window.
-  local opts = terminal_window_opts()
-  M.floating_term.win = vim.api.nvim_open_win(M.floating_term.buf, true, opts)
+  update_floating_term_bg()
+  local backdrop_opts, term_opts = terminal_window_opts()
+  open_backdrop(backdrop_opts)
+  M.floating_term.win = vim.api.nvim_open_win(M.floating_term.buf, true, term_opts)
+  vim.api.nvim_set_option_value(
+    "winhl",
+    "Normal:FloatingTermBg",
+    { win = M.floating_term.win }
+  )
   vim.cmd.startinsert()
 
   return nil
