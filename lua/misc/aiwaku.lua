@@ -40,7 +40,7 @@ function M.prompt_and_send(ls, le)
     local session_name    = state.current_session
     local current_session = session_name and session.find_session(session_name)
     if not current_session then
-      vim.notify("[aiwaku] No active aiwaku session", vim.log.levels.WARN)
+      vim.notify("[aiwaku] No active session", vim.log.levels.WARN)
       return
     end
 
@@ -50,7 +50,7 @@ function M.prompt_and_send(ls, le)
 
     local bufnr = state.session_bufnrs[session_name]
     if not bufnr then
-      vim.notify("[aiwaku] Session buffer is nil", vim.log.levels.WARN)
+      vim.notify("[aiwaku] Session buffer not found", vim.log.levels.WARN)
       return
     end
 
