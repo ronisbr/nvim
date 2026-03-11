@@ -272,6 +272,12 @@ local function statusline__filename()
   return "%#StatuslineDefaultBold#" .. modified_str .. "%t"
 end
 
+-- Current folder.
+local function statusline__folder()
+  local folder = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+  return "%#StatuslineNormal#   " .. folder .. "/"
+end
+
 -- File type.
 local function statusline__filetype()
   local filetype = vim.bo.filetype
@@ -302,7 +308,7 @@ local function statusline__lsp_clients()
     return ""
   end
 
-  return "%#StatuslineFaded#[" .. clients .. "]"
+  return "%#StatuslineFaded#[ " .. clients .. "]"
 end
 
 -- Tabs.
@@ -324,7 +330,7 @@ local function statusline__tabs()
     end
   end
 
-  return "%#StatuslineFaded#[" .. table.concat(tab_parts, " | ") .. "]"
+  return " %#StatuslineFaded#[" .. table.concat(tab_parts, " | ") .. "]"
 end
 
 -- Cursor position.
@@ -399,9 +405,9 @@ local function statusline__render_active()
     "%#StatuslineDefault#%=",
     statusline__visual_selection_information(),
     statusline__space(),
-    statusline__tabs(),
-    statusline__space(),
+    statusline__folder(),
     statusline__cursor_position(),
+    statusline__tabs(),
   }
 
   return table.concat(statusline_components, "")
