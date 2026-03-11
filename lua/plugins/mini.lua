@@ -244,16 +244,6 @@ MiniDeps.now(function()
   mini_completion_map("i", "<CR>", "v:lua.cr_action()")
 end)
 
--- mini.diff -------------------------------------------------------------------------------
-
-MiniDeps.later(
-  function()
-    MiniDeps.add({ source = "nvim-mini/mini.diff" })
-
-    require("mini.diff").setup({})
-  end
-)
-
 -- mini.extra ------------------------------------------------------------------------------
 
 MiniDeps.now(
