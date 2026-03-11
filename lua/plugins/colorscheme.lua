@@ -15,12 +15,18 @@ MiniDeps.now(
     vim.g.gruvbox_material_enable_italic        = true
     vim.g.gruvbox_material_float_style          = "dim"
 
+
     vim.cmd.colorscheme("gruvbox-material")
 
-    -- Customize Highlight Groups --------------------------------------------------------
+    -- MiniDeps.add({ source = "ronisbr/nano-theme.nvim" })
+    --
+    -- vim.cmd.colorscheme("nano-theme")
+    -- vim.o.background = "light"
 
-    vim.api.nvim_set_hl(0, "WinBar", { bold = false })
-    vim.api.nvim_set_hl(0, "WinBarNC", { bold = false })
+    -- Customize Highlight Groups ----------------------------------------------------------
+
+    -- vim.api.nvim_set_hl(0, "WinBar", { bold = false })
+    -- vim.api.nvim_set_hl(0, "WinBarNC", { bold = false })
   end
 )
 

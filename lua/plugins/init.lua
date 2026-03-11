@@ -22,3 +22,12 @@ require("plugins.undotree")
 require("plugins.vimtex")
 
 require("plugins.none-ls")
+
+MiniDeps.later(
+  function()
+    local float_bg = vim.api.nvim_get_hl(0, { name = "NormalFloat" }).bg
+    local float_fg = vim.api.nvim_get_hl(0, { name = "Title" }).fg
+
+    vim.api.nvim_set_hl(0, "FloatTitle", { fg = float_fg, bg = float_bg })
+  end
+)
