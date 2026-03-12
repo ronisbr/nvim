@@ -275,7 +275,7 @@ end
 -- Current folder.
 local function statusline__folder()
   local folder = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
-  return "%#StatuslineNormal#   " .. folder .. "/"
+  return "  " .. folder .. "/"
 end
 
 -- File type.
