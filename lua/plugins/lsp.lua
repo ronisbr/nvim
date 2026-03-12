@@ -6,6 +6,8 @@
 
 MiniDeps.now(
   function()
+    MiniDeps.add({ source = "antonk52/filepaths_ls.nvim" })
+
     MiniDeps.add({
       source = "neovim/nvim-lspconfig",
       dependencies = {
@@ -22,9 +24,13 @@ MiniDeps.now(
 
     vim.lsp.config("copilot", {})
 
-    -- C++ ..............................................................................
+    -- C++ .................................................................................
 
     vim.lsp.config("clangd", {})
+
+    -- Filepaths ...........................................................................
+
+    vim.lsp.config("filepaths_ls", {})
 
     -- Julia ...............................................................................
 
@@ -94,6 +100,7 @@ MiniDeps.now(
 
     vim.lsp.enable("clangd")
     vim.lsp.enable("copilot")
+    vim.lsp.enable("filepaths_ls")
     vim.lsp.enable("julials")
     vim.lsp.enable("lua_ls")
     vim.lsp.enable("tinymist")
