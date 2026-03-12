@@ -66,6 +66,7 @@ MiniDeps.now(
           nmap("gra", vim.lsp.buf.code_action, "Code Actions")
           nmap("grd", vim.lsp.buf.definition, "Definition")
           nmap("grD", vim.lsp.buf.declaration, "Declaration")
+          nmap("gre", vim.diagnostic.open_float, "Line Diagnostics")
           nmap("gri", vim.lsp.buf.implementation, "Implementation")
           nmap("grn", vim.lsp.buf.rename, "Rename")
           nmap("grr", function() MiniExtra.pickers.lsp({ scope = "references" }) end, "References")
