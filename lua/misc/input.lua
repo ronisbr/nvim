@@ -78,7 +78,7 @@ local function wininput(opts, on_confirm)
   )
 
   vim.keymap.set(
-    "n",
+    { "i", "n" },
     "<Esc>",
     "<Cmd>close!<CR>",
     {
