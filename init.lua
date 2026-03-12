@@ -8,6 +8,7 @@ require("config.options")
 
 if not vim.g.vscode then
   require("misc.bufdelete").setup()
+  require("misc.input").setup()
   require("misc.lazygit").setup()
   require("misc.statusline").setup()
   require("misc.terminal").setup()
