@@ -133,6 +133,27 @@ MiniDeps.later(
   end
 )
 
+-- mini.cmdline ----------------------------------------------------------------------------
+
+MiniDeps.later(
+  function()
+    MiniDeps.add({ source = "nvim-mini/mini.cmdline" })
+
+    require("mini.cmdline").setup()
+
+    -- Limit the popup menu height when entering the cmdline to avoid it
+    -- covering too much of the screen (0 means unlimited by default).
+    vim.api.nvim_create_autocmd("CmdlineEnter", {
+      callback = function() vim.o.pumheight = 10 end,
+    })
+
+    -- Reset to unlimited on leave so other completion contexts are unaffected.
+    vim.api.nvim_create_autocmd("CmdlineLeave", {
+      callback = function() vim.o.pumheight = 0 end,
+    })
+  end
+)
+
 -- mini.completion -------------------------------------------------------------------------
 
 MiniDeps.now(function()
