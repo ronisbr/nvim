@@ -41,7 +41,7 @@ MiniDeps.now(
           PmenuKindSel  = { fg = "NONE", bg = theme.ui.bg_p2 },
           PmenuSbar     = { bg = theme.ui.bg_m1 },
           PmenuSel      = { fg = "NONE", bg = theme.ui.bg_p2 },
-          PmenuThumb    = { bg = "#C0A36E" },
+          PmenuThumb    = { bg = theme.syn.identifier },
         }
       end
     })
@@ -49,4 +49,3 @@ MiniDeps.now(
     vim.cmd.colorscheme("kanagawa-dragon")
   end
 )
-
