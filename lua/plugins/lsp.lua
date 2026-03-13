@@ -60,7 +60,11 @@ MiniDeps.now(
             },
             workspace = {
               checkThirdParty = false,
-              library = { vim.env.VIMRUNTIME }
+              library = {
+                vim.env.VIMRUNTIME,
+                vim.fn.stdpath("data") .. "/site/pack/deps/start",
+                vim.fn.stdpath("data") .. "/site/pack/deps/opt",
+              }
             }
           }
         )
