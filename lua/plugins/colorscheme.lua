@@ -28,7 +28,24 @@ MiniDeps.now(
     -- vim.api.nvim_set_hl(0, "WinBarNC", { bold = false })
 
     MiniDeps.add({ source = "rebelot/kanagawa.nvim" })
-    require("kanagawa").setup({})
+    require("kanagawa").setup({
+      terminalColors = false,
+
+      overrides = function(colors)
+        local theme = colors.theme
+        return {
+          Pmenu         = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+          PmenuExtra    = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+          PmenuExtraSel = { fg = "NONE", bg = theme.ui.bg_p2 },
+          PmenuKind     = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+          PmenuKindSel  = { fg = "NONE", bg = theme.ui.bg_p2 },
+          PmenuSbar     = { bg = theme.ui.bg_m1 },
+          PmenuSel      = { fg = "NONE", bg = theme.ui.bg_p2 },
+          PmenuThumb    = { bg = "#C0A36E" },
+        }
+      end
+    })
+
     vim.cmd.colorscheme("kanagawa-dragon")
   end
 )
