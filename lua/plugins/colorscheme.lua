@@ -17,35 +17,42 @@ MiniDeps.now(
 
     -- vim.cmd.colorscheme("gruvbox-material")
 
-    -- MiniDeps.add({ source = "ronisbr/nano-theme.nvim" })
-    --
-    -- vim.cmd.colorscheme("nano-theme")
-    -- vim.o.background = "light"
+    MiniDeps.add({ source = "ronisbr/nano-theme.nvim" })
+
+    vim.cmd.colorscheme("nano-theme")
+    vim.o.background = "light"
 
     -- Customize Highlight Groups ----------------------------------------------------------
 
     -- vim.api.nvim_set_hl(0, "WinBar", { bold = false })
     -- vim.api.nvim_set_hl(0, "WinBarNC", { bold = false })
 
-    MiniDeps.add({ source = "rebelot/kanagawa.nvim" })
-    require("kanagawa").setup({
-      terminalColors = false,
+    -- MiniDeps.add({ source = "rebelot/kanagawa.nvim" })
+    -- require("kanagawa").setup({
+    --   terminalColors = false,
+    --
+    --   overrides = function(colors)
+    --     local theme = colors.theme
+    --     return {
+    --       Pmenu         = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+    --       PmenuExtra    = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+    --       PmenuExtraSel = { fg = "NONE", bg = theme.ui.bg_p2 },
+    --       PmenuKind     = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+    --       PmenuKindSel  = { fg = "NONE", bg = theme.ui.bg_p2 },
+    --       PmenuSbar     = { bg = theme.ui.bg_m1 },
+    --       PmenuSel      = { fg = "NONE", bg = theme.ui.bg_p2 },
+    --       PmenuThumb    = { bg = theme.syn.identifier },
+    --     }
+    --   end
+    -- })
+    --
+    -- vim.cmd.colorscheme("kanagawa-dragon")
+  end
+)
 
-      overrides = function(colors)
-        local theme = colors.theme
-        return {
-          Pmenu         = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
-          PmenuExtra    = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
-          PmenuExtraSel = { fg = "NONE", bg = theme.ui.bg_p2 },
-          PmenuKind     = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
-          PmenuKindSel  = { fg = "NONE", bg = theme.ui.bg_p2 },
-          PmenuSbar     = { bg = theme.ui.bg_m1 },
-          PmenuSel      = { fg = "NONE", bg = theme.ui.bg_p2 },
-          PmenuThumb    = { bg = theme.syn.identifier },
-        }
-      end
-    })
-
-    vim.cmd.colorscheme("kanagawa-dragon")
+MiniDeps.later(
+  function()
+    MiniDeps.add({ source = "f-person/auto-dark-mode.nvim" })
+    require("auto-dark-mode").setup()
   end
 )
