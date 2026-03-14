@@ -62,11 +62,23 @@ local function update_floating_term_bg()
   local b = bit.band(bg, 0x0000FF)
 
   local luminance = 0.299 * r + 0.587 * g + 0.114 * b
-  local offset = luminance < 128 and 15 or -15
+  local is_light = luminance >= 128
 
-  r = math.max(0, math.min(255, r + offset))
-  g = math.max(0, math.min(255, g + offset))
-  b = math.max(0, math.min(255, b + offset))
+  local r_offset, g_offset, b_offset
+  if is_light then
+    -- Darker and warmer: reduce more aggressively, pull toward warm tones.
+    r_offset = -4
+    g_offset = -7
+    b_offset = -10
+  else
+    r_offset = 15
+    g_offset = 15
+    b_offset = 15
+  end
+
+  r = math.max(0, math.min(255, r + r_offset))
+  g = math.max(0, math.min(255, g + g_offset))
+  b = math.max(0, math.min(255, b + b_offset))
 
   vim.api.nvim_set_hl(0, "FloatingTermBg", { bg = string.format("#%02x%02x%02x", r, g, b) })
 end
