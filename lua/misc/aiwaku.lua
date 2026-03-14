@@ -37,32 +37,58 @@ function M.prompt_and_send(ls, le)
     local session = require("aiwaku.session")
     local window  = require("aiwaku.window")
 
+    local function send(current_session, session_name)
+      if not window.win_visible(state.win_id) then
+        session.open_session(current_session)
+      end
+
+      local bufnr = state.session_bufnrs[session_name]
+      if not bufnr then
+        vim.notify("[aiwaku] Session buffer not found", vim.log.levels.WARN)
+        return
+      end
+
+      local job_id = vim.b[bufnr].terminal_job_id
+      if not job_id then
+        vim.notify("[aiwaku] Sidebar terminal has no job channel", vim.log.levels.WARN)
+        return
+      end
+
+      local content = (input ~= "" and (input .. " ") or "") .. ref .. "\n"
+      vim.api.nvim_chan_send(job_id, content)
+      vim.api.nvim_set_current_win(state.win_id)
+    end
+
     local session_name    = state.current_session
     local current_session = session_name and session.find_session(session_name)
+
     if not current_session then
-      vim.notify("[aiwaku] No active session", vim.log.levels.WARN)
+      session.new_session()
+
+      local attempts     = 0
+      local max_attempts = 20
+      local interval_ms  = 50
+
+      local function try_send()
+        attempts = attempts + 1
+        session_name    = state.current_session
+        current_session = session_name and session.find_session(session_name)
+
+        if current_session then
+          send(current_session, session_name)
+        elseif attempts < max_attempts then
+          vim.defer_fn(try_send, interval_ms)
+        else
+          vim.notify("[aiwaku] Failed to initialize session", vim.log.levels.ERROR)
+        end
+      end
+
+      vim.defer_fn(try_send, interval_ms)
+
       return
     end
 
-    if not window.win_visible(state.win_id) then
-      session.open_session(current_session)
-    end
-
-    local bufnr = state.session_bufnrs[session_name]
-    if not bufnr then
-      vim.notify("[aiwaku] Session buffer not found", vim.log.levels.WARN)
-      return
-    end
-
-    local job_id = vim.b[bufnr].terminal_job_id
-    if not job_id then
-      vim.notify("[aiwaku] Sidebar terminal has no job channel", vim.log.levels.WARN)
-      return
-    end
-
-    local content = (input ~= "" and (input .. " ") or "") .. ref .. "\n"
-    vim.api.nvim_chan_send(job_id, content)
-    vim.api.nvim_set_current_win(state.win_id)
+    send(current_session, session_name)
   end)
 end
 
