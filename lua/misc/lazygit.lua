@@ -61,6 +61,7 @@ local function update_floating_term_bg()
   local g = bit.rshift(bit.band(bg, 0x00FF00), 8)
   local b = bit.band(bg, 0x0000FF)
 
+  -- Determine if the theme is light or dark based on perceived luminance.
   local luminance = 0.299 * r + 0.587 * g + 0.114 * b
   local is_light = luminance >= 128
 
