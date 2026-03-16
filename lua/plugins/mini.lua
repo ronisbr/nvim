@@ -265,6 +265,25 @@ MiniDeps.now(function()
   mini_completion_map("i", "<CR>", "v:lua.cr_action()")
 end)
 
+-- mini.diff -------------------------------------------------------------------------------
+
+MiniDeps.later(
+  function()
+    MiniDeps.add({ source = "nvim-mini/mini.diff" })
+
+    require("mini.diff").setup({
+      view = {
+        style = "sign",
+        signs = {
+          add    = "┃",
+          delete = "━",
+          change = "┃"
+        }
+      }
+    })
+  end
+)
+
 -- mini.extra ------------------------------------------------------------------------------
 
 MiniDeps.now(
@@ -272,6 +291,7 @@ MiniDeps.now(
     MiniDeps.add({ source = "nvim-mini/mini.extra" })
 
     require("mini.extra").setup({})
+
   end
 )
 

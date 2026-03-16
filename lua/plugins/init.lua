@@ -13,7 +13,6 @@ require("plugins.copilot")
 require("plugins.mini")
 
 require("plugins.aiwaku")
-require("plugins.gitsigns")
 require("plugins.julia")
 require("plugins.lsp")
 require("plugins.multicursor")
