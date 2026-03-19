@@ -36,6 +36,32 @@ MiniDeps.later(
       }
     })
 
+    -- Disable visual noise in the aiwaku sidebar terminal.
+    -- BufFilePost fires after nvim_buf_set_name(), which is when the buffer gets its
+    -- "aiwaku://" name (set after the buffer is already in the window).
+    local function clean_aiwaku_win(buf)
+      vim.b[buf].miniindentscope_disable = true
+      vim.b[buf].minitrailspace_disable  = true
+      for _, w in ipairs(vim.fn.win_findbuf(buf)) do
+        vim.wo[w].list = false
+      end
+    end
+
+    vim.api.nvim_create_autocmd("BufFilePost", {
+      pattern  = "aiwaku://*",
+      callback = function(ev) clean_aiwaku_win(ev.buf) end,
+    })
+
+    vim.api.nvim_create_autocmd("BufWinEnter", {
+      pattern  = "aiwaku://*",
+      callback = function(ev) clean_aiwaku_win(ev.buf) end,
+    })
+
+    vim.api.nvim_create_autocmd("WinEnter", {
+      pattern  = "aiwaku://*",
+      callback = function(ev) clean_aiwaku_win(ev.buf) end,
+    })
+
     local aiwaku_misc = require("misc.aiwaku")
 
     vim.keymap.set(
