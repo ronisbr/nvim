@@ -6,6 +6,9 @@
 
 MiniDeps.now(
   function()
+    MiniDeps.add({ source = "ronisbr/nano-theme.nvim" })
+    vim.cmd.colorscheme("nano-theme")
+
     -- MiniDeps.add({ source = "sainnhe/gruvbox-material", })
 
     -- vim.g.gruvbox_material_background           = "medium"
@@ -17,10 +20,6 @@ MiniDeps.now(
 
     -- vim.cmd.colorscheme("gruvbox-material")
 
-    MiniDeps.add({ source = "ronisbr/nano-theme.nvim" })
-
-    vim.cmd.colorscheme("nano-theme")
-    vim.o.background = "light"
 
     -- Customize Highlight Groups ----------------------------------------------------------
 
