@@ -114,7 +114,7 @@ function M.prompt_and_send(ls, le)
   -- Create the title bar at the top of the backdrop.
   local tool          = state.current_tool or (state.config and state.config.cmd[1])
   local model_name    = tool and tool.name or "Unknown"
-  local title_text    = "Aiwaku Prompt [" .. model_name .. "]"
+  local title_text    = "Aiwaku Prompt"
   local title_padding = math.floor((width - #title_text) / 2)
 
   if title_padding < 0 then
@@ -266,6 +266,12 @@ function M.prompt_and_send(ls, le)
   end
 
   local hint_line = string.rep(" ", hint_padding) .. hint_text
+  local model_pad = 2
+  local hint_gap  = width - #hint_line - #model_name - model_pad
+
+  if hint_gap > 0 then
+    hint_line = hint_line .. string.rep(" ", hint_gap) .. model_name .. string.rep(" ", model_pad)
+  end
 
   vim.api.nvim_buf_set_lines(hint_buf, 0, -1, false, { hint_line })
 
@@ -286,13 +292,26 @@ function M.prompt_and_send(ls, le)
   )
 
   vim.wo[hint_win].winhl = "Normal:FloatingTermBg"
+  local model_col = #hint_line - #model_name - model_pad
+
+  -- Highlight the hint text with Comment and the model name with Special.
   vim.api.nvim_buf_set_extmark(
     hint_buf,
     ns,
     0,
     0,
-    { line_hl_group = "Comment" }
+    { end_col = model_col, hl_group = "Comment" }
   )
+
+  if model_col >= 0 then
+    vim.api.nvim_buf_set_extmark(
+      hint_buf,
+      ns,
+      0,
+      model_col,
+      { end_col = model_col + #model_name, hl_group = "Special" }
+    )
+  end
 
   -- Helper: close all floating windows.
   local closed = false
