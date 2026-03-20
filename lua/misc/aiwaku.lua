@@ -319,12 +319,8 @@ function M.prompt_and_send(ls, le)
     input = input:gsub("^%s+", ""):gsub("%s+$", "")
     close_wins()
 
-    local function send(current_session, session_name)
-      if not window.win_visible(state.win_id) then
-        session.open_session(current_session)
-      end
-
-      -- Disable visual noise in the aiwaku sidebar terminal.
+    -- Try to send the content to the session terminal. Returns true on success.
+    local function try_send(sname)
       local sid_win = state.win_id
 
       if sid_win and vim.api.nvim_win_is_valid(sid_win) then
@@ -335,57 +331,94 @@ function M.prompt_and_send(ls, le)
         vim.wo[sid_win].list                   = false
       end
 
-      local bufnr = state.session_bufnrs[session_name]
+      local bufnr = sname and state.session_bufnrs[sname]
 
-      if not bufnr then
-        vim.notify("[aiwaku] Session buffer not found", vim.log.levels.WARN)
-        return
+      if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
+        return false
       end
 
       local job_id = vim.b[bufnr].terminal_job_id
 
       if not job_id then
-        vim.notify("[aiwaku] Sidebar terminal has no job channel", vim.log.levels.WARN)
-        return
+        return false
       end
 
       local content = (input ~= "" and (input .. " ") or "") .. ref .. "\n"
 
       vim.api.nvim_chan_send(job_id, content)
-      vim.api.nvim_set_current_win(state.win_id)
-      vim.cmd("startinsert")
+
+      if state.win_id and vim.api.nvim_win_is_valid(state.win_id) then
+        vim.api.nvim_set_current_win(state.win_id)
+        vim.cmd("startinsert")
+      end
+
+      return true
+    end
+
+    -- Retry sending until the terminal job is ready.
+    local function wait_and_send(get_session_name)
+      local attempts     = 0
+      local max_attempts = 10
+      local interval_ms  = 100
+
+      local function retry()
+        -- While the plugin is busy (async operation in flight), keep waiting
+        -- without consuming retry attempts.
+        if state.busy then
+          vim.defer_fn(retry, interval_ms)
+          return
+        end
+
+        attempts = attempts + 1
+
+        if try_send(get_session_name()) then
+          return
+        end
+
+        if attempts < max_attempts then
+          vim.defer_fn(retry, interval_ms)
+        else
+          vim.notify("[aiwaku] Failed to send prompt to session", vim.log.levels.ERROR)
+        end
+      end
+
+      vim.defer_fn(retry, interval_ms)
     end
 
     local session_name    = state.current_session
     local current_session = session_name and session.find_session(session_name)
 
-    if not current_session then
-      session.new_session()
-
-      local attempts     = 0
-      local max_attempts = 20
-      local interval_ms  = 50
-
-      local function try_send()
-        attempts        = attempts + 1
-        session_name    = state.current_session
-        current_session = session_name and session.find_session(session_name)
-
-        if current_session then
-          send(current_session, session_name)
-        elseif attempts < max_attempts then
-          vim.defer_fn(try_send, interval_ms)
-        else
-          vim.notify("[aiwaku] Failed to initialize session", vim.log.levels.ERROR)
-        end
+    if current_session then
+      -- Existing session found; ensure it is visible.
+      if not window.win_visible(state.win_id) then
+        session.open_session(current_session)
       end
 
-      vim.defer_fn(try_send, interval_ms)
+      -- Try sending immediately; if the terminal is not ready yet, retry.
+      if not try_send(session_name) then
+        wait_and_send(function() return session_name end)
+      end
 
       return
     end
 
-    send(current_session, session_name)
+    -- If find_session failed but we still have a valid session buffer, reuse it.
+    if session_name
+      and state.session_bufnrs[session_name]
+      and vim.api.nvim_buf_is_valid(state.session_bufnrs[session_name])
+    then
+      if not try_send(session_name) then
+        wait_and_send(function() return session_name end)
+      end
+
+      return
+    end
+
+    -- No usable session exists; create a new one and wait for it to be ready.
+    session.new_session()
+    wait_and_send(function()
+      return state.current_session
+    end)
   end
 
   -- Keymaps for the prompt buffer.
