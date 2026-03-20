@@ -415,7 +415,9 @@ function M.prompt_and_send(ls, le)
 
       -- Try sending immediately; if the terminal is not ready yet, retry.
       if not try_send(session_name) then
-        wait_and_send(function() return session_name end)
+        wait_and_send(function()
+          return session_name
+        end)
       end
 
       return
