@@ -89,9 +89,7 @@ map(
 -- Placeholders <++> -----------------------------------------------------------------------
 
 map("n", "<C-j>", "/<++><CR>v3lc", "Change Next Placeholder")
-map("n", "<C-k>", "?<++><CR>v3lc", "Change Previous Placeholder")
 map("i", "<C-j>", "<Esc>/<++><CR>v3lc", "Change Next Placeholder")
-map("i", "<C-k>", "<Esc>?<++><CR>v3lc", "Change Previous Placeholder")
 
 -- Visual Code -----------------------------------------------------------------------------
 
