@@ -207,7 +207,7 @@ local function configure_hl_groups()
     }
   )
 
-  -- Mode caps (for the rounded separators on each side of the mode indicator).
+  -- Mode separators (for the slant on the right side of the mode indicator).
   for _, hl_name in ipairs({
     "StatuslineModeNormal",
     "StatuslineModeInsert",
@@ -218,8 +218,8 @@ local function configure_hl_groups()
       0,
       hl_name .. "Cap",
       {
-        fg = get_color(hl_name, "bg"),
-        bg = statusline_bg,
+        fg = statusline_bg,
+        bg = get_color(hl_name, "bg"),
       }
     )
   end
@@ -238,9 +238,8 @@ end
 -- Width of the mode name area (based on the longest mode name: "Terminal").
 local mode_name_width = 8
 
--- Nerd Font rounded separators (U+E0B6 left, U+E0B4 right).
-local mode_sep_l = "\238\130\182"
-local mode_sep_r = "\238\130\180"
+-- Powerline slant separator for the right edge (U+E0BE gives a / shape).
+local mode_sep_r = "\238\130\190"
 
 -- Current Neovim mode.
 local function statusline__mode()
@@ -250,7 +249,6 @@ local function statusline__mode()
   local cap_hl    = mode_info.hl .. "Cap"
 
   return
-    "%#" .. cap_hl .. "#" .. mode_sep_l ..
     "%#" .. mode_info.hl .. "# " .. center_string(mode_str, mode_name_width) .. " " ..
     "%#" .. cap_hl .. "#" .. mode_sep_r
 end
