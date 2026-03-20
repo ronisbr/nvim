@@ -207,6 +207,29 @@ local function configure_hl_groups()
     }
   )
 
+  -- Folder Block --------------------------------------------------------------------------
+
+  local folder_bg = get_color("NonText", "fg")
+
+  vim.api.nvim_set_hl(
+    0,
+    "StatuslineFolder",
+    {
+      fg = get_color("Normal", "fg"),
+      bg = folder_bg,
+      bold = true,
+    }
+  )
+
+  vim.api.nvim_set_hl(
+    0,
+    "StatuslineFolderCap",
+    {
+      fg = folder_bg,
+      bg = statusline_bg,
+    }
+  )
+
   -- Mode separators (for the slant on the right side of the mode indicator).
   for _, hl_name in ipairs({
     "StatuslineModeNormal",
@@ -218,8 +241,8 @@ local function configure_hl_groups()
       0,
       hl_name .. "Cap",
       {
-        fg = statusline_bg,
-        bg = get_color(hl_name, "bg"),
+        fg = get_color(hl_name, "bg"),
+        bg = folder_bg,
       }
     )
   end
@@ -238,8 +261,8 @@ end
 -- Width of the mode name area (based on the longest mode name: "Terminal").
 local mode_name_width = 8
 
--- Powerline slant separator for the right edge (U+E0BE gives a / shape).
-local mode_sep_r = "\238\130\190"
+-- Powerline slant separator for the right edge (U+E0BC gives a / shape).
+local mode_sep_r = "\238\130\188"
 
 -- Current Neovim mode.
 local function statusline__mode()
@@ -273,7 +296,9 @@ end
 -- Current folder.
 local function statusline__folder()
   local folder = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
-  return "  " .. folder .. "/"
+  return
+    "%#StatuslineFolder#   " .. folder .. " " ..
+    "%#StatuslineFolderCap#" .. mode_sep_r
 end
 
 -- File type.
@@ -393,6 +418,7 @@ end
 local function statusline__render_active()
   local statusline_components = {
     statusline__mode(),
+    statusline__folder(),
     statusline__space(),
     statusline__macro_recording(),
     statusline__filename(),
@@ -403,7 +429,6 @@ local function statusline__render_active()
     "%#StatuslineDefault#%=",
     statusline__visual_selection_information(),
     statusline__space(),
-    statusline__folder(),
     statusline__cursor_position(),
     statusline__tabs(),
   }
