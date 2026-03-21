@@ -36,6 +36,17 @@ vim.api.nvim_create_autocmd(
   }
 )
 
+vim.api.nvim_create_autocmd(
+  "BufWinEnter",
+  {
+    pattern = "copilot:/*",
+    callback = function(event)
+      vim.bo[event.buf].buflisted = false
+      vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+    end,
+  }
+)
+
 -- Automatically close terminal buffers when the process exits with status 0.
 vim.api.nvim_create_autocmd(
   "TermClose",
