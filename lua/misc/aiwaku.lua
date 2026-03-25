@@ -220,7 +220,7 @@ function M.prompt_and_send(ls, le)
   vim.wo[prompt_win].spell          = false
   vim.wo[prompt_win].statusline     = " "
   vim.wo[prompt_win].winbar         = ""
-  vim.wo[prompt_win].winhl          = "Normal:FloatingTermBg,LineNr:FloatingTermBg"
+  vim.wo[prompt_win].winhl          = "Normal:FloatingTermBg,LineNr:LineNr"
 
   -- Create a horizontal separator between prompt and hint bar.
   local sep_bot_buf = vim.api.nvim_create_buf(false, true)
