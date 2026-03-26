@@ -140,14 +140,24 @@ MiniMisc.on_event(
 
     -- Limit the popup menu height when entering the cmdline to avoid it
     -- covering too much of the screen (0 means unlimited by default).
-    vim.api.nvim_create_autocmd("CmdlineEnter", {
-      callback = function() vim.o.pumheight = 10 end,
-    })
+    vim.api.nvim_create_autocmd(
+      "CmdlineEnter",
+      {
+        callback = function()
+          vim.o.pumheight = 10
+        end
+      }
+    )
 
     -- Reset to unlimited on leave so other completion contexts are unaffected.
-    vim.api.nvim_create_autocmd("CmdlineLeave", {
-      callback = function() vim.o.pumheight = 0 end,
-    })
+    vim.api.nvim_create_autocmd(
+      "CmdlineLeave",
+      {
+        callback = function()
+          vim.o.pumheight = 0
+        end
+      }
+    )
   end
 )
 
@@ -335,7 +345,9 @@ MiniMisc.later(
     -- Mapping to toggle hidden files in the mini.files window.
     local show_hidden_files = true
 
-    local filter__show_hidden_files = function(fs_entry) return true end
+    local filter__show_hidden_files = function(fs_entry)
+      return true
+    end
 
     local filter__hide_hidden_files = function(fs_entry)
       return not vim.startswith(fs_entry.name, ".")
