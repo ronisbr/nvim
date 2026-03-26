@@ -6,6 +6,10 @@
 
 local M = {}
 
+M.history = M.history or {}
+
+local MAX_HISTORY = 10
+
 --- Prompt the user for input and send it to the active aiwaku session terminal.
 ---
 --- If `ls` and `le` are provided, the file reference appended to the prompt will be a line
@@ -313,15 +317,30 @@ function M.prompt_and_send(ls, le)
     )
   end
 
-  -- Helper: close all floating windows.
   local closed = false
 
+  --- Close all floating windows belonging to this prompt session. Saves the current buffer
+  --- content to history before closing, so that both explicit sends and plain quits preserve
+  --- the prompt. Skips saving when in history-navigation mode, as the buffer then holds a
+  --- previously stored entry rather than a new prompt.
   local function close_wins()
     if closed then
       return
     end
 
     closed = true
+
+    -- Read the buffer before closing, because bufhidden=wipe destroys it immediately
+    -- after the last window referencing it is closed.
+    local lines = vim.api.nvim_buf_get_lines(prompt_buf, 0, -1, false)
+    local input = table.concat(lines, "\n"):gsub("^%s+", ""):gsub("%s+$", "")
+
+    if input ~= "" and not in_history then
+      table.insert(M.history, 1, input)
+      if #M.history > MAX_HISTORY then
+        M.history[MAX_HISTORY + 1] = nil
+      end
+    end
 
     for _, w in ipairs({ prompt_win, title_win, sep_top_win, sep_bot_win, hint_win, backdrop_win }) do
       if vim.api.nvim_win_is_valid(w) then
@@ -330,15 +349,19 @@ function M.prompt_and_send(ls, le)
     end
   end
 
-  -- Helper: send prompt content to aiwaku.
+  --- Close the UI (which saves the buffer to history) and dispatch its content to the active
+  --- aiwaku session, creating one if none exists.
   local function send_prompt()
     local lines = vim.api.nvim_buf_get_lines(prompt_buf, 0, -1, false)
     local input = vim.fn.join(lines, "\n")
 
     input = input:gsub("^%s+", ""):gsub("%s+$", "")
+
     close_wins()
 
-    -- Try to send the content to the session terminal. Returns true on success.
+    --- Write the prompt content to the terminal job of the named session.
+    ---@param sname string|nil Session name to look up in `state.session_bufnrs`.
+    ---@return boolean True if the content was sent successfully, false otherwise.
     local function try_send(sname)
       local sid_win = state.win_id
 
@@ -374,15 +397,19 @@ function M.prompt_and_send(ls, le)
       return true
     end
 
-    -- Retry sending until the terminal job is ready.
+    --- Poll until the terminal job of the session is ready, then send the prompt.
+    --- Pauses without consuming attempts while `state.busy` is true.
+    ---@param get_session_name fun(): string|nil Returns the session name to send to on each
+    --- attempt.
     local function wait_and_send(get_session_name)
       local attempts     = 0
       local max_attempts = 10
       local interval_ms  = 100
 
+      --- Single retry tick: skip while busy, attempt to send, reschedule on failure.
       local function retry()
-        -- While the plugin is busy (async operation in flight), keep waiting
-        -- without consuming retry attempts.
+        -- While the plugin is busy (async operation in flight), keep waiting without
+        -- consuming retry attempts.
         if state.busy then
           vim.defer_fn(retry, interval_ms)
           return
@@ -442,9 +469,189 @@ function M.prompt_and_send(ls, le)
     end)
   end
 
+  -- History navigation state.
+  local history_ns  = vim.api.nvim_create_namespace("aiwaku_history")
+  local in_history  = false
+  local history_idx = 0
+
+  --- Return true when the prompt buffer contains only whitespace.
+  ---@return boolean
+  local function buf_is_empty()
+    local lines = vim.api.nvim_buf_get_lines(prompt_buf, 0, -1, false)
+    return table.concat(lines, "\n"):gsub("^%s+", ""):gsub("%s+$", "") == ""
+  end
+
+  --- Cover every line of the prompt buffer with a `Special` extmark so that the currently
+  --- previewed history entry is visually distinct from normal editing.
+  local function apply_history_hl()
+    vim.api.nvim_buf_clear_namespace(prompt_buf, history_ns, 0, -1)
+    local lines = vim.api.nvim_buf_get_lines(prompt_buf, 0, -1, false)
+
+    for i, line in ipairs(lines) do
+      vim.api.nvim_buf_set_extmark(prompt_buf, history_ns, i - 1, 0, {
+        end_col  = #line,
+        hl_group = "Special",
+        hl_eol   = true,
+        priority = 200,
+      })
+    end
+  end
+
+  --- Load `M.history[idx]` into the prompt buffer and apply history highlights.
+  ---@param idx integer 1-based index into `M.history` (1 = most recent).
+  local function show_history(idx)
+    local item = M.history[idx]
+
+    if not item then
+      return
+    end
+
+    vim.api.nvim_buf_set_lines(
+      prompt_buf,
+      0,
+      -1,
+      false,
+      vim.split(item, "\n", { plain = true })
+    )
+    apply_history_hl()
+  end
+
+  --- Enter history-navigation mode and display the most recent entry. It does nothing when
+  --- `M.history` is empty.
+  local function enter_history()
+    if #M.history == 0 then
+      return
+    end
+
+    in_history  = true
+    history_idx = 1
+    show_history(history_idx)
+  end
+
+  --- Cancel history navigation: clear the buffer, remove highlights, and return to insert
+  --- mode.
+  local function exit_history()
+    in_history  = false
+    history_idx = 0
+    vim.api.nvim_buf_clear_namespace(prompt_buf, history_ns, 0, -1)
+    vim.api.nvim_buf_set_lines(prompt_buf, 0, -1, false, { "" })
+    vim.cmd("startinsert")
+  end
+
+  --- Confirm the currently previewed history entry: remove highlights and resume insert
+  --- mode at the end of the buffer, leaving the text in place.
+  local function confirm_history()
+    in_history  = false
+    history_idx = 0
+    vim.api.nvim_buf_clear_namespace(prompt_buf, history_ns, 0, -1)
+    vim.cmd("startinsert!")
+  end
+
   -- Keymaps for the prompt buffer.
-  vim.keymap.set("n", "q",     close_wins, { buffer = prompt_buf, nowait = true })
-  vim.keymap.set("n", "<Esc>", close_wins, { buffer = prompt_buf, nowait = true })
+  vim.keymap.set("n", "q", close_wins, { buffer = prompt_buf, nowait = true })
+
+  vim.keymap.set(
+    "n",
+    "<Esc>",
+    function()
+      if in_history then
+        exit_history()
+      else
+        close_wins()
+      end
+    end,
+    { buffer = prompt_buf, nowait = true }
+  )
+
+  vim.keymap.set(
+    "n",
+    "<CR>",
+    function()
+      if in_history then
+        confirm_history()
+      end
+    end,
+    { buffer = prompt_buf, nowait = true }
+  )
+
+  vim.keymap.set(
+    "n",
+    "k",
+    function()
+      if in_history then
+        if history_idx < #M.history then
+          history_idx = history_idx + 1
+          show_history(history_idx)
+        end
+      elseif buf_is_empty() then
+        enter_history()
+      else vim.cmd("normal! k")
+        end
+    end,
+    { buffer = prompt_buf, nowait = true }
+  )
+
+  vim.keymap.set(
+    "n",
+    "<Up>",
+    function()
+      if in_history then
+        if history_idx < #M.history then
+          history_idx = history_idx + 1
+          show_history(history_idx)
+        end
+      elseif buf_is_empty() then
+        enter_history()
+      else
+        vim.cmd("normal! k")
+      end
+    end,
+    { buffer = prompt_buf, nowait = true }
+  )
+
+  vim.keymap.set(
+    "i",
+    "<Up>",
+    function()
+      if buf_is_empty() then
+        vim.cmd("stopinsert")
+        enter_history()
+        end
+    end,
+    { buffer = prompt_buf, nowait = true }
+  )
+
+  vim.keymap.set(
+    "n",
+    "j",
+    function()
+      if in_history then
+        if history_idx > 1 then
+          history_idx = history_idx - 1
+          show_history(history_idx)
+        end
+      else
+        vim.cmd("normal! j")
+      end
+    end,
+    { buffer = prompt_buf, nowait = true }
+  )
+
+  vim.keymap.set(
+    "n",
+    "<Down>",
+    function()
+      if in_history then
+        if history_idx > 1 then
+          history_idx = history_idx - 1
+          show_history(history_idx)
+        end
+      else
+        vim.cmd("normal! j")
+      end
+    end,
+    { buffer = prompt_buf, nowait = true }
+  )
 
   vim.api.nvim_create_autocmd(
     "BufWriteCmd",
