@@ -257,27 +257,14 @@ function M.prompt_and_send(ls, le)
     { line_hl_group = "NonText" }
   )
 
+  -- Whether to append the file reference when sending the prompt (default on).
+  local include_ref = true
+
   -- Create the hint bar at the bottom of the backdrop.
-  local hint_buf = vim.api.nvim_create_buf(false, true)
+  local hint_buf  = vim.api.nvim_create_buf(false, true)
+  local model_pad = 2
 
   vim.bo[hint_buf].bufhidden = "wipe"
-
-  local hint_text    = ":w => Send Prompt | q => Quit"
-  local hint_padding = math.floor((width - #hint_text) / 2)
-
-  if hint_padding < 0 then
-    hint_padding = 0
-  end
-
-  local hint_line = string.rep(" ", hint_padding) .. hint_text
-  local model_pad = 2
-  local hint_gap  = width - #hint_line - #model_name - model_pad
-
-  if hint_gap > 0 then
-    hint_line = hint_line .. string.rep(" ", hint_gap) .. model_name .. string.rep(" ", model_pad)
-  end
-
-  vim.api.nvim_buf_set_lines(hint_buf, 0, -1, false, { hint_line })
 
   local hint_win = vim.api.nvim_open_win(
     hint_buf,
@@ -296,33 +283,50 @@ function M.prompt_and_send(ls, le)
   )
 
   vim.wo[hint_win].winhl = "Normal:FloatingTermBg"
-  local model_col = #hint_line - #model_name - model_pad
 
-  -- Highlight the hint text with Comment and the model name with Special.
-  vim.api.nvim_buf_set_extmark(
-    hint_buf,
-    ns,
-    0,
-    0,
-    { end_col = model_col, hl_group = "Comment" }
-  )
+  --- Rebuild the hint bar to reflect the current `include_ref` state.
+  local function update_hint_bar()
+    local pad      = string.rep(" ", model_pad)
+    local ref_str  = pad .. (include_ref and "ref:on" or "ref:off") .. pad
+    local hint     = "<M-CR> / :w => Send Prompt ┃ <Esc> / q => Quit"
+    local right    = model_name .. pad
+    local hint_dw  = vim.fn.strdisplaywidth(hint)
+    local hint_col = math.floor((width - hint_dw) / 2)
+    local line     =
+      ref_str ..
+      string.rep(" ", math.max(0, hint_col - #ref_str)) ..
+      hint ..
+      string.rep(" ", math.max(0, width - hint_col - hint_dw - #right)) ..
+      right
 
-  if model_col >= 0 then
-    vim.api.nvim_buf_set_extmark(
-      hint_buf,
-      ns,
-      0,
-      model_col,
-      { end_col = model_col + #model_name, hl_group = "Special" }
-    )
+    vim.api.nvim_buf_set_lines(hint_buf, 0, -1, false, { line })
+    vim.api.nvim_buf_clear_namespace(hint_buf, ns, 0, -1)
+
+    -- Ref-toggle indicator (left) and hint text (centre) share the same highlight.
+    local model_col = #line - #right
+
+    vim.api.nvim_buf_set_extmark(hint_buf, ns, 0, 0, {
+      end_col  = model_col,
+      hl_group = "Comment",
+    })
+
+    -- Model name (right).
+    if model_col >= 0 then
+      vim.api.nvim_buf_set_extmark(hint_buf, ns, 0, model_col, {
+        end_col  = model_col + #model_name,
+        hl_group = "Special",
+      })
+    end
   end
+
+  update_hint_bar()
 
   local closed = false
 
   --- Close all floating windows belonging to this prompt session. Saves the current buffer
-  --- content to history before closing, so that both explicit sends and plain quits preserve
-  --- the prompt. Skips saving when in history-navigation mode, as the buffer then holds a
-  --- previously stored entry rather than a new prompt.
+  --- content to history before closing, so that both explicit sends and plain quits
+  --- preserve the prompt. Skips saving when in history-navigation mode, as the buffer then
+  --- holds a previously stored entry rather than a new prompt.
   local function close_wins()
     if closed then
       return
@@ -385,7 +389,12 @@ function M.prompt_and_send(ls, le)
         return false
       end
 
-      local content = (input ~= "" and (input .. " ") or "") .. ref .. "\n"
+      local content
+      if include_ref then
+        content = "Reference: " .. ref .. "\n\n" .. input .. "\n"
+      else
+        content = input
+      end
 
       vim.api.nvim_chan_send(job_id, content)
 
@@ -649,6 +658,25 @@ function M.prompt_and_send(ls, le)
       else
         vim.cmd("normal! j")
       end
+    end,
+    { buffer = prompt_buf, nowait = true }
+  )
+
+  vim.keymap.set(
+    { "n", "i" },
+    "<M-CR>",
+    function()
+      send_prompt()
+    end,
+    { buffer = prompt_buf, nowait = true }
+  )
+
+  vim.keymap.set(
+    { "n", "i" },
+    "<C-s>",
+    function()
+      include_ref = not include_ref
+      update_hint_bar()
     end,
     { buffer = prompt_buf, nowait = true }
   )
