@@ -4,10 +4,8 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.later(
   function()
-    MiniDeps.add({ source = "jake-stewart/multicursor.nvim" })
-
     local mc = require("multicursor-nvim")
     mc.setup()
 

@@ -4,7 +4,7 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-local autocmd_groups = vim.api.nvim_create_augroup("ronisbr_autocmds", { clear = true })
+_G.ronisbr_autocmd_groups = vim.api.nvim_create_augroup("ronisbr_autocmds", { clear = true })
 
 -- Buffer ----------------------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ local autocmd_groups = vim.api.nvim_create_augroup("ronisbr_autocmds", { clear =
 vim.api.nvim_create_autocmd(
   "FileType",
   {
-    group = autocmd_groups,
+    group = ronisbr_autocmd_groups,
     pattern = {
       "PlenaryTestPopup",
       "checkhealth",
@@ -51,7 +51,7 @@ vim.api.nvim_create_autocmd(
 vim.api.nvim_create_autocmd(
   "TermClose",
   {
-    group = autocmd_groups,
+    group = ronisbr_autocmd_groups,
     desc = "Auto-close terminal buffer on successful exit",
     callback = function(args)
       if ((vim.v.event.status == 0) and vim.api.nvim_buf_is_valid(args.buf)) then
@@ -65,7 +65,7 @@ vim.api.nvim_create_autocmd(
 vim.api.nvim_create_autocmd(
   { "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" },
   {
-    group = autocmd_groups,
+    group = ronisbr_autocmd_groups,
     desc = "Check if file changed on disk",
     callback = function()
       if vim.fn.mode() ~= "c" then

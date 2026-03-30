@@ -128,7 +128,7 @@ local function julia_indent()
     end
 
     -- Fall through to tree-sitter indent.
-    return vim.fn.eval('nvim_treesitter#indent()')
+    return require('nvim-treesitter').indentexpr()
 end
 
 _G._julia_indent = julia_indent

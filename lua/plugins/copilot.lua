@@ -6,10 +6,9 @@
 
 -- copilot.vim -----------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.on_event(
+  "InsertEnter",
   function()
-    MiniDeps.add({ source = "zbirenbaum/copilot.lua" })
-
     require("copilot").setup({
       nes = {
         enabled = false

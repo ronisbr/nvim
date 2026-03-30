@@ -4,18 +4,8 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-MiniDeps.now(
+MiniMisc.later(
   function()
-    MiniDeps.add({ source = "antonk52/filepaths_ls.nvim" })
-
-    MiniDeps.add({
-      source = "neovim/nvim-lspconfig",
-      dependencies = {
-        "nvim-mini/mini.completion",
-        "nvim-mini/mini.extra",
-      }
-    })
-
     -- Configuration of the LSP Clients ----------------------------------------------------
 
     vim.lsp.config("*", { capabilities = MiniCompletion.get_lsp_capabilities() })

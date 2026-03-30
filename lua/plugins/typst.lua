@@ -4,9 +4,9 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.on_filetype(
+  "typst",
   function()
-    MiniDeps.add({ source = "chomosuke/typst-preview.nvim" })
-    require("typst-preview").setup({})
+    require("typst-preview").setup()
   end
 )

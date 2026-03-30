@@ -1,27 +1,34 @@
 _G.__nvim_start_time = (_G.__nvim_start_time or vim.uv.hrtime())
 
-require("config.minideps")
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
+require("plugins")
 
 require("config.autocmds")
 require("config.keymaps")
 require("config.options")
 
-if not vim.g.vscode then
-  require("misc.bufdelete").setup()
-  require("misc.input").setup()
-  require("misc.lazygit").setup()
-  require("misc.statusline").setup()
-  require("misc.terminal").setup()
-end
+require("misc.bufdelete").setup()
+require("misc.input").setup()
+require("misc.lazygit").setup()
+require("misc.statusline").setup()
+require("misc.terminal").setup()
 
 require("misc.julia").setup()
 
-MiniDeps.later(
+MiniMisc.now(
   function()
-    local num_plugins = #MiniDeps.get_session()
+    local plugins = vim.pack.get()
+    local num_plugins = 0
+
+    for _ in pairs(plugins) do
+      num_plugins = num_plugins + 1
+    end
+
     _G.__nvim_num_loaded_plugins = num_plugins
 
-    vim.cmd("doautocmd User MiniDepsFinished")
+    vim.cmd("doautocmd User StartupFinished")
   end
 )
 

@@ -4,9 +4,10 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.on_event(
+  "BufEnter",
   function()
-    MiniDeps.add({ source = "mbbill/undotree" })
+    vim.pack.add({ "https://github.com/mbbill/undotree" })
   end
 )
 

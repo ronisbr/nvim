@@ -4,10 +4,9 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.on_event(
+	"BufEnter",
   function()
-    MiniDeps.add({ source = "juhaku/aiwaku.nvim", depends = { "nvim-lua/plenary.nvim" } })
-
     require("aiwaku").setup({
       cmd = {
         { name = "Claude",  cmd = "claude" },

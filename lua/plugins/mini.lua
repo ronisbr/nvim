@@ -15,20 +15,17 @@ local neovim_logo = [[
 
 -- mini.align ------------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.later(
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.align" })
-
+    vim.pack.add({ "https://github.com/nvim-mini/mini.align" })
     require("mini.align").setup({})
   end
 )
 
 -- mini.clue -------------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.later(
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.clue" })
-
     local miniclue = require("mini.clue")
 
     -- Compute the mini.clue window width dinamically.
@@ -135,10 +132,9 @@ MiniDeps.later(
 
 -- mini.cmdline ----------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.on_event(
+  "CmdLineEnter",
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.cmdline" })
-
     require("mini.cmdline").setup()
 
     -- Limit the popup menu height when entering the cmdline to avoid it
@@ -156,121 +152,118 @@ MiniDeps.later(
 
 -- mini.completion -------------------------------------------------------------------------
 
-MiniDeps.now(function()
-  MiniDeps.add({ source = "nvim-mini/mini.completion" })
+MiniMisc.now(
+  function()
+    require("mini.completion").setup({
+      delay = { completion = 700, info = 300, signature = 200 },
+    })
 
-  require("mini.completion").setup({
-    delay = { completion = 700, info = 300, signature = 200 },
-  })
+    -- Keymaps -------------------------------------------------------------------------------
 
-  -- Keymaps -------------------------------------------------------------------------------
-
-  local function mini_completion_map(mode, lhs, rhs)
-    vim.keymap.set(mode, lhs, rhs, { noremap = true, expr = true, silent = true })
-  end
-
-  -- Smart <Tab>: navigate completion menu if visible, otherwise accept Copilot, else Tab or
-  -- expand/jump mini.snippets.
-  vim.keymap.set(
-    "i",
-    "<Tab>",
-    function()
-      if vim.fn.pumvisible() == 1 then
-        return vim.api.nvim_replace_termcodes("<C-n>", true, true, true)
-      end
-
-      -- For Julia files, directly substitute a \sequence with its Unicode equivalent.
-      if vim.bo.filetype == "julia" then
-        local col       = vim.fn.col(".") - 1
-        local before    = vim.fn.getline("."):sub(1, col)
-        local latex_seq = before:match("(\\%S+)$")
-
-        if latex_seq then
-          local symbols = vim.g.l2u_symbols_dict
-          local unicode = symbols and symbols[latex_seq]
-
-          if unicode then
-            local bs = vim.api.nvim_replace_termcodes("<BS>", true, true, true)
-            return string.rep(bs, #latex_seq) .. unicode
-          end
-        end
-      end
-
-      -- Accept Copilot suggestion if available.
-      local copilot_suggestion = require("copilot.suggestion")
-      if require("copilot.suggestion").is_visible() then
-        return copilot_suggestion.accept()
-      end
-
-      local is_active = MiniSnippets.session.get() ~= nil
-      if is_active then
-        return MiniSnippets.session.jump("next")
-      end
-
-      -- If mini.snippets is expandable or jumpable, use it.
-      local can_uniquely_expand = #MiniSnippets.expand({ insert = false }) == 1
-      if can_uniquely_expand then
-        return vim.api.nvim_replace_termcodes(
-          "<Cmd>lua require('mini.snippets').expand()<CR>",
-          true,
-          true,
-          true
-        )
-      end
-
-      return vim.api.nvim_replace_termcodes("<Tab>", true, true, true)
-    end,
-    {
-      expr = true,
-      replace_keycodes = false,
-      silent = true
-    }
-  )
-
-  -- Use <S-Tab> to navigate backward through completion items or jump backward in snippet.
-  vim.keymap.set(
-    "i",
-    "<S-Tab>",
-    function()
-      if vim.fn.pumvisible() == 1 then
-        return vim.api.nvim_replace_termcodes("<C-p>", true, true, true)
-      end
-
-      -- If mini.snippets is active, jump to the previous position.
-      local is_active = MiniSnippets.session.get() ~= nil
-      if is_active then
-        return MiniSnippets.session.jump("prev")
-      end
-
-      return vim.api.nvim_replace_termcodes("<S-Tab>", true, true, true)
-    end,
-    {
-      expr = true,
-      replace_keycodes = false,
-      silent = true
-    }
-  )
-
-  -- Configure a more consistent behavior of <CR>.
-  _G.cr_action = function()
-    -- If there is selected item in popup, accept it with <C-y>
-    if vim.fn.complete_info()["selected"] ~= -1 then
-      return vim.api.nvim_replace_termcodes("<C-y>", true, true, true)
+    local function mini_completion_map(mode, lhs, rhs)
+      vim.keymap.set(mode, lhs, rhs, { noremap = true, expr = true, silent = true })
     end
 
-    -- Fall back to plain `<CR>`.
-    return vim.api.nvim_replace_termcodes("\r", true, true, true)
-  end
+    -- Smart <Tab>: navigate completion menu if visible, otherwise accept Copilot, else Tab or
+    -- expand/jump mini.snippets.
+    vim.keymap.set(
+      "i",
+      "<Tab>",
+      function()
+        if vim.fn.pumvisible() == 1 then
+          return vim.api.nvim_replace_termcodes("<C-n>", true, true, true)
+        end
 
-  mini_completion_map("i", "<CR>", "v:lua.cr_action()")
+        -- For Julia files, directly substitute a \sequence with its Unicode equivalent.
+        if vim.bo.filetype == "julia" then
+          local col       = vim.fn.col(".") - 1
+          local before    = vim.fn.getline("."):sub(1, col)
+          local latex_seq = before:match("(\\%S+)$")
+
+          if latex_seq then
+            local symbols = vim.g.l2u_symbols_dict
+            local unicode = symbols and symbols[latex_seq]
+
+            if unicode then
+              local bs = vim.api.nvim_replace_termcodes("<BS>", true, true, true)
+              return string.rep(bs, #latex_seq) .. unicode
+            end
+          end
+        end
+
+        -- Accept Copilot suggestion if available.
+        local copilot_suggestion = require("copilot.suggestion")
+        if require("copilot.suggestion").is_visible() then
+          return copilot_suggestion.accept()
+        end
+
+        local is_active = MiniSnippets.session.get() ~= nil
+        if is_active then
+          return MiniSnippets.session.jump("next")
+        end
+
+        -- If mini.snippets is expandable or jumpable, use it.
+        local can_uniquely_expand = #MiniSnippets.expand({ insert = false }) == 1
+        if can_uniquely_expand then
+          return vim.api.nvim_replace_termcodes(
+            "<Cmd>lua require('mini.snippets').expand()<CR>",
+            true,
+            true,
+            true
+          )
+        end
+
+        return vim.api.nvim_replace_termcodes("<Tab>", true, true, true)
+      end,
+      {
+        expr = true,
+        replace_keycodes = false,
+        silent = true
+      }
+    )
+
+    -- Use <S-Tab> to navigate backward through completion items or jump backward in snippet.
+    vim.keymap.set(
+      "i",
+      "<S-Tab>",
+      function()
+        if vim.fn.pumvisible() == 1 then
+          return vim.api.nvim_replace_termcodes("<C-p>", true, true, true)
+        end
+
+        -- If mini.snippets is active, jump to the previous position.
+        local is_active = MiniSnippets.session.get() ~= nil
+        if is_active then
+          return MiniSnippets.session.jump("prev")
+        end
+
+        return vim.api.nvim_replace_termcodes("<S-Tab>", true, true, true)
+      end,
+      {
+        expr = true,
+        replace_keycodes = false,
+        silent = true
+      }
+    )
+
+    -- Configure a more consistent behavior of <CR>.
+    _G.cr_action = function()
+      -- If there is selected item in popup, accept it with <C-y>
+      if vim.fn.complete_info()["selected"] ~= -1 then
+        return vim.api.nvim_replace_termcodes("<C-y>", true, true, true)
+      end
+
+      -- Fall back to plain `<CR>`.
+      return vim.api.nvim_replace_termcodes("\r", true, true, true)
+    end
+
+    mini_completion_map("i", "<CR>", "v:lua.cr_action()")
 end)
 
 -- mini.diff -------------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.later(
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.diff" })
-
     require("mini.diff").setup({
       view = {
         style = "sign",
@@ -286,21 +279,16 @@ MiniDeps.later(
 
 -- mini.extra ------------------------------------------------------------------------------
 
-MiniDeps.now(
+MiniMisc.later(
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.extra" })
-
     require("mini.extra").setup({})
-
   end
 )
 
 -- mini.files ------------------------------------------------------------------------------
 
-MiniDeps.now(
+MiniMisc.later(
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.files" })
-
     require("mini.files").setup({
       mappings = {
         go_in_plus = "<Enter>"
@@ -395,10 +383,9 @@ MiniDeps.now(
 
 -- mini.hipatterns -------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.on_event(
+  "BufEnter",
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.hipatterns" })
-
     local hipatterns = require("mini.hipatterns")
 
     hipatterns.setup({
@@ -416,20 +403,16 @@ MiniDeps.later(
 
 -- mini.icons ------------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.later(
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.icons" })
-
     require("mini.icons").setup({})
   end
 )
 
 -- mini.indentscope ------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.later(
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.indentscope" })
-
     require("mini.indentscope").setup({
       draw = { delay = 100, },
       symbol = "│"
@@ -464,14 +447,8 @@ MiniDeps.later(
 
 -- mini.misc -------------------------------------------------------------------------------
 
-MiniDeps.now(
+MiniMisc.later(
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.misc" })
-
-    local MiniMisc = require("mini.misc")
-
-    MiniMisc.setup({})
-
     MiniMisc.setup_auto_root(
       nil,
       function(path)
@@ -485,20 +462,17 @@ MiniDeps.now(
 
 -- mini.move -------------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.on_event(
+  "BufEnter",
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.move" })
-
     require("mini.move").setup({})
   end
 )
 
 -- mini.notify -----------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.later(
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.notify" })
-
     require("mini.notify").setup({})
 
     vim.notify = require("mini.notify").make_notify({
@@ -526,13 +500,8 @@ MiniDeps.later(
 
 -- mini.pick -------------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.later(
   function()
-    MiniDeps.add({
-      source = "nvim-mini/mini.pick",
-      depends = { "nvim-mini/mini.extra" }
-    })
-
     local MiniPick  = require("mini.pick")
 
     local minipick_window_config = function()
@@ -559,90 +528,89 @@ MiniDeps.later(
 
     -- Keymaps -----------------------------------------------------------------------------
 
-   local function mini_pick_map(lhs, rhs, desc)
-     return vim.keymap.set("n", lhs, rhs, { desc = desc, silent = true })
-   end
+    local function mini_pick_map(lhs, rhs, desc)
+      return vim.keymap.set("n", lhs, rhs, { desc = desc, silent = true })
+    end
 
-   mini_pick_map(
-     "<Leader>/",
-     function()
-       require("mini.extra").pickers.buf_lines({ scope = "current" })
-     end,
-     "Fuzzily Search in Current Buffer"
-   )
+    mini_pick_map(
+      "<Leader>/",
+      function()
+        require("mini.extra").pickers.buf_lines({ scope = "current" })
+      end,
+      "Fuzzily Search in Current Buffer"
+    )
 
-   mini_pick_map(
-     "<Leader><Space>",
-     function()
-       require("mini.pick").builtin.files({})
-     end,
-     "Find Files in ./"
-   )
+    mini_pick_map(
+      "<Leader><Space>",
+      function()
+        require("mini.pick").builtin.files({})
+      end,
+      "Find Files in ./"
+    )
 
-   mini_pick_map(
-     "<Leader>:",
-     function()
-       require("mini.extra").pickers.history({ scope = ":" })
-     end,
-     "Find in Command History"
-   )
+    mini_pick_map(
+      "<Leader>:",
+      function()
+        require("mini.extra").pickers.history({ scope = ":" })
+      end,
+      "Find in Command History"
+    )
 
-   mini_pick_map(
-     "<Leader>,",
-     function()
-       require("mini.pick").builtin.buffers({})
-     end,
-     "Find Existing Buffers"
-   )
+    mini_pick_map(
+      "<Leader>,",
+      function()
+        require("mini.pick").builtin.buffers({})
+      end,
+      "Find Existing Buffers"
+    )
 
-   mini_pick_map(
-     "<Leader>fe",
-     function()
-       require("mini.extra").pickers.explorer({})
-     end,
-     "Find in Explorer"
-   )
+    mini_pick_map(
+      "<Leader>fe",
+      function()
+        require("mini.extra").pickers.explorer({})
+      end,
+      "Find in Explorer"
+    )
 
-   mini_pick_map(
-     "<Leader>fh",
-     function()
-       require("mini.pick").builtin.help({})
-     end,
-     "Find Help"
-   )
+    mini_pick_map(
+      "<Leader>fh",
+      function()
+        require("mini.pick").builtin.help({})
+      end,
+      "Find Help"
+    )
 
-   mini_pick_map(
-     "<Leader>fi",
-     function()
-       require("mini.pick").builtin.grep_live({})
-     end,
-     "Find with Grep"
-   )
+    mini_pick_map(
+      "<Leader>fi",
+      function()
+        require("mini.pick").builtin.grep_live({})
+        "Find with Grep"
+      end
+    )
 
-   mini_pick_map(
-     "<Leader>fr",
-     function()
-       require("mini.extra").pickers.oldfiles({})
-     end,
-     "Find Recent Files"
-   )
+    mini_pick_map(
+      "<Leader>fr",
+      function()
+        require("mini.extra").pickers.oldfiles({})
+      end,
+      "Find Recent Files"
+    )
 
-   mini_pick_map(
-     "z=",
-     function()
-       require("mini.extra").pickers.spellsuggest({})
-     end,
-     "Show Spelling Suggestions"
-   )
+    mini_pick_map(
+      "z=",
+      function()
+        require("mini.extra").pickers.spellsuggest({})
+      end,
+      "Show Spelling Suggestions"
+    )
   end
 )
 
 -- mini.snippets ---------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.on_event(
+  "InsertEnter",
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.snippets" })
-
     local gen_loader = require('mini.snippets').gen_loader
 
     require('mini.snippets').setup({
@@ -658,9 +626,9 @@ MiniDeps.later(
 
 -- mini.splitjoin --------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.on_event(
+  "BufEnter",
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.splitjoin" })
 
     require("mini.splitjoin").setup({
       detect = { separator = "[,;]" }
@@ -670,12 +638,11 @@ MiniDeps.later(
 
 -- mini.starter ----------------------------------------------------------------------------
 
-MiniDeps.now(
+MiniMisc.now(
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.starter" })
-
     -- Auxiliary Functions -----------------------------------------------------------------
 
+    -- Center the header.
     local function center_header(content)
       -- Compute the maximum width of the lines in the content.
       local max_width = 0
@@ -750,11 +717,9 @@ MiniDeps.now(
       local st_right_pad = string.rep(" ", max_width - st_width)
 
       return "\n" ..
-        num_plugins_str  .. np_right_pad .. "\n" ..
-        startup_time_str .. st_right_pad .. "\n"
+      num_plugins_str  .. np_right_pad .. "\n" ..
+      startup_time_str .. st_right_pad .. "\n"
     end
-
-    -- Setup -------------------------------------------------------------------------------
 
     local starter = require("mini.starter")
 
@@ -779,59 +744,57 @@ MiniDeps.now(
         starter.gen_hook.aligning("center", "center"),
       }
     })
-
-    -- Autocmds ----------------------------------------------------------------------------
-
-    -- Create the an event to refresh the mini.starter after the `UIEnter`, updating the
-    -- startupt time.
-    vim.api.nvim_create_autocmd(
-      "User",
-      {
-        pattern  = "MiniDepsFinished",
-        once     = true,
-        callback = function()
-          if not _G.__nvim_startup_time then
-            local started = _G.__nvim_start_time
-            if not started then return "" end
-            local dt_ns = vim.uv.hrtime() - started
-            local ms = math.floor(dt_ns / 1e6 + 0.5)
-            _G.__nvim_startup_time = ms
-          end
-
-          if vim.bo.filetype == "ministarter" then MiniStarter.refresh() end
-        end,
-      }
-    )
-
-    vim.api.nvim_create_autocmd(
-      "User",
-      {
-        pattern = {
-          "MiniStarterOpened"
-        },
-        callback = function()
-          -- Remove characters at the end of buffer.
-          vim.opt_local.fillchars = "eob: "
-
-          -- Hide the status line by changing its highlight group.
-          local ns = vim.api.nvim_create_namespace("mini_starter_statusline_ns")
-          vim.api.nvim_set_hl(ns, "StatusLine",   { link = "Normal" })
-          vim.api.nvim_set_hl(ns, "StatusLineNC", { link = "Normal" })
-
-          -- Apply the namespace to the current window (which shows the Starter buffer).
-          vim.api.nvim_win_set_hl_ns(0, ns)
-        end
-      }
-    )
   end
+)
+
+-- Autocmds ----------------------------------------------------------------------------
+
+-- Create the an event to refresh the mini.starter after the `UIEnter`, updating the
+-- startupt time.
+vim.api.nvim_create_autocmd(
+  "User",
+  {
+    pattern  = "StartupFinished",
+    once     = true,
+    callback = function()
+      if not _G.__nvim_startup_time then
+        local started = _G.__nvim_start_time
+        if not started then return "" end
+        local dt_ns = vim.uv.hrtime() - started
+        local ms = math.floor(dt_ns / 1e6 + 0.5)
+        _G.__nvim_startup_time = ms
+      end
+
+      if vim.bo.filetype == "ministarter" then MiniStarter.refresh() end
+    end,
+  }
+)
+
+vim.api.nvim_create_autocmd(
+  "User",
+  {
+    pattern = {
+      "MiniStarterOpened"
+    },
+    callback = function()
+      -- Remove characters at the end of buffer.
+      vim.opt_local.fillchars = "eob: "
+
+      -- Hide the status line by changing its highlight group.
+      local ns = vim.api.nvim_create_namespace("mini_starter_statusline_ns")
+      vim.api.nvim_set_hl(ns, "StatusLine",   { link = "Normal" })
+      vim.api.nvim_set_hl(ns, "StatusLineNC", { link = "Normal" })
+
+      -- Apply the namespace to the current window (which shows the Starter buffer).
+      vim.api.nvim_win_set_hl_ns(0, ns)
+    end
+  }
 )
 
 -- mini.trailspace -------------------------------------------------------------------------
 
-MiniDeps.later(
+MiniMisc.later(
   function()
-    MiniDeps.add({ source = "nvim-mini/mini.trailspace" })
-
     require("mini.trailspace").setup({})
 
     -- Keymaps -----------------------------------------------------------------------------
