@@ -5,13 +5,14 @@
 -- -----------------------------------------------------------------------------------------
 
 local neovim_logo = [[
-███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
-████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
-██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
-██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
-██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
-╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
-]] .. tostring(vim.version())
+  │ ╲ ││
+  ││╲╲││
+  ││ ╲ │
+
+  NVIM v]] .. tostring(vim.version())
+
+local neovim_logo_separator = [[
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━]]
 
 -- mini.align ------------------------------------------------------------------------------
 
@@ -426,6 +427,7 @@ MiniMisc.later(
         pattern = {
           "help",
           "dashboard",
+          "ministarter",
           "terminal",
         },
         callback = function()
@@ -657,7 +659,7 @@ MiniMisc.now(
         end
       end
 
-      -- Detect header lines and pad them for center alignment
+      -- Detect header lines and pad them for center alignment.
       local coords = {}
       vim.list_extend(coords, MiniStarter.content_coords(content, "header"))
       vim.list_extend(coords, MiniStarter.content_coords(content, "footer"))
@@ -686,6 +688,72 @@ MiniMisc.now(
             type = "empty"
           }
         )
+      end
+
+      return content
+    end
+
+    -- Highlight the N logo: left vertical stroke in Special, rest in Comment.
+    local function highlight_logo(content)
+      -- │ is U+2502 = 3 bytes in UTF-8. Lua's `?` only makes one byte optional, so we need
+      -- to try the two-character match first, then fall back to one.
+      local bar2 = "││"
+      local bar1 = "│"
+
+      for _, line in ipairs(content) do
+        for j, unit in ipairs(line) do
+          if unit.type == "header" then
+            local s = unit.string
+
+            -- Try matching two bars first (lines 2-3), then one bar (line 1).
+            local left, rest = s:match("^(%s*" .. bar2 .. ")(.*)")
+
+            if not left then
+              left, rest = s:match("^(%s*" .. bar1 .. ")(.*)")
+            end
+
+            if left then
+              unit.string = left
+              unit.hl     = "Changed"
+
+              if rest ~= "" then
+                table.insert(line, j + 1, { string = rest, type = "header", hl = "Added" })
+              end
+
+            else
+              unit.hl = "Normal"
+            end
+
+            break
+          end
+        end
+      end
+      return content
+    end
+
+    -- Add the separator after the last header line, centered on screen independently of the
+    -- header centering.
+    function header_separator(content)
+      -- Find the last header line.
+      local last_header_line = 0
+      for i, line in ipairs(content) do
+        for _, unit in ipairs(line) do
+          if unit.type == "header" then
+            last_header_line = i
+            break
+          end
+        end
+      end
+
+      if last_header_line > 0 then
+        -- Center the separator on screen independently.
+        local sep_width = vim.fn.strdisplaywidth(neovim_logo_separator)
+        local pad = math.max(math.floor((vim.o.columns - sep_width) / 2), 0)
+
+        table.insert(content, last_header_line + 1, {
+          { string = string.rep(" ", pad),  type = "empty" },
+          { string = neovim_logo_separator, type = "header", hl = "Normal" },
+        })
       end
 
       return content
@@ -731,17 +799,22 @@ MiniMisc.now(
       { name = "Config",       action = ":lua MiniFiles.open('~/.config/nvim')", section = "Actions" },
       { name = "LazyGit",      action = ":LazyGit",                              section = "Actions" },
       { name = "Quit",         action = ":qa",                                   section = "Actions" },
-      starter.sections.recent_files(10, false, true),
+      starter.sections.recent_files(10, false, false),
     }
 
     starter.setup({
-      header = neovim_logo .. "\n\n",
+      header = neovim_logo,
       items  = items,
       footer = mini_starter_footer,
       content_hooks = {
         starter.gen_hook.adding_bullet(),
         center_header,
         starter.gen_hook.aligning("center", "center"),
+        highlight_logo,
+        -- Add the separator after aligning so it does not affect centering. Also, notice
+        -- that we need to add after changing the highlighting so that we can choose the
+        -- separator color.
+        header_separator,
       }
     })
   end
@@ -777,6 +850,9 @@ vim.api.nvim_create_autocmd(
       "MiniStarterOpened"
     },
     callback = function()
+      -- Disable indentscope on the starter buffer.
+      vim.b.miniindentscope_disable = true
+
       -- Remove characters at the end of buffer.
       vim.opt_local.fillchars = "eob: "
 
