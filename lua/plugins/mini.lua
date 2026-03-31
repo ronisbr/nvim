@@ -9,7 +9,7 @@ local neovim_logo = [[
   ││╲╲││
   ││ ╲ │
 
-  NVIM v]] .. tostring(vim.version())
+  NVIM v]] .. tostring(vim.version()) .. "\n"
 
 local neovim_logo_separator = [[
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━]]
@@ -745,7 +745,10 @@ MiniMisc.now(
 
     -- Add the separator after the last header line, centered on screen independently of the
     -- header centering.
-    function header_separator(content)
+    function separators(content)
+      local sep_width = vim.fn.strdisplaywidth(neovim_logo_separator)
+      local pad       = math.max(math.floor((vim.o.columns - sep_width) / 2), 0)
+
       -- Find the last header line.
       local last_header_line = 0
       for i, line in ipairs(content) do
@@ -757,16 +760,23 @@ MiniMisc.now(
         end
       end
 
+      -- Separator after the header.
       if last_header_line > 0 then
-        -- Center the separator on screen independently.
-        local sep_width = vim.fn.strdisplaywidth(neovim_logo_separator)
-        local pad = math.max(math.floor((vim.o.columns - sep_width) / 2), 0)
-
         table.insert(content, last_header_line + 1, {
           { string = string.rep(" ", pad),  type = "empty" },
           { string = neovim_logo_separator, type = "header", hl = "Normal" },
         })
       end
+
+      -- Separator at the end.
+      table.insert(
+        content,
+        #content + 1,
+        {
+          { string = string.rep(" ", pad),  type = "empty" },
+          { string = neovim_logo_separator, type = "header", hl = "Normal" }
+        }
+      )
 
       return content
     end
@@ -826,7 +836,7 @@ MiniMisc.now(
         -- Add the separator after aligning so it does not affect centering. Also, notice
         -- that we need to add after changing the highlighting so that we can choose the
         -- separator color.
-        header_separator,
+        separators,
       }
     })
   end
