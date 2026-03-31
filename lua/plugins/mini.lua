@@ -814,14 +814,15 @@ MiniMisc.now(
     local starter = require("mini.starter")
 
     local items = {
-      { name = "Find File",    action = ":Pick files",                           section = "Actions" },
-      { name = "New File",     action = ":ene | startinsert",                    section = "Actions" },
-      { name = "Find Text",    action = ":Pick grep_live",                       section = "Actions" },
-      { name = "Recent Files", action = ":Pick oldfiles",                        section = "Actions" },
-      { name = "Config",       action = ":lua MiniFiles.open('~/.config/nvim')", section = "Actions" },
-      { name = "LazyGit",      action = ":LazyGit",                              section = "Actions" },
-      { name = "Quit",         action = ":qa",                                   section = "Actions" },
-      starter.sections.recent_files(10, false, false),
+      { name = "Find File",      action = ":Pick files",                           section = "Actions" },
+      { name = "New File",       action = ":ene | startinsert",                    section = "Actions" },
+      { name = "Find Text",      action = ":Pick grep_live",                       section = "Actions" },
+      { name = "Recent Files",   action = ":Pick oldfiles",                        section = "Actions" },
+      { name = "Config",         action = ":lua MiniFiles.open('~/.config/nvim')", section = "Actions" },
+      { name = "LazyGit",        action = ":LazyGit",                              section = "Actions" },
+      { name = "Update Plugins", action = ":lua vim.pack.update()",                section = "Actions" },
+      { name = "Quit",           action = ":qa",                                   section = "Actions" },
+      starter.sections.recent_files(8, false, false),
     }
 
     starter.setup({
