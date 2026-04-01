@@ -21,13 +21,14 @@ vim.api.nvim_create_autocmd(
       "lspinfo",
       "minideps-confirm",
       "neotest-output",
+      "neotest-output-panel",
       "neotest-summary",
       "notify",
+      "nvim-undotree",
       "qf",
       "spectre_panel",
       "startuptime",
       "tsplayground",
-      "neotest-output-panel",
     },
     callback = function(event)
       vim.bo[event.buf].buflisted = false
