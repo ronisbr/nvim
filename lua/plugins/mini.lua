@@ -598,8 +598,8 @@ MiniMisc.later(
       "<Leader>fi",
       function()
         require("mini.pick").builtin.grep_live({})
-        "Find with Grep"
-      end
+      end,
+      "Find with Grep"
     )
 
     mini_pick_map(
