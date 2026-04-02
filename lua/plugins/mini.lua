@@ -483,35 +483,6 @@ MiniMisc.on_event(
   end
 )
 
--- mini.notify -----------------------------------------------------------------------------
-
-MiniMisc.later(
-  function()
-    require("mini.notify").setup({})
-
-    vim.notify = require("mini.notify").make_notify({
-      ERROR = { duration = 10000 },
-    })
-
-    function mini_notify_map(lhs, rhs, desc)
-      return vim.keymap.set("n", lhs, rhs, { desc = desc, silent = true })
-    end
-
-    mini_notify_map("<leader>nd", MiniNotify.clear, "Dismiss All Notifications")
-    mini_notify_map("<leader>ns", MiniNotify.show_history, "Notification History")
-
-    -- Close the notification history buffer with `q`.
-    vim.api.nvim_create_autocmd(
-      "FileType",
-      {
-        pattern = { "mininotify-history" },
-        callback = function(event)
-          vim.keymap.set("n", "q", "<cmd>bd<cr>", { buffer = event.buf, silent = true })
-        end,
-    })
-  end
-)
-
 -- mini.pick -------------------------------------------------------------------------------
 
 MiniMisc.later(
