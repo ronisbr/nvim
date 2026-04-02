@@ -7,6 +7,7 @@
 -- UI2 -------------------------------------------------------------------------------------
 
 -- General configuraton for UI2.
+vim.opt.cmdheight = 0
 require('vim._core.ui2').enable({
   enable = true,
   msg = {
@@ -63,7 +64,7 @@ vim.api.nvim_create_autocmd(
 
       -- :h LspProgress
       vim.api.nvim_echo(
-        {{ value.message or 'done' }},
+        {{ value.message or "done" }},
         false,
         {
           id      = "lsp." .. ev.data.client_id,
@@ -74,6 +75,26 @@ vim.api.nvim_create_autocmd(
           percent = value.percentage,
         }
       )
+    end,
+  }
+)
+
+vim.api.nvim_create_autocmd(
+  "CmdlineEnter",
+  {
+    callback = function()
+      vim.opt.laststatus = 0
+      vim.opt.cmdheight = 1
+    end,
+  }
+)
+
+vim.api.nvim_create_autocmd(
+  "CmdlineLeave",
+  {
+    callback = function()
+      vim.opt.laststatus = 3
+      vim.opt.cmdheight = 0
     end,
   }
 )

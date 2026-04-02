@@ -93,5 +93,6 @@ MiniMisc.later(
 
     vim.api.nvim_set_hl(0, "FloatTitle", { fg = float_fg, bg = float_bg })
     vim.api.nvim_set_hl(0, "MiniFilesTitle", { link = "FloatTitle" })
+    vim.api.nvim_set_hl(0, "MsgArea", { link = "Statusline" })
   end
 )
