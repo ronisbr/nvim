@@ -30,24 +30,13 @@ _G.MiniMisc.on_filetype = function(ft, f)
   MiniMisc.safely("filetype:" .. ft, f)
 end
 
--- Color Scheme ----------------------------------------------------------------------------
---
--- We need to set the colorscheme before loading plugins to apply the theme before
--- installing the rest of the plugins.
-
-vim.pack.add({
-  "https://github.com/ronisbr/nano-theme.nvim",
-  "https://github.com/f-person/auto-dark-mode.nvim"
-})
-
-require("plugins.colorscheme")
-
 -- Plugins ---------------------------------------------------------------------------------
 
 vim.pack.add({
   "https://github.com/JuliaEditorSupport/julia-vim",
   "https://github.com/antonk52/filepaths_ls.nvim",
   "https://github.com/chomosuke/typst-preview.nvim",
+  "https://github.com/f-person/auto-dark-mode.nvim",
   "https://github.com/jake-stewart/multicursor.nvim",
   "https://github.com/juhaku/aiwaku.nvim",
   "https://github.com/lervag/vimtex",
@@ -71,8 +60,11 @@ vim.pack.add({
   "https://github.com/nvim-mini/mini.trailspace",
   "https://github.com/nvim-treesitter/nvim-treesitter",
   "https://github.com/nvimtools/none-ls.nvim",
+  "https://github.com/ronisbr/nano-theme.nvim",
   "https://github.com/zbirenbaum/copilot.lua",
 })
+
+require("plugins.colorscheme")
 
 require("plugins.builtin")
 
