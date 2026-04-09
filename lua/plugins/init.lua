@@ -62,6 +62,7 @@ vim.pack.add({
   "https://github.com/nvimtools/none-ls.nvim",
   "https://github.com/ronisbr/nano-theme.nvim",
   "https://github.com/zbirenbaum/copilot.lua",
+  "https://github.com/rachartier/tiny-cmdline.nvim.git"
 })
 
 require("plugins.colorscheme")
@@ -78,6 +79,7 @@ require("plugins.aiwaku")
 require("plugins.julia")
 require("plugins.lsp")
 require("plugins.multicursor")
+require("plugins.tiny-cmdline")
 require("plugins.treesitter")
 require("plugins.typst")
 require("plugins.vimtex")
@@ -93,6 +95,6 @@ MiniMisc.later(
 
     vim.api.nvim_set_hl(0, "FloatTitle", { fg = float_fg, bg = float_bg })
     vim.api.nvim_set_hl(0, "MiniFilesTitle", { link = "FloatTitle" })
-    vim.api.nvim_set_hl(0, "MsgArea", { link = "Statusline" })
+    -- vim.api.nvim_set_hl(0, "MsgArea", { link = "Statusline" })
   end
 )
