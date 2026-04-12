@@ -12,7 +12,7 @@ vim.opt.ignorecase = true
 vim.opt.scrolloff = 10
 vim.opt.shiftwidth = 4
 vim.opt.smartcase = true
-vim.opt.spelllang = "en_us,pt_br"
+vim.opt.spelllang = "en,pt"
 vim.opt.tabstop = 4
 vim.opt.textwidth = 92
 
@@ -82,3 +82,55 @@ if vim.g.neovide then
   )
 end
 
+-- Dictionaries ----------------------------------------------------------------------------
+
+-- Download missing spell files from the Vim runtime repository.
+do
+  local spell_dir = vim.fn.stdpath("data") .. "/site/spell/"
+  local base_url = "https://ftp.nluug.nl/pub/vim/runtime/spell/"
+
+  -- Download a spell file from the Vim runtime repository into `spell_dir`. The file is
+  -- first saved to a `.tmp` path and atomically renamed on success to avoid leaving a
+  -- truncated file that would prevent future retries.
+  local function download(file)
+    vim.notify("Downloading spell file: " .. file, vim.log.levels.INFO)
+    vim.fn.mkdir(spell_dir, "p")
+    local tmp = spell_dir .. file .. ".tmp"
+
+    vim.system(
+      { "curl", "-fsSL", "-o", tmp, base_url .. file },
+      {},
+      vim.schedule_wrap(function(result)
+        if result.code == 0 then
+          vim.uv.fs_rename(tmp, spell_dir .. file, function()
+            vim.schedule(function()
+              vim.notify("Spell file downloaded: " .. file, vim.log.levels.INFO)
+              vim.cmd("silent! edit")
+            end)
+          end)
+        else
+          vim.uv.fs_unlink(tmp, function() end)
+          vim.notify("Failed to download spell file: " .. file, vim.log.levels.ERROR)
+        end
+      end)
+    )
+  end
+
+  -- Check whether the UTF-8 spell file for `lang` exists and is non-empty. Uses only the
+  -- two-letter language prefix (e.g. "en" for "en_us") since that is the filename
+  -- convention used by the Vim runtime repository. Downloads the file if it is missing or
+  -- zero-size.
+  local function ensure_dict(lang)
+    local file = lang:sub(1, 2) .. ".utf-8.spl"
+    local path = spell_dir .. file
+    local stat = vim.uv.fs_stat(path)
+    if not stat or stat.size == 0 then
+      download(file)
+    end
+  end
+
+  for _, lang in ipairs(vim.split(vim.o.spelllang, ",")) do
+    ensure_dict(lang)
+  end
+
+end
