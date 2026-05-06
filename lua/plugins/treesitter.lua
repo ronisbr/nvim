@@ -22,6 +22,7 @@ MiniMisc.now(
     require("nvim-treesitter").install({
       "bash",
       "c",
+      "cpp",
       "diff",
       "julia",
       "lua",
@@ -39,6 +40,7 @@ MiniMisc.now(
         pattern = {
           "bash",
           "c",
+          "cpp",
           "diff",
           "julia",
           "lua",
@@ -62,6 +64,7 @@ MiniMisc.now(
         pattern = {
           "bash",
           "c",
+          "cpp",
           "diff",
           "julia",
           "lua",
