@@ -21,6 +21,17 @@ local esc_timer_rt = nil
 local ft_pad_v = 1
 local ft_pad_h = 3
 
+local float_padding_border = {
+  { " ", "FloatingTermBg" },
+  { " ", "FloatingTermBg" },
+  { " ", "FloatingTermBg" },
+  { " ", "FloatingTermBg" },
+  { " ", "FloatingTermBg" },
+  { " ", "FloatingTermBg" },
+  { " ", "FloatingTermBg" },
+  { " ", "FloatingTermBg" },
+}
+
 -- Local state of the floating terminal.
 M.floating_term = {
   buf          = nil, -- .................................. Buffer for the floating terminal
@@ -77,7 +88,7 @@ local function update_floating_term_bg()
 end
 
 --- Return the window options for the floating terminal backdrop (outer) and terminal (inner).
--- @return table, table: Backdrop options and terminal options for nvim_open_win.
+-- @return table|nil, table: Backdrop options and terminal options for nvim_open_win.
 local function terminal_window_opts()
   -- Notice that we are removing two lines to take into account the status line and command
   -- line.
@@ -99,6 +110,19 @@ local function terminal_window_opts()
     zindex   = 10,
   }
 
+  if vim.g.neovide then
+    return nil, {
+      border   = float_padding_border,
+      col      = col,
+      height   = height - 2,
+      relative = "editor",
+      row      = row,
+      style    = "minimal",
+      width    = width - 2,
+      zindex   = 11,
+    }
+  end
+
   local term_opts = {
     border   = "none",
     col      = col + ft_pad_h,
@@ -115,6 +139,8 @@ end
 
 --- Open the backdrop window for the floating terminal.
 local function open_backdrop(backdrop_opts)
+  if not backdrop_opts then return end
+
   if not (
     M.floating_term.backdrop_buf and vim.api.nvim_buf_is_valid(M.floating_term.backdrop_buf)
   ) then
@@ -173,7 +199,7 @@ local function toggle_floating_terminal()
 
     vim.api.nvim_set_option_value(
       "winhl",
-      "Normal:FloatingTermBg",
+      "Normal:FloatingTermBg,FloatBorder:FloatingTermBg",
       { win = M.floating_term.win }
     )
 
@@ -297,7 +323,7 @@ local function toggle_floating_terminal()
 
   vim.api.nvim_set_option_value(
     "winhl",
-    "Normal:FloatingTermBg",
+    "Normal:FloatingTermBg,FloatBorder:FloatingTermBg",
     { win = M.floating_term.win }
   )
 

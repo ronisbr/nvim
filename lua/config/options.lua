@@ -43,7 +43,7 @@ end
 
 if vim.g.neovide then
   -- vim.o.guifont = "JetBrains Mono,Symbols Nerd Font Mono:h15"
-  vim.o.guifont = "Monaco Nerd Font:h15"
+  vim.o.guifont = "Iosevka Nerd Font:h17"
   vim.o.linespace = -1
 
   vim.g.neovide_cursor_animation_length = 0.05
@@ -60,10 +60,10 @@ if vim.g.neovide then
   --
   --     https://github.com/neovide/neovide/issues/2931
   --
-  vim.g.neovide_floating_shadow = false
-  -- vim.g.neovide_floating_z_height = 10
-  -- vim.g.neovide_light_angle_degrees = 0
-  -- vim.g.neovide_light_radius = 5
+  vim.g.neovide_floating_shadow = true
+  vim.g.neovide_floating_z_height = 10
+  vim.g.neovide_light_angle_degrees = 0
+  vim.g.neovide_light_radius = 5
 
   -- Fix pasting using `CMD+v` on macOS. Otherwise, we will not be able to paste to the
   -- terminal using `CMD+v` on Neovide. For more information, see:
