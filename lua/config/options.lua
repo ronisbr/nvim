@@ -47,23 +47,24 @@ if vim.g.neovide then
   vim.o.linespace = -1
 
   vim.g.neovide_cursor_animation_length = 0.05
-  vim.g.neovide_floating_blur_amount_x = 6.0
-  vim.g.neovide_floating_blur_amount_y = 6.0
   vim.g.neovide_floating_corner_radius = 0.4
+  vim.g.neovide_normal_opacity = 0.9
   vim.g.neovide_padding_bottom = 10
   vim.g.neovide_padding_left = 10
   vim.g.neovide_padding_right = 10
   vim.g.neovide_padding_top = 10
   vim.g.neovide_scroll_animation_length = 0.1
 
-  -- We must disable shadows until this bug is fixed:
-  --
-  --     https://github.com/neovide/neovide/issues/2931
-  --
+  -- Window shadows.
   vim.g.neovide_floating_shadow = true
   vim.g.neovide_floating_z_height = 10
   vim.g.neovide_light_angle_degrees = 0
   vim.g.neovide_light_radius = 5
+
+  -- Window blurring configuration.
+  vim.g.neovide_floating_blur_amount_x = 6.0
+  vim.g.neovide_floating_blur_amount_y = 6.0
+  vim.g.neovide_window_blurred = true
 
   -- Fix pasting using `CMD+v` on macOS. Otherwise, we will not be able to paste to the
   -- terminal using `CMD+v` on Neovide. For more information, see:
