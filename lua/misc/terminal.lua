@@ -32,6 +32,18 @@ local float_padding_border = {
   { " ", "FloatingTermBg" },
 }
 
+-- Window highlight overrides for the floating terminal. We remap every background
+-- group that a floating (terminal) window may render with so that the content is
+-- tinted with `FloatingTermBg`. In the Neovim TUI remapping `Normal` is enough, but
+-- Neovide resolves the float/terminal background via `NormalFloat`/`NormalNC`, so we
+-- remap those too to keep the look consistent across both.
+local floating_term_winhl = table.concat({
+  "Normal:FloatingTermBg",
+  "NormalNC:FloatingTermBg",
+  "NormalFloat:FloatingTermBg",
+  "FloatBorder:FloatingTermBg",
+}, ",")
+
 -- Local state of the floating terminal.
 M.floating_term = {
   buf          = nil, -- .................................. Buffer for the floating terminal
@@ -199,7 +211,7 @@ local function toggle_floating_terminal()
 
     vim.api.nvim_set_option_value(
       "winhl",
-      "Normal:FloatingTermBg,FloatBorder:FloatingTermBg",
+      floating_term_winhl,
       { win = M.floating_term.win }
     )
 
@@ -323,7 +335,7 @@ local function toggle_floating_terminal()
 
   vim.api.nvim_set_option_value(
     "winhl",
-    "Normal:FloatingTermBg,FloatBorder:FloatingTermBg",
+    floating_term_winhl,
     { win = M.floating_term.win }
   )
 
