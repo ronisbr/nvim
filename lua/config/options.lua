@@ -42,9 +42,8 @@ end
 -- Neovide ---------------------------------------------------------------------------------
 
 if vim.g.neovide then
-  -- vim.o.guifont = "JetBrains Mono,Symbols Nerd Font Mono:h15"
-  vim.o.guifont = "Iosevka Nerd Font:h17"
-  vim.o.linespace = -1
+  vim.o.guifont = "Iosevka SS15,Symbols Nerd Font Mono:h17"
+  vim.o.linespace = 0
 
   vim.g.neovide_cursor_animation_length = 0.05
   vim.g.neovide_floating_corner_radius = 0.4
