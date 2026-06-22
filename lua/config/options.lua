@@ -48,7 +48,7 @@ if vim.g.neovide then
 
   vim.g.neovide_cursor_animation_length = 0.05
   vim.g.neovide_floating_corner_radius = 0.4
-  vim.g.neovide_normal_opacity = 0.9
+  vim.g.neovide_normal_opacity = 1.0
   vim.g.neovide_padding_bottom = 10
   vim.g.neovide_padding_left = 10
   vim.g.neovide_padding_right = 10
@@ -56,7 +56,10 @@ if vim.g.neovide then
   vim.g.neovide_scroll_animation_length = 0.1
 
   -- Window shadows.
-  vim.g.neovide_floating_shadow = true
+  --
+  -- When using UI2, we still see shadows in the command line. Hence, we need to disable it
+  -- for now.
+  vim.g.neovide_floating_shadow = false
   vim.g.neovide_floating_z_height = 10
   vim.g.neovide_light_angle_degrees = 0
   vim.g.neovide_light_radius = 5
