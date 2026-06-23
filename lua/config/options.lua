@@ -68,6 +68,9 @@ if vim.g.neovide then
   vim.g.neovide_floating_blur_amount_y = 6.0
   vim.g.neovide_window_blurred = true
 
+  -- Fix Meta key.
+  vim.g.neovide_input_macos_option_key_is_meta = "only_left"
+
   -- Fix pasting using `CMD+v` on macOS. Otherwise, we will not be able to paste to the
   -- terminal using `CMD+v` on Neovide. For more information, see:
   --
