@@ -22,6 +22,7 @@ map("n", "<Esc>", "<Esc><Cmd>noh<CR>")
 
 map("n", "[b", ":bprev<CR>", "Previous Buffer")
 map("n", "]b", ":bnext<CR>", "Next Buffer")
+map("n", "<Leader>bw", "<Cmd>%bd|e#|bd#<CR>", "Close All Buffers Except Current")
 
 -- Tabs ------------------------------------------------------------------------------------
 
