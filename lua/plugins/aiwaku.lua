@@ -7,6 +7,9 @@
 MiniMisc.on_event(
 	"BufEnter",
   function()
+    vim.env.SHELL = "/bin/zsh"
+    vim.o.shell   = "/bin/zsh"
+
     require("aiwaku").setup({
       cmd = {
         { name = "OpenCode", cmd = "opencode" },
