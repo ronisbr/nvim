@@ -32,6 +32,11 @@ local float_padding_border = {
   { " ", "FloatingTermBg" },
 }
 
+-- Shell used exclusively by the terminals spawned from this module. Intentionally
+-- decoupled from `vim.o.shell` so toggling these terminals does not affect the
+-- global shell (e.g., `:!` commands, terminal jobs outside this file).
+local terminal_shell = "nu"
+
 -- Window highlight overrides for the floating terminal. We remap every background
 -- group that a floating (terminal) window may render with so that the content is
 -- tinted with `FloatingTermBg`. In the Neovim TUI remapping `Normal` is enough, but
@@ -97,6 +102,43 @@ local function update_floating_term_bg()
   b = math.max(0, math.min(255, b + b_offset))
 
   vim.api.nvim_set_hl(0, "FloatingTermBg", { bg = string.format("#%02x%02x%02x", r, g, b) })
+end
+
+--- Determine if the current theme is light or dark based on Normal background luminance.
+-- @return boolean|nil: True if light, false if dark. Nil if undeterminable.
+local function is_light_theme()
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+  local bg = normal.bg
+  if not bg then return nil end
+
+  local r = bit.rshift(bit.band(bg, 0xFF0000), 16)
+  local g = bit.rshift(bit.band(bg, 0x00FF00), 8)
+  local b = bit.band(bg, 0x0000FF)
+
+  local luminance = 0.299 * r + 0.587 * g + 0.114 * b
+  return luminance >= 128
+end
+
+--- Determine if the configured shell is nushell.
+-- @return boolean: True if the shell basename is `nu`.
+local function is_nushell()
+  local shell = terminal_shell or ""
+  local basename = shell:match("([^/\\]+)$") or shell
+  return basename == "nu"
+end
+
+--- If the shell is nushell, send the appropriate nano theme source command based on the
+-- current background. No-op for non-nushell shells or invalid job IDs.
+-- @param jobid number|nil: The terminal job ID to send the command to.
+local function send_nushell_theme(jobid)
+  if not jobid or not is_nushell() then return end
+
+  local is_light = is_light_theme() or false
+  local theme_file = is_light and "nano_default_light.nu" or "nano_default_dark.nu"
+  vim.fn.chansend(
+    jobid,
+    string.format('source ($nu.data-dir | path join "vendor/%s")\n', theme_file)
+  )
 end
 
 --- Return the window options for the floating terminal backdrop (outer) and terminal (inner).
@@ -216,7 +258,7 @@ local function toggle_floating_terminal()
     )
 
     M.floating_term.jobid = vim.fn.jobstart(
-      vim.o.shell,
+      terminal_shell,
       {
         on_exit = function()
           M.floating_term.jobid = nil
@@ -233,6 +275,8 @@ local function toggle_floating_terminal()
         term = true
       }
     )
+
+    send_nushell_theme(M.floating_term.jobid)
 
     vim.api.nvim_buf_call(
       M.floating_term.buf,
@@ -374,7 +418,7 @@ local function toggle_right_terminal()
   vim.api.nvim_set_option_value("cursorline", false, { win = M.right_term.win })
 
   M.right_term.jobid = vim.fn.jobstart(
-    vim.o.shell,
+    terminal_shell,
     {
       on_exit = function()
         M.right_term.jobid = nil
@@ -382,6 +426,8 @@ local function toggle_right_terminal()
       term = true
     }
   )
+
+  send_nushell_theme(M.right_term.jobid)
 
   vim.api.nvim_buf_call(
     M.right_term.buf,
