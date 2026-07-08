@@ -87,6 +87,21 @@ map(
   "Convert to Block"
 )
 
+-- AI Coding Tools ---------------------------------------------------------------------------
+
+map(
+  "n",
+  "<Leader>ac",
+  function()
+    local file = vim.fn.expand("%:p")
+    local line = vim.fn.line(".")
+    local ref = file .. ":" .. line
+    vim.fn.setreg("+", ref)
+    vim.notify("Copied: " .. ref)
+  end,
+  "Copy File:Line Reference to Clipboard"
+)
+
 -- Placeholders <++> -----------------------------------------------------------------------
 
 map("n", "<C-j>", "/<++><CR>v3lc", "Change Next Placeholder")
