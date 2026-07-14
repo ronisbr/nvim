@@ -102,26 +102,6 @@ msgs.set_pos = function(tgt)
   end
 end
 
--- vim.api.nvim_create_autocmd(
---   "CmdlineEnter",
---   {
---     callback = function()
---       vim.opt.laststatus = 0
---       vim.opt.cmdheight = 1
---     end,
---   }
--- )
---
--- vim.api.nvim_create_autocmd(
---   "CmdlineLeave",
---   {
---     callback = function()
---       vim.opt.laststatus = 3
---       vim.opt.cmdheight = 0
---     end,
---   }
--- )
-
 -- undotree --------------------------------------------------------------------------------
 
 vim.cmd("packadd nvim.undotree")
