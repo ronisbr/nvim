@@ -71,7 +71,6 @@ MiniMisc.later(
         { mode = "n", keys = "<Leader>c", desc = "+Code" },
         { mode = "n", keys = "<Leader>f", desc = "+Find" },
         { mode = "n", keys = "<Leader>m", desc = "+Multicursors" },
-        { mode = "n", keys = "<Leader>n", desc = "+Notifications" },
         { mode = "n", keys = "<Leader>o", desc = "+Open" },
         { mode = "n", keys = "<Leader>t", desc = "+Text" },
 

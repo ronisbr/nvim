@@ -52,7 +52,6 @@ vim.pack.add({
   "https://github.com/nvim-mini/mini.icons",
   "https://github.com/nvim-mini/mini.indentscope",
   "https://github.com/nvim-mini/mini.move",
-  "https://github.com/nvim-mini/mini.notify",
   "https://github.com/nvim-mini/mini.pick",
   "https://github.com/nvim-mini/mini.snippets",
   "https://github.com/nvim-mini/mini.splitjoin",
