@@ -18,14 +18,7 @@ require("misc.julia").setup()
 
 MiniMisc.now(
   function()
-    local plugins = vim.pack.get()
-    local num_plugins = 0
-
-    for _ in pairs(plugins) do
-      num_plugins = num_plugins + 1
-    end
-
-    _G.__nvim_num_loaded_plugins = num_plugins
+    _G.__nvim_num_loaded_plugins = #vim.pack.get(nil, { info = false })
 
     vim.cmd("doautocmd User StartupFinished")
   end
