@@ -297,7 +297,7 @@ MiniMisc.later(
 
 -- mini.files ------------------------------------------------------------------------------
 
-MiniMisc.later(
+MiniMisc.now(
   function()
     require("mini.files").setup({
       mappings = {
