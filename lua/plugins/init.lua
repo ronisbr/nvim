@@ -34,12 +34,15 @@ end
 
 vim.pack.add({
   "https://github.com/JuliaEditorSupport/julia-vim",
+  "https://github.com/MeanderingProgrammer/render-markdown.nvim",
   "https://github.com/antonk52/filepaths_ls.nvim",
   "https://github.com/chomosuke/typst-preview.nvim",
   "https://github.com/f-person/auto-dark-mode.nvim",
   "https://github.com/jake-stewart/multicursor.nvim",
   "https://github.com/juhaku/aiwaku.nvim",
   "https://github.com/lervag/vimtex",
+  "https://github.com/neovim-treesitter/nvim-treesitter",
+  "https://github.com/neovim-treesitter/treesitter-parser-registry",
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/nvim-lua/plenary.nvim",
   "https://github.com/nvim-mini/mini.clue",
@@ -57,12 +60,10 @@ vim.pack.add({
   "https://github.com/nvim-mini/mini.splitjoin",
   "https://github.com/nvim-mini/mini.starter",
   "https://github.com/nvim-mini/mini.trailspace",
-  "https://github.com/neovim-treesitter/nvim-treesitter",
-  "https://github.com/neovim-treesitter/treesitter-parser-registry",
   "https://github.com/nvimtools/none-ls.nvim",
+  "https://github.com/rachartier/tiny-cmdline.nvim.git",
   "https://github.com/ronisbr/nano-theme.nvim",
   "https://github.com/zbirenbaum/copilot.lua",
-  "https://github.com/rachartier/tiny-cmdline.nvim.git"
 })
 
 require("plugins.colorscheme")
