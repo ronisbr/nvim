@@ -119,7 +119,7 @@ end
 
 -- Configure the highlight groups used by the statusline.
 local function configure_hl_groups()
-  local statusline_bg = get_color("Statusline", "bg")
+  local statusline_bg = get_color("Statusline", "bg") or get_color("Visual", "bg")
 
   vim.api.nvim_set_hl(
     0,
@@ -170,12 +170,14 @@ local function configure_hl_groups()
   -- Neovim Modes --------------------------------------------------------------------------
 
   local statusline_default_bg = get_color("StatuslineDefault", "bg")
+  local mode_fg = statusline_default_bg
+    or (vim.o.background == "dark" and "#000000" or "#ffffff")
 
   vim.api.nvim_set_hl(
     0,
     "StatuslineModeNormal",
     {
-      fg = statusline_default_bg,
+      fg = mode_fg,
       bg = get_color("StatuslineDefault", "fg"),
     }
   )
@@ -184,7 +186,7 @@ local function configure_hl_groups()
     0,
     "StatuslineModeInsert",
     {
-      fg = statusline_default_bg,
+      fg = mode_fg,
       bg = get_color("WarningMsg", "fg"),
     }
   )
@@ -193,7 +195,7 @@ local function configure_hl_groups()
     0,
     "StatuslineModeReplace",
     {
-      fg = statusline_default_bg,
+      fg = mode_fg,
       bg = get_color("ErrorMsg", "fg"),
     }
   )
@@ -202,7 +204,7 @@ local function configure_hl_groups()
     0,
     "StatuslineModeVisual",
     {
-      fg = statusline_default_bg,
+      fg = mode_fg,
       bg = get_color("Special", "fg"),
     }
   )
@@ -570,4 +572,3 @@ function M.setup()
 end
 
 return M
-
