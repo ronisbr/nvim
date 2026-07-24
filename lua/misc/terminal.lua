@@ -72,7 +72,7 @@ M.right_term = {
 --- Update the FloatingTermBg highlight group based on the current Normal background.
 -- Lightens the background for dark themes, darkens it for light themes.
 local function update_floating_term_bg()
-  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+  local normal = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
   local bg = normal.bg
 
   if not bg then return end
@@ -104,21 +104,6 @@ local function update_floating_term_bg()
   vim.api.nvim_set_hl(0, "FloatingTermBg", { bg = string.format("#%02x%02x%02x", r, g, b) })
 end
 
---- Determine if the current theme is light or dark based on Normal background luminance.
--- @return boolean|nil: True if light, false if dark. Nil if undeterminable.
-local function is_light_theme()
-  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
-  local bg = normal.bg
-  if not bg then return nil end
-
-  local r = bit.rshift(bit.band(bg, 0xFF0000), 16)
-  local g = bit.rshift(bit.band(bg, 0x00FF00), 8)
-  local b = bit.band(bg, 0x0000FF)
-
-  local luminance = 0.299 * r + 0.587 * g + 0.114 * b
-  return luminance >= 128
-end
-
 --- Determine if the configured shell is nushell.
 -- @return boolean: True if the shell basename is `nu`.
 local function is_nushell()
@@ -133,8 +118,8 @@ end
 local function send_nushell_theme(jobid)
   if not jobid or not is_nushell() then return end
 
-  local is_light = is_light_theme() or false
-  local theme_file = is_light and "nano_default_light.nu" or "nano_default_dark.nu"
+  local theme_file = "nano_active.nu"
+
   vim.fn.chansend(
     jobid,
     string.format('source ($nu.data-dir | path join "vendor/%s")\n', theme_file)
