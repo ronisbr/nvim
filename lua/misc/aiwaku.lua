@@ -62,9 +62,10 @@ function M.prompt_and_send(ls, le)
 
   vim.api.nvim_buf_set_name(prompt_buf, "aiwaku-prompt")
 
-  -- Ensure the FloatingTermBg highlight is set based on the current Normal background.
-  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
-  local bg     = normal.bg
+  -- Ensure the FloatingTermBg highlight is set based on the current NormalFloat background,
+  -- so that the prompt windows follow the floating window background instead of the editor
+  -- one, which can be transparent.
+  local bg = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false }).bg
 
   if bg then
     local r = bit.rshift(bit.band(bg, 0xFF0000), 16)
