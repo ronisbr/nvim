@@ -4,6 +4,66 @@
 --
 -- -----------------------------------------------------------------------------------------
 
+-- CmdAtom ---------------------------------------------------------------------------------
+
+-- ................................................................................... teste
+-- ................................................................................ -- teste
+
+-- Track the last 20 atoms.
+local atom_ring = {} ---@type vim.event.cmdatom.data[]
+
+vim.api.nvim_create_autocmd(
+  "CmdAtom",
+  {
+    callback = function(ev)
+      -- Skip this mapping itself, and cmdwin edits.
+      if ev.data.lhs ~= " " and vim.fn.getcmdwintype() == "" then
+        atom_ring[#atom_ring + 1] = ev.data
+        if #atom_ring > 20 then
+          table.remove(atom_ring, 1)
+        end
+      end
+    end,
+  }
+)
+
+-- `[count]\` shows a cmdwin where the user can edit/save the last [count] atoms as a
+-- "macro". \ (no count) replays it.
+vim.keymap.set(
+  "n",
+  "\\",
+  function()
+    local count = vim.v.count
+    -- CmdAtom is deferred; schedule it so pending events land in the ring first.
+    vim.schedule(
+      function()
+        count = math.min(count, #atom_ring)
+
+        if count == 0 then -- Replay the saved macro.
+          for _, step in ipairs(vim.g.atom_macro or {}) do
+            vim.api.nvim_feedkeys(vim.keycode(step.keys or step.lhs), step.keys and "n" or "m", false)
+          end
+          return
+        end
+
+        local parts = {}
+
+        for i = #atom_ring - count + 1, #atom_ring do
+          local a = atom_ring[i]
+          local keys = a.keys or ("%s%s"):format(a.count or "", a.lhs)
+          local field = a.keys and "keys" or "lhs"
+          parts[#parts + 1] = ("{%s=%q},"):format(field, vim.fn.keytrans(keys))
+        end
+
+        local cmd = ("lua vim.g.atom_macro = { %s }"):format(table.concat(parts, " "))
+
+        -- Draft it on the cmdline; CTRL-F opens the cmdwin to edit it.
+        vim.api.nvim_feedkeys((":%s%s"):format(cmd, vim.keycode("<C-f>")), "n", false)
+      end
+    )
+  end
+)
+
 -- UI2 -------------------------------------------------------------------------------------
 
 local ui2  = require("vim._core.ui2")
@@ -42,21 +102,19 @@ ui2.enable({
       wmsg         = "msg",
       typed_cmd    = "cmd",
     },
-    cmd = {
-      height = 0.5,
-    },
     dialog = {
       height = 0.5,
     },
     msg = {
       height  = 0.3,
-      timeout = 3000,
     },
     pager = {
       height = 0.5,
     },
   },
 })
+
+vim.opt.messagesopt:append({ "timeout:3000" })
 
 -- Show LSP progress messages.
 vim.api.nvim_create_autocmd(
@@ -113,4 +171,3 @@ vim.api.nvim_create_user_command(
   end,
   {}
 )
-

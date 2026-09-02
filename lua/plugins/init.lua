@@ -38,7 +38,6 @@ vim.pack.add({
   "https://github.com/antonk52/filepaths_ls.nvim",
   "https://github.com/chomosuke/typst-preview.nvim",
   "https://github.com/f-person/auto-dark-mode.nvim",
-  "https://github.com/jake-stewart/multicursor.nvim",
   "https://github.com/juhaku/aiwaku.nvim",
   "https://github.com/lervag/vimtex",
   "https://github.com/neovim-treesitter/nvim-treesitter",
@@ -79,7 +78,6 @@ require("plugins.mini")
 require("plugins.aiwaku")
 require("plugins.julia")
 require("plugins.lsp")
-require("plugins.multicursor")
 require("plugins.tiny-cmdline")
 require("plugins.treesitter")
 require("plugins.typst")
