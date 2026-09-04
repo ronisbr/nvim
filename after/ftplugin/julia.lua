@@ -204,13 +204,12 @@ local function julia_indent()
     return require('nvim-treesitter').indentexpr()
 end
 
-_G._julia_indent = julia_indent
-
 -- nvim-treesitter sets indentexpr via a FileType autocommand that fires after
--- after/ftplugin. Use vim.schedule to set ours after tree-sitter is done.
+-- after/ftplugin. Use vim.schedule to set ours after tree-sitter is done. 'indentexpr'
+-- accepts a Lua function directly (Neovim v0.13).
 local bufnr = vim.api.nvim_get_current_buf()
 vim.schedule(function()
     if vim.api.nvim_buf_is_valid(bufnr) then
-        vim.bo[bufnr].indentexpr = "v:lua._julia_indent()"
+        vim.bo[bufnr].indentexpr = julia_indent
     end
 end)

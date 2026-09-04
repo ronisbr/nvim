@@ -76,7 +76,8 @@ MiniMisc.now(
           "yaml"
         },
         callback = function()
-          vim.bo.indentexpr = "v:lua.require('nvim-treesitter').indentexpr()"
+          -- 'indentexpr' accepts a Lua function directly (Neovim v0.13).
+          vim.bo.indentexpr = require("nvim-treesitter").indentexpr
         end,
         group = ronisbr_autocmd_groups
       }

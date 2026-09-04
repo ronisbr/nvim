@@ -62,16 +62,14 @@ vim.api.nvim_create_autocmd(
   }
 )
 
--- Reload files changed outside of Neovim.
+-- Highlight the text affected by yank and put operations.
 vim.api.nvim_create_autocmd(
-  { "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" },
+  { "TextYankPost", "TextPutPost" },
   {
     group = ronisbr_autocmd_groups,
-    desc = "Check if file changed on disk",
+    desc = "Highlight yanked and put text",
     callback = function()
-      if vim.fn.mode() ~= "c" then
-        vim.cmd("checktime")
-      end
+      vim.hl.hl_op({ higroup = "Visual", timeout = 200 })
     end,
   }
 )

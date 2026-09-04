@@ -70,14 +70,17 @@ local ui2  = require("vim._core.ui2")
 local msgs = require("vim._core.ui2.messages")
 
 -- General configuraton for UI2.
-vim.opt.cmdheight = 0
+vim.opt.cmdheight = 1
 ui2.enable({
   enable = true,
   msg = {
+    -- Keys are message kinds (`:h ui-messages`), triggers (`typed_cmd`) and Lua patterns
+    -- matched against the message ID. Note that the pattern match runs before the kind
+    -- lookup, so keys must not match unrelated IDs (an empty key would match every ID).
+    -- Buffer write, completion, and LSP messages are all "progress" messages now.
     targets = {
-      [""]         = "msg",
+      default      = "msg",
       empty        = "cmd",
-      bufwrite     = "msg",
       confirm      = "cmd",
       emsg         = "pager",
       echo         = "msg",
@@ -87,7 +90,7 @@ ui2.enable({
       list_cmd     = "pager",
       lua_error    = "pager",
       lua_print    = "msg",
-      progress     = "pager",
+      progress     = "msg",
       rpc_error    = "pager",
       quickfix     = "msg",
       search_cmd   = "cmd",
@@ -114,7 +117,9 @@ ui2.enable({
   },
 })
 
-vim.opt.messagesopt:append({ "timeout:3000" })
+-- Messages stay 3 s in the message window, and <CR> right after a `:` command that showed a
+-- collapsed message opens the pager (`g<` works at any time).
+vim.opt.messagesopt:append({ "timeout:3000", "pager:<CR>" })
 
 -- Show LSP progress messages.
 vim.api.nvim_create_autocmd(

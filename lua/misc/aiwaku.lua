@@ -685,7 +685,7 @@ function M.prompt_and_send(ls, le)
   vim.api.nvim_create_autocmd(
     "BufWriteCmd",
     {
-      buffer = prompt_buf,
+      buf = prompt_buf,
       callback = function()
         send_prompt()
       end,

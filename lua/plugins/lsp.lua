@@ -104,11 +104,10 @@ MiniMisc.later(
     vim.api.nvim_create_user_command(
       "LspLog",
       function()
-        vim.cmd.tabnew({
-          vim.lsp.log.get_filename()
-        })
+        vim.cmd.tabnew()
+        vim.cmd.log("lsp")
       end,
-      { desc = "Opens the Nvim LSP client log.",}
+      { desc = "Opens the Nvim LSP client log in a new tab.",}
     )
   end
 )

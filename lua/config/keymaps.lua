@@ -44,16 +44,16 @@ map("n", "]t", ":tabnext<CR>", "Next Tab")
 -- Text Manipulation -----------------------------------------------------------------------
 
 -- Return an expression mapping right-hand side that runs `keys` through the `g@` operator
--- (via 'operatorfunc'), making the mapping repeatable with `.`. `name` must be a unique
--- global function name. `motion` is appended to `g@`: use "l" for normal mode mappings and
--- "" for visual mode ones, where the selection provides the range.
-local function dot_repeatable(name, motion, keys)
+-- (via 'operatorfunc'), making the mapping repeatable with `.`. `motion` is appended to
+-- `g@`: use "l" for normal mode mappings and "" for visual mode ones, where the selection
+-- provides the range.
+local function dot_repeatable(motion, keys)
   local feed = vim.api.nvim_replace_termcodes(keys, true, false, true)
 
   -- `:normal!` is used instead of `nvim_feedkeys(feed, "nx", false)` because the "x" flag
   -- flushes the typeahead, which can interfere with the native multicursor cascade
   -- replaying the mapping at the other cursors.
-  _G[name] = function()
+  local function opfunc()
     vim.cmd.normal({ args = { feed }, bang = true })
   end
 
@@ -72,7 +72,8 @@ local function dot_repeatable(name, motion, keys)
       end
     end
 
-    vim.o.operatorfunc = "v:lua." .. name
+    -- 'operatorfunc' accepts a Lua function directly (Neovim v0.13).
+    vim.o.operatorfunc = opfunc
     return "g@" .. motion
   end
 end
@@ -81,7 +82,6 @@ emap(
   "n",
   "<Leader>ta",
   dot_repeatable(
-    "align_with_char_opfunc",
     "l",
     "<Cmd>set lazyredraw<CR>" ..
     "<Cmd>set formatoptions-=ro<CR>" ..
@@ -99,7 +99,6 @@ emap(
   "v",
   "<Leader>ta",
   dot_repeatable(
-    "align_with_pattern_opfunc",
     "",
     "`[v`]yma<Cmd>set formatoptions-=ro<CR>" ..
     "<Cmd>set lazyredraw<CR>" ..

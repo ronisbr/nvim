@@ -326,7 +326,7 @@ local function toggle_floating_terminal()
     vim.api.nvim_create_autocmd(
       "BufWipeout",
       {
-        buffer   = M.floating_term.buf,
+        buf      = M.floating_term.buf,
         group    = group_id,
         callback = function()
           if M.floating_term.win and vim.api.nvim_win_is_valid(M.floating_term.win) then
@@ -500,7 +500,7 @@ local function toggle_right_terminal()
   vim.api.nvim_create_autocmd(
     "BufWipeout",
     {
-      buffer   = M.right_term.buf,
+      buf      = M.right_term.buf,
       group    = group_id,
       callback = function()
         if M.right_term.win and vim.api.nvim_win_is_valid(M.right_term.win) then
@@ -515,7 +515,7 @@ local function toggle_right_terminal()
   vim.api.nvim_create_autocmd(
     "BufEnter",
     {
-      buffer   = M.right_term.buf,
+      buf      = M.right_term.buf,
       group    = group_id,
       callback = function()
         vim.api.nvim_set_option_value("cursorline", false, { win = 0 })
