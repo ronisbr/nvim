@@ -248,6 +248,40 @@ local function configure_hl_groups()
       }
     )
   end
+
+  -- Multicursor Badge ---------------------------------------------------------------------
+
+  vim.api.nvim_set_hl(
+    0,
+    "StatuslineMulticursor",
+    {
+      fg   = mode_fg,
+      bg   = get_color("Special", "fg"),
+      bold = true,
+    }
+  )
+
+  vim.api.nvim_set_hl(
+    0,
+    "StatuslineMulticursorFollow",
+    {
+      fg   = mode_fg,
+      bg   = get_color("WarningMsg", "fg"),
+      bold = true,
+    }
+  )
+
+  -- Round caps for the pill-shaped badge.
+  for _, hl_name in ipairs({ "StatuslineMulticursor", "StatuslineMulticursorFollow" }) do
+    vim.api.nvim_set_hl(
+      0,
+      hl_name .. "Cap",
+      {
+        fg = get_color(hl_name, "bg"),
+        bg = statusline_bg,
+      }
+    )
+  end
 end
 
 -- Statusline Components -----------------------------------------------------------------------
@@ -265,6 +299,15 @@ local mode_name_width = 8
 
 -- Powerline slant separator for the right edge (U+E0BC gives a / shape).
 local mode_sep_r = "\238\130\188"
+
+-- Powerline round caps (U+E0B6 and U+E0B4) for pill-shaped badges.
+local pill_cap_l = "\238\130\182"
+local pill_cap_r = "\238\130\180"
+
+-- Icons for the multicursor badge: nf-fa-i_cursor (U+F246) and nf-fa-link (U+F0C1), the
+-- latter indicating that the follow mode is enabled.
+local multicursor_icon = "\239\137\134"
+local follow_icon      = "\239\131\129"
 
 -- Current Neovim mode.
 local function statusline__mode()
@@ -414,6 +457,31 @@ local function statusline__visual_selection_information()
   return "%#StatuslineSalient#[" .. tostring(lines) .. "L " .. tostring(columns) .. "C]"
 end
 
+-- Native multicursor indicator (`:h multicursor`): a pill badge with the number of extra
+-- cursors. When the follow mode (`q=`) is enabled, the badge changes color and shows a link
+-- icon. The state is tracked by `misc.multicursor`.
+local function statusline__multicursor()
+  local mc    = require("misc.multicursor")
+  local count = mc.cursors()
+
+  if count == 0 then
+    return ""
+  end
+
+  local hl   = mc.follow and "StatuslineMulticursorFollow" or "StatuslineMulticursor"
+  local text = multicursor_icon .. " " .. tostring(count)
+
+  if mc.follow then
+    text = text .. " " .. follow_icon
+  end
+
+  return
+    "%#" .. hl .. "Cap#" .. pill_cap_l ..
+    "%#" .. hl .. "#" .. text ..
+    "%#" .. hl .. "Cap#" .. pill_cap_r ..
+    statusline__space()
+end
+
 -- Render Functions ------------------------------------------------------------------------
 
 -- Default render function when the buffer is active.
@@ -429,6 +497,7 @@ local function statusline__render_active()
     statusline__space(),
     statusline__lsp_clients(),
     "%#StatuslineDefault#%=",
+    statusline__multicursor(),
     statusline__visual_selection_information(),
     statusline__space(),
     statusline__cursor_position(),

@@ -11,6 +11,7 @@ require("config.options")
 
 require("misc.bufdelete").setup()
 require("misc.lazygit").setup()
+require("misc.multicursor").setup()
 require("misc.statusline").setup()
 require("misc.terminal").setup()
 

@@ -28,7 +28,10 @@ if not vim.g.vscode then
   vim.opt.relativenumber = true
   vim.opt.ruler = false
   vim.opt.shortmess = vim.opt.shortmess + { c = true, q = true }
-  vim.opt.showcmd = false
+  -- 'showcmd' must stay enabled: Neovim reports the native multicursor state (number of
+  -- cursors and follow mode) only through its text. `misc.multicursor` intercepts that text
+  -- before UI2 draws it in the cmdline, and the statusline shows the indicator instead.
+  vim.opt.showcmd = true
   vim.opt.showmode = false
   vim.opt.signcolumn = "yes"
   vim.opt.splitbelow = true

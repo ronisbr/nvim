@@ -127,6 +127,14 @@ MiniMisc.later(
         scroll_up = "",
       },
     })
+
+    -- mini.clue maps `Q` in normal mode to "execute the latest macro without triggers",
+    -- which shadows the native multicursor command (`:h Q`) in Neovim v0.13. Remove that
+    -- mapping so the built-in command is used. Only the mini.clue mapping is removed.
+    local q_map = vim.fn.maparg("Q", "n", false, true)
+    if q_map.desc == "Execute macro without 'mini.clue' triggers" then
+      vim.keymap.del("n", "Q")
+    end
   end
 )
 
@@ -790,7 +798,7 @@ MiniMisc.now(
       { name = "Recent Files",   action = ":Pick oldfiles",                        section = "Actions" },
       { name = "Config",         action = ":lua MiniFiles.open('~/.config/nvim')", section = "Actions" },
       { name = "LazyGit",        action = ":LazyGit",                              section = "Actions" },
-      { name = "Update Plugins", action = ":lua vim.pack.update()",                section = "Actions" },
+      { name = "Update Plugins", action = ":packupdate",                            section = "Actions" },
       { name = "Quit",           action = ":qa",                                   section = "Actions" },
       starter.sections.recent_files(8, false, false),
     }
