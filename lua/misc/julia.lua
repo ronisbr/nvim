@@ -246,12 +246,12 @@ local function create_julia_func_doc(input)
   return output
 end
 
---- Include the current file in the bottom terminal.
-local function include_file_in_bottom_term()
+--- Include the current file in the right terminal.
+local function include_file_in_right_term()
   local filepath = vim.api.nvim_buf_get_name(0)
   local cmd      = "include(\"" .. filepath .. "\")\n"
 
-  require("misc.terminal").send_to_bottom_term(cmd)
+  require("misc.terminal").send_to_right_term(cmd)
 end
 
 --------------------------------------------------------------------------------------------
@@ -286,7 +286,7 @@ function M.setup()
   vim.api.nvim_create_user_command(
     "JuliaFunctionDocumentation",
     function(t)
-      require("misc/julia").insert_julia_func_doc(t.line1, t.line2)
+      require("misc.julia").insert_julia_func_doc(t.line1, t.line2)
     end,
     { range = true }
   )
@@ -297,10 +297,10 @@ function M.setup()
       vim.keymap.set(
         "n",
         "<Leader>bf",
-        include_file_in_bottom_term,
+        include_file_in_right_term,
         {
           buffer = true,
-          desc   = "Include File in Bottom Terminal",
+          desc   = "Include File in Right Terminal",
           silent = true
         }
       )

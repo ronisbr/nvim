@@ -6,20 +6,10 @@
 
 MiniMisc.now(
   function()
-    vim.api.nvim_create_autocmd(
-      "PackChanged",
-      {
-        callback = function(ev)
-          local name, kind = ev.data.spec.name, ev.data.kind
-          if name == "nvim-treesitter" and kind == "update" then
-            if not ev.data.active then vim.cmd.packadd("nvim-treesitter") end
-            vim.cmd("TSUpdate")
-          end
-        end
-      }
-    )
+    local augroup = vim.api.nvim_create_augroup("ronisbr_treesitter", { clear = true })
 
-    require("nvim-treesitter").install({
+    -- Languages with treesitter highlighting and indentation.
+    local filetypes = {
       "bash",
       "c",
       "cpp",
@@ -31,57 +21,50 @@ MiniMisc.now(
       "markdown_inline",
       "vim",
       "vimdoc",
-      "yaml"
-    })
+      "yaml",
+    }
 
     vim.api.nvim_create_autocmd(
-      "FileType",
+      "PackChanged",
       {
-        pattern = {
-          "bash",
-          "c",
-          "cpp",
-          "diff",
-          "julia",
-          "lua",
-          "luadoc",
-          "markdown",
-          "markdown_inline",
-          "vim",
-          "vimdoc",
-          "yaml"
-        },
-        callback = function()
-          vim.treesitter.start()
+        group    = augroup,
+        callback = function(ev)
+          local name, kind = ev.data.spec.name, ev.data.kind
+
+          if name == "nvim-treesitter" and kind == "update" then
+            if not ev.data.active then
+              vim.cmd.packadd("nvim-treesitter")
+            end
+
+            vim.cmd("TSUpdate")
+          end
         end,
-        group = ronisbr_autocmd_groups
       }
     )
 
+    require("nvim-treesitter").install(filetypes)
+
     vim.api.nvim_create_autocmd(
       "FileType",
       {
-        pattern = {
-          "bash",
-          "c",
-          "cpp",
-          "diff",
-          "julia",
-          "lua",
-          "luadoc",
-          "markdown",
-          "markdown_inline",
-          "vim",
-          "vimdoc",
-          "yaml"
-        },
+        group    = augroup,
+        pattern  = filetypes,
         callback = function()
-          -- 'indentexpr' accepts a Lua function directly (Neovim v0.13).
+          vim.treesitter.start()
+        end,
+      }
+    )
+
+    -- Julia buffers wrap the treesitter indentation in `after/ftplugin/julia.lua`.
+    vim.api.nvim_create_autocmd(
+      "FileType",
+      {
+        group    = augroup,
+        pattern  = vim.tbl_filter(function(ft) return ft ~= "julia" end, filetypes),
+        callback = function()
           vim.bo.indentexpr = require("nvim-treesitter").indentexpr
         end,
-        group = ronisbr_autocmd_groups
       }
     )
   end
 )
-
