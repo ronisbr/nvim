@@ -23,6 +23,21 @@ MiniMisc.later(
   end
 )
 
+-- mini.bufremove --------------------------------------------------------------------------
+
+MiniMisc.later(
+  function()
+    require("mini.bufremove").setup({})
+
+    vim.keymap.set(
+      "n",
+      "<Leader>bd",
+      function() MiniBufremove.delete() end,
+      { desc = "Delete Buffer (Keep Layout)", silent = true }
+    )
+  end
+)
+
 -- mini.clue -------------------------------------------------------------------------------
 
 MiniMisc.later(
@@ -170,17 +185,13 @@ MiniMisc.on_event(
 
 -- mini.completion -------------------------------------------------------------------------
 
-MiniMisc.now(
+MiniMisc.later(
   function()
     require("mini.completion").setup({
       delay = { completion = 700, info = 300, signature = 200 },
     })
 
     -- Keymaps -------------------------------------------------------------------------------
-
-    local function mini_completion_map(mode, lhs, rhs)
-      vim.keymap.set(mode, lhs, rhs, { noremap = true, expr = true, silent = true })
-    end
 
     -- Smart <Tab>: navigate completion menu if visible, otherwise accept Copilot, else Tab or
     -- expand/jump mini.snippets.
@@ -264,19 +275,21 @@ MiniMisc.now(
       }
     )
 
-    -- Configure a more consistent behavior of <CR>.
-    _G.cr_action = function()
-      -- If there is selected item in popup, accept it with <C-y>
-      if vim.fn.complete_info()["selected"] ~= -1 then
-        return vim.api.nvim_replace_termcodes("<C-y>", true, true, true)
-      end
+    -- Configure a more consistent behavior of <CR>: accept the selected completion item.
+    vim.keymap.set(
+      "i",
+      "<CR>",
+      function()
+        if vim.fn.complete_info()["selected"] ~= -1 then
+          return (vim.keycode("<C-y>"))
+        end
 
-      -- Fall back to plain `<CR>`.
-      return vim.api.nvim_replace_termcodes("\r", true, true, true)
-    end
-
-    mini_completion_map("i", "<CR>", "v:lua.cr_action()")
-end)
+        return "\r"
+      end,
+      { expr = true, replace_keycodes = false, silent = true }
+    )
+  end
+)
 
 -- mini.diff -------------------------------------------------------------------------------
 
@@ -401,10 +414,17 @@ MiniMisc.now(
   end
 )
 
+-- mini.git --------------------------------------------------------------------------------
+
+MiniMisc.later(
+  function()
+    require("mini.git").setup({})
+  end
+)
+
 -- mini.hipatterns -------------------------------------------------------------------------
 
-MiniMisc.on_event(
-  "BufEnter",
+MiniMisc.later(
   function()
     local hipatterns = require("mini.hipatterns")
 
@@ -483,8 +503,7 @@ MiniMisc.later(
 
 -- mini.move -------------------------------------------------------------------------------
 
-MiniMisc.on_event(
-  "BufEnter",
+MiniMisc.later(
   function()
     require("mini.move").setup({})
   end
@@ -587,14 +606,6 @@ MiniMisc.later(
       end,
       "Find Recent Files"
     )
-
-    mini_pick_map(
-      "z=",
-      function()
-        require("mini.extra").pickers.spellsuggest({})
-      end,
-      "Show Spelling Suggestions"
-    )
   end
 )
 
@@ -618,10 +629,8 @@ MiniMisc.on_event(
 
 -- mini.splitjoin --------------------------------------------------------------------------
 
-MiniMisc.on_event(
-  "BufEnter",
+MiniMisc.later(
   function()
-
     require("mini.splitjoin").setup({
       detect = { separator = "[,;]" }
     })
@@ -723,7 +732,7 @@ MiniMisc.now(
 
     -- Add the separator after the last header line, centered on screen independently of the
     -- header centering.
-    function separators(content)
+    local function separators(content)
       local sep_width = vim.fn.strdisplaywidth(neovim_logo_separator)
       local pad       = math.max(math.floor((vim.o.columns - sep_width) / 2), 0)
 

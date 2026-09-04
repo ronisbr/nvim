@@ -51,71 +51,19 @@ local excluded_filetypes = {
 
 -- Return a string with the names of the active LSP clients for the buffer `bufnr`.
 local function active_lsp_clients(bufnr)
-  local buf_ft       = vim.bo[bufnr].filetype
-  local clients      = vim.lsp.get_clients({ bufnr = bufnr })
-  local client_names = {}
+  local buf_ft = vim.bo[bufnr].filetype
+  local names  = {}
 
-  if next(clients) == nil then
-    return ""
-  end
-
-  for _, client in ipairs(clients) do
-    local filetypes = client.config and client.config.filetypes
-
-    if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-      table.insert(client_names, client.name)
+  for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+    if vim.list_contains(client.config.filetypes or {}, buf_ft) then
+      table.insert(names, client.name)
     end
   end
 
-  return table.concat(client_names, ", ")
+  return table.concat(names, ", ")
 end
 
--- Return the color of the attribute `attr` of the highlight group `hl_group`.
-local function get_color(hl_group, attribute)
-  local hl = vim.api.nvim_get_hl(0, { name = hl_group })
-
-  if hl[attribute] then
-    return "#" .. string.format("%06x", hl[attribute])
-  end
-
-  return nil
-end
-
--- Return the current git branch name, or an empty string if the current directory is not a
--- git repository. Notice that we will cache the result for 10 seconds considering the file
--- path to avoid unnecessary calls to the `git` command, which can lock the UI.
-local branch_cache = {}
-
-local function git_branch()
-  local filename = vim.api.nvim_buf_get_name(0)
-
-  if filename == "" then
-    return ""
-  end
-
-  -- Check if the timestamp of the cache is still valid (10 s).
-  local cache = branch_cache[filename]
-  local now   = vim.uv.now()
-
-  if cache and (now - cache.time < 10000) then
-    return cache.branch
-  end
-
-  -- We must run the git command in the directory of the file because the statusline can be
-  -- rendered before changing the directory.
-  local branch = vim.fn.system(
-    "git -C " ..
-    vim.fn.fnamemodify(filename, ':p:h') ..
-    " branch --show-current 2>/dev/null | tr -d '\n'"
-  )
-
-  branch_cache[filename] = {
-    branch = branch,
-    time   = now
-  }
-
-  return branch
-end
+local get_color = require("misc.util").get_color
 
 -- Configure the highlight groups used by the statusline.
 local function configure_hl_groups()
@@ -144,7 +92,7 @@ local function configure_hl_groups()
     0,
     "StatuslineFaded",
     {
-      fg = get_color("Comment", "fg"),
+      fg = get_color("Dimmed", "fg") or get_color("Comment", "fg"),
       bg = statusline_bg
     }
   )
@@ -166,6 +114,19 @@ local function configure_hl_groups()
       bg = statusline_bg
     }
   )
+
+  -- Diagnostics ---------------------------------------------------------------------------
+
+  for _, severity in ipairs({ "Error", "Warn", "Info", "Hint" }) do
+    vim.api.nvim_set_hl(
+      0,
+      "StatuslineDiagnostic" .. severity,
+      {
+        fg = get_color("Diagnostic" .. severity, "fg"),
+        bg = statusline_bg,
+      }
+    )
+  end
 
   -- Neovim Modes --------------------------------------------------------------------------
 
@@ -355,7 +316,8 @@ local function statusline__filetype()
   end
 
   local fileicon = ""
-  local branch   = git_branch()
+  local summary  = vim.b.minigit_summary
+  local branch   = summary and summary.head_name or ""
 
   if _G.MiniIcons ~= nil and type(_G.MiniIcons.get) == "function" then
     fileicon = _G.MiniIcons.get("filetype", filetype) .. " "
@@ -377,6 +339,35 @@ local function statusline__lsp_clients()
   end
 
   return "%#StatuslineFaded#[ " .. clients .. "]"
+end
+
+-- Diagnostic severities shown in the statusline: severity, icon (nf-fa-times_circle,
+-- nf-fa-exclamation_triangle, nf-fa-info_circle, and nf-fa-lightbulb_o), and highlight group.
+local diagnostic_severities = {
+  { vim.diagnostic.severity.ERROR, vim.fn.nr2char(0xF057), "StatuslineDiagnosticError" },
+  { vim.diagnostic.severity.WARN,  vim.fn.nr2char(0xF071), "StatuslineDiagnosticWarn"  },
+  { vim.diagnostic.severity.INFO,  vim.fn.nr2char(0xF05A), "StatuslineDiagnosticInfo"  },
+  { vim.diagnostic.severity.HINT,  vim.fn.nr2char(0xF0EB), "StatuslineDiagnosticHint"  },
+}
+
+-- Number of diagnostics per severity.
+local function statusline__diagnostics()
+  local counts = vim.diagnostic.count(0)
+  local parts  = {}
+
+  for _, severity in ipairs(diagnostic_severities) do
+    local count = counts[severity[1]]
+
+    if count and count > 0 then
+      table.insert(parts, "%#" .. severity[3] .. "#" .. severity[2] .. " " .. count)
+    end
+  end
+
+  if #parts == 0 then
+    return ""
+  end
+
+  return " " .. table.concat(parts, " ")
 end
 
 -- Tabs.
@@ -484,8 +475,8 @@ end
 
 -- Render Functions ------------------------------------------------------------------------
 
--- Default render function when the buffer is active.
-local function statusline__render_active()
+-- Default render function.
+local function statusline__render_default()
   local statusline_components = {
     statusline__mode(),
     statusline__folder(),
@@ -496,6 +487,7 @@ local function statusline__render_active()
     statusline__filetype(),
     statusline__space(),
     statusline__lsp_clients(),
+    statusline__diagnostics(),
     "%#StatuslineDefault#%=",
     statusline__multicursor(),
     statusline__visual_selection_information(),
@@ -507,23 +499,13 @@ local function statusline__render_active()
   return table.concat(statusline_components, "")
 end
 
--- Default render function when the buffer is inactive.
-local function statusline__render_inactive()
-  return "%#StatuslineDefault#      %#StatuslineFaded#%t"
-end
-
--- Render function for read-only buffers when the buffer is active.
-local function statusline__render_read_only_buffer_active()
+-- Render function for read-only buffers.
+local function statusline__render_read_only_buffer()
   return "%#StatuslineDefault#%h%q %f"
 end
 
--- Render function for read-only buffers when the buffer is inactive.
-local function statusline__render_read_only_buffer_inactive()
-  return "%#StatuslineFaded#%h%q %f"
-end
-
--- Render function for quickfix buffers when the buffer is active.
-local function statusline__render_quickfix_active()
+-- Render function for quickfix buffers.
+local function statusline__render_quickfix()
   local fileicon       = ""
   local quickfix_title = vim.w.quickfix_title
 
@@ -541,63 +523,25 @@ local function statusline__render_quickfix_active()
     "%#StatuslineFaded#%l / %L (%p %%)"
 end
 
--- Render function for quickfix buffers when the buffer is inactive.
-local function statusline__render_quickfix_inactive()
-  local fileicon       = ""
-  local quickfix_title = vim.w.quickfix_title
-
-  if _G.MiniIcons ~= nil and type(_G.MiniIcons.get) == "function" then
-    fileicon = _G.MiniIcons.get("filetype", "qf") .. "  "
-  end
-
-  return
-    "%#StatuslineFaded#" ..
-    fileicon ..
-    "[Quickfix List] " ..
-    quickfix_title
-end
-
 --------------------------------------------------------------------------------------------
 --                                    Public Functions                                    --
 --------------------------------------------------------------------------------------------
 
 -- Render the statusline.
-function M.render(active)
-  -- Check if the current filetype must be excluded.
-  local filetype    = vim.bo.filetype
-  local is_excluded = false
-
-  for i = 1, #excluded_filetypes do
-    if filetype == excluded_filetypes[i] then
-      is_excluded = true
-      break
-    end
-  end
-
-  if is_excluded then
+function M.render()
+  if vim.list_contains(excluded_filetypes, vim.bo.filetype) then
     return ""
   end
 
-  -- Check if the current buffer is a quickfix buffer.
   if vim.bo.buftype == "quickfix" then
-    return active == 0 and
-      statusline__render_quickfix_inactive() or
-      statusline__render_quickfix_active()
+    return statusline__render_quickfix()
   end
 
-  -- Check if the current buffer is read-only.
-  local is_read_only = vim.bo.readonly
-
-  if is_read_only then
-    return active == 0 and
-      statusline__render_read_only_buffer_inactive() or
-      statusline__render_read_only_buffer_active()
+  if vim.bo.readonly then
+    return statusline__render_read_only_buffer()
   end
 
-  -- Render the normal statusline.
-  return active == 0 and
-    statusline__render_inactive() or
-    statusline__render_active()
+  return statusline__render_default()
 end
 
 -- Setup the statusline.
@@ -606,12 +550,7 @@ function M.setup()
   vim.opt.laststatus = 3
   vim.opt.showtabline = 0
 
-  vim.go.statusline =
-    "%{" ..
-      "%(nvim_get_current_win()==#g:actual_curwin) ? " ..
-        "v:lua.require('misc.statusline').render(1) : " ..
-        "v:lua.require('misc.statusline').render(0) " ..
-    "%}"
+  vim.go.statusline = "%{%v:lua.require('misc.statusline').render()%}"
 
   -- Create an autocmd to setup the statusline when the colorscheme is changed.
   vim.api.nvim_create_autocmd(
@@ -624,17 +563,18 @@ function M.setup()
     }
   )
 
-  -- Redraw the statusline when an LSP client is attached or detached.
+  -- Redraw the statusline when an LSP client is attached or detached, or when the
+  -- diagnostics change.
   vim.api.nvim_create_autocmd(
     {
+      "DiagnosticChanged",
       "LspAttach",
-      "LspDetach"
+      "LspDetach",
     },
     {
       pattern = "*",
       callback = function()
-        -- We need to redraw the statusline because the LSP clients may have changed.
-        vim.cmd("redrawstatus")
+        vim.cmd.redrawstatus()
       end,
     }
   )

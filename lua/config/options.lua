@@ -4,7 +4,6 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-vim.opt.autoread = true
 vim.opt.breakindent = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.expandtab = true
@@ -16,11 +15,15 @@ vim.opt.spelllang = "en,pt"
 vim.opt.tabstop = 4
 vim.opt.textwidth = 92
 
+-- Use zsh for `:!`, `:terminal`, and the terminals spawned by plugins (e.g. aiwaku). The
+-- floating and right terminals use nushell explicitly (see `misc.terminal`).
+vim.env.SHELL = "/bin/zsh"
+vim.opt.shell = "/bin/zsh"
+
 if not vim.g.vscode then
   vim.opt.colorcolumn = "93"
   vim.opt.cursorline = true
   vim.opt.inccommand = "nosplit"
-  vim.opt.lazyredraw = false
   vim.opt.list = true
   vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
   vim.opt.mouse = 'a'
@@ -106,21 +109,22 @@ do
     vim.fn.mkdir(spell_dir, "p")
     local tmp = spell_dir .. file .. ".tmp"
 
-    vim.system(
-      { "curl", "-fsSL", "-o", tmp, base_url .. file },
-      {},
-      vim.schedule_wrap(function(result)
-        if result.code == 0 then
-          vim.uv.fs_rename(tmp, spell_dir .. file, function()
-            vim.schedule(function()
-              vim.notify("Spell file downloaded: " .. file, vim.log.levels.INFO)
-              vim.cmd("silent! edit")
-            end)
-          end)
-        else
+    vim.net.request(
+      base_url .. file,
+      { outpath = tmp },
+      vim.schedule_wrap(function(err)
+        if err then
           vim.uv.fs_unlink(tmp, function() end)
           vim.notify("Failed to download spell file: " .. file, vim.log.levels.ERROR)
+          return
         end
+
+        vim.uv.fs_rename(tmp, spell_dir .. file, function()
+          vim.schedule(function()
+            vim.notify("Spell file downloaded: " .. file, vim.log.levels.INFO)
+            vim.cmd("silent! edit")
+          end)
+        end)
       end)
     )
   end

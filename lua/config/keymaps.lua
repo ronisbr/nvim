@@ -4,20 +4,12 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-function map(mode, lhs, rhs)
-  return vim.keymap.set(mode, lhs, rhs, { silent = true })
+local function map(mode, lhs, rhs, desc)
+  vim.keymap.set(mode, lhs, rhs, { desc = desc, silent = true })
 end
 
-function map(mode, lhs, rhs, desc)
-  return vim.keymap.set(mode, lhs, rhs, { desc = desc, silent = true })
-end
-
-function rmap(mode, lhs, rhs, desc)
-  return vim.keymap.set(mode, lhs, rhs, { desc = desc, remap = true, silent = true })
-end
-
-function emap(mode, lhs, rhs, desc)
-  return vim.keymap.set(mode, lhs, rhs, { desc = desc, expr = true, silent = true })
+local function emap(mode, lhs, rhs, desc)
+  vim.keymap.set(mode, lhs, rhs, { desc = desc, expr = true, silent = true })
 end
 
 map("n", "<Esc>", "<Esc><Cmd>noh<CR>")
@@ -32,14 +24,14 @@ map("i", "<Down>", "<C-o>gj")
 
 -- Buffers ---------------------------------------------------------------------------------
 
-map("n", "[b", ":bprev<CR>", "Previous Buffer")
-map("n", "]b", ":bnext<CR>", "Next Buffer")
+map("n", "[b", "<Cmd>bprev<CR>", "Previous Buffer")
+map("n", "]b", "<Cmd>bnext<CR>", "Next Buffer")
 map("n", "<Leader>bw", "<Cmd>%bd|e#|bd#<CR>", "Close All Buffers Except Current")
 
 -- Tabs ------------------------------------------------------------------------------------
 
-map("n", "[t", ":tabprevious<CR>", "Previous Tab")
-map("n", "]t", ":tabnext<CR>", "Next Tab")
+map("n", "[t", "<Cmd>tabprevious<CR>", "Previous Tab")
+map("n", "]t", "<Cmd>tabnext<CR>", "Next Tab")
 
 -- Text Manipulation -----------------------------------------------------------------------
 

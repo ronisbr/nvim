@@ -34,22 +34,20 @@ end
 
 vim.pack.add({
   "https://github.com/JuliaEditorSupport/julia-vim",
-  "https://github.com/MeanderingProgrammer/render-markdown.nvim",
   "https://github.com/antonk52/filepaths_ls.nvim",
-  "https://github.com/chomosuke/typst-preview.nvim",
-  "https://github.com/f-person/auto-dark-mode.nvim",
   "https://github.com/juhaku/aiwaku.nvim",
-  "https://github.com/lervag/vimtex",
   "https://github.com/neovim-treesitter/nvim-treesitter",
   "https://github.com/neovim-treesitter/treesitter-parser-registry",
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/nvim-lua/plenary.nvim",
+  "https://github.com/nvim-mini/mini.bufremove",
   "https://github.com/nvim-mini/mini.clue",
   "https://github.com/nvim-mini/mini.cmdline",
   "https://github.com/nvim-mini/mini.completion",
   "https://github.com/nvim-mini/mini.diff",
   "https://github.com/nvim-mini/mini.extra",
   "https://github.com/nvim-mini/mini.files",
+  { src = "https://github.com/nvim-mini/mini-git", name = "mini.git" },
   "https://github.com/nvim-mini/mini.hipatterns",
   "https://github.com/nvim-mini/mini.icons",
   "https://github.com/nvim-mini/mini.indentscope",
@@ -77,6 +75,7 @@ require("plugins.mini")
 require("plugins.aiwaku")
 require("plugins.julia")
 require("plugins.lsp")
+require("plugins.markdown")
 require("plugins.treesitter")
 require("plugins.typst")
 require("plugins.vimtex")

@@ -1,13 +1,12 @@
 -- Description -----------------------------------------------------------------------------
 --
--- Configuration for typst-preview.nvim.
+-- Configuration of plugins related to Markdown files.
 --
 -- -----------------------------------------------------------------------------------------
 
 MiniMisc.on_filetype(
-  "typst",
+  "markdown",
   function()
-    vim.pack.add({ "https://github.com/chomosuke/typst-preview.nvim" })
-    require("typst-preview").setup()
+    vim.pack.add({ "https://github.com/MeanderingProgrammer/render-markdown.nvim" })
   end
 )

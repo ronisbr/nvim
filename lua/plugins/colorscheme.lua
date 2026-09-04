@@ -15,7 +15,5 @@ MiniMisc.now(
     })
 
     vim.cmd.colorscheme("nano-theme")
-
-    -- require("auto-dark-mode").setup()
   end
 )

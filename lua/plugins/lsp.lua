@@ -10,10 +10,6 @@ MiniMisc.later(
 
     vim.lsp.config("*", { capabilities = MiniCompletion.get_lsp_capabilities() })
 
-    -- Copilot .............................................................................
-
-    vim.lsp.config("copilot", {})
-
     -- C++ .................................................................................
 
     vim.lsp.config("clangd", {})
@@ -93,7 +89,6 @@ MiniMisc.later(
     -- Enable LSP Clients ----------------------------------------------------------------
 
     vim.lsp.enable("clangd")
-    vim.lsp.enable("copilot")
     vim.lsp.enable("filepaths_ls")
     vim.lsp.enable("julials")
     vim.lsp.enable("lua_ls")

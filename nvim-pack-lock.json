@@ -4,10 +4,6 @@
       "rev": "4f049e7ac4f2e2961e92653a51dd544a481527be",
       "src": "https://github.com/juhaku/aiwaku.nvim"
     },
-    "auto-dark-mode.nvim": {
-      "rev": "54058b4fe414bd64bd2904a6f8a63f1f14e3d8df",
-      "src": "https://github.com/f-person/auto-dark-mode.nvim"
-    },
     "circadia": {
       "rev": "d60f502b06e8454ef09bf3c4a74b9cb9f6ae4ed3",
       "src": "https://github.com/tanmaymanojgandhi/circadia"
@@ -27,6 +23,10 @@
     "mini.align": {
       "rev": "77d7446b9f2452193f13ced9fb73a8b3aa4a4f4d",
       "src": "https://github.com/nvim-mini/mini.align"
+    },
+    "mini.bufremove": {
+      "rev": "281bb1a2c60c3618c854bef2c0933276eb2362c2",
+      "src": "https://github.com/nvim-mini/mini.bufremove"
     },
     "mini.clue": {
       "rev": "4d506660e7030a15748ab073bebfe3ed03884000",
@@ -51,6 +51,10 @@
     "mini.files": {
       "rev": "a249438d15fa6f64085ba83a9d1794d726aaf5ad",
       "src": "https://github.com/nvim-mini/mini.files"
+    },
+    "mini.git": {
+      "rev": "62aa54f41c50181dceff90b55f989efe69ad198c",
+      "src": "https://github.com/nvim-mini/mini-git"
     },
     "mini.hipatterns": {
       "rev": "7c840c71d6a91f53d734cab2b6fe2290d285ec3b",

@@ -4,7 +4,7 @@
 --
 -- -----------------------------------------------------------------------------------------
 
-_G.ronisbr_autocmd_groups = vim.api.nvim_create_augroup("ronisbr_autocmds", { clear = true })
+local augroup = vim.api.nvim_create_augroup("ronisbr_autocmds", { clear = true })
 
 -- Buffer ----------------------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ _G.ronisbr_autocmd_groups = vim.api.nvim_create_augroup("ronisbr_autocmds", { cl
 vim.api.nvim_create_autocmd(
   "FileType",
   {
-    group = ronisbr_autocmd_groups,
+    group = augroup,
     pattern = {
       "PlenaryTestPopup",
       "checkhealth",
@@ -52,7 +52,7 @@ vim.api.nvim_create_autocmd(
 vim.api.nvim_create_autocmd(
   "TermClose",
   {
-    group = ronisbr_autocmd_groups,
+    group = augroup,
     desc = "Auto-close terminal buffer on successful exit",
     callback = function(args)
       if ((vim.v.event.status == 0) and vim.api.nvim_buf_is_valid(args.buf)) then
@@ -66,7 +66,7 @@ vim.api.nvim_create_autocmd(
 vim.api.nvim_create_autocmd(
   { "TextYankPost", "TextPutPost" },
   {
-    group = ronisbr_autocmd_groups,
+    group = augroup,
     desc = "Highlight yanked and put text",
     callback = function()
       vim.hl.hl_op({ higroup = "Visual", timeout = 200 })

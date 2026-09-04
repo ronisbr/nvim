@@ -4,6 +4,8 @@
 --
 -- -----------------------------------------------------------------------------------------
 
+local float = require("misc.float")
+
 local M = {}
 
 M.history = M.history or {}
@@ -62,158 +64,49 @@ function M.prompt_and_send(ls, le)
 
   vim.api.nvim_buf_set_name(prompt_buf, "aiwaku-prompt")
 
-  -- Ensure the FloatingTermBg highlight is set based on the current NormalFloat background,
-  -- so that the prompt windows follow the floating window background instead of the editor
-  -- one, which can be transparent.
-  local bg = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false }).bg
-
-  if bg then
-    local r = bit.rshift(bit.band(bg, 0xFF0000), 16)
-    local g = bit.rshift(bit.band(bg, 0x00FF00), 8)
-    local b = bit.band(bg, 0x0000FF)
-
-    local luminance = 0.299 * r + 0.587 * g + 0.114 * b
-    local offset    = luminance >= 128 and -7 or 15
-
-    r = math.max(0, math.min(255, r + (luminance >= 128 and -4 or offset)))
-    g = math.max(0, math.min(255, g + offset))
-    b = math.max(0, math.min(255, b + (luminance >= 128 and -10 or offset)))
-
-    vim.api.nvim_set_hl(
-      0,
-      "FloatingTermBg",
-      { bg = string.format("#%02x%02x%02x", r, g, b) }
-    )
-  end
-
-  -- Compute the floating window dimensions (backdrop includes padding).
+  -- Compute the floating window dimensions (the backdrop includes the padding).
   local ui     = vim.api.nvim_list_uis()[1]
   local tw     = vim.bo.textwidth > 0 and vim.bo.textwidth or vim.go.textwidth
-  local width  = tw + 13
+  local width  = math.min(tw + 13, ui.width - 4)
   local height = math.floor(ui.height * 0.4)
   local row    = math.floor((ui.height - height) / 2)
   local col    = math.floor((ui.width - width) / 2)
 
-  -- Open the backdrop window (dimmed background).
-  local backdrop_buf = vim.api.nvim_create_buf(false, true)
-  vim.bo[backdrop_buf].bufhidden = "wipe"
+  -- Whether to append the file reference when sending the prompt (default on).
+  local include_ref = true
 
-  local backdrop_win = vim.api.nvim_open_win(
-    backdrop_buf,
-    false,
-    {
-      relative  = "editor",
-      width     = width,
-      height    = height,
-      row       = row,
-      col       = col,
-      style     = "minimal",
-      border    = "none",
-      focusable = false,
-      zindex    = 10,
+  local tool       = state.current_tool or (state.config and state.config.cmd[1])
+  local model_name = tool and tool.name or "Unknown"
+
+  --- Return the footer chunks reflecting the current `include_ref` state.
+  local function footer()
+    return {
+      { " " .. (include_ref and "ref:on" or "ref:off") .. " ┃ ",      "FloatingTermFooter" },
+      { "<M-CR> / :w => Send Prompt ┃ <Esc> / q => Quit ┃ ",           "FloatingTermFooter" },
+      { model_name .. " ",                                              "FloatingTermAccent" },
     }
-  )
-
-  vim.wo[backdrop_win].winhl = "Normal:FloatingTermBg"
-
-  -- Create the title bar at the top of the backdrop.
-  local tool          = state.current_tool or (state.config and state.config.cmd[1])
-  local model_name    = tool and tool.name or "Unknown"
-  local title_text    = "Aiwaku Prompt"
-  local title_padding = math.floor((width - #title_text) / 2)
-
-  if title_padding < 0 then
-    title_padding = 0
   end
 
-  local title_line = string.rep(" ", title_padding) .. title_text
-  local title_buf  = vim.api.nvim_create_buf(false, true)
-
-  vim.bo[title_buf].bufhidden = "wipe"
-
-  vim.api.nvim_buf_set_lines(title_buf, 0, -1, false, { title_line })
-
-  local title_win = vim.api.nvim_open_win(
-    title_buf,
-    false,
+  -- Open the prompt window over a bordered backdrop that carries the title and the footer.
+  local prompt_float = float.open(
     {
-      relative  = "editor",
-      width     = width,
-      height    = 1,
-      row       = row + pad_v,
-      col       = col,
-      style     = "minimal",
-      border    = "none",
-      focusable = false,
-      zindex    = 11,
+      buf    = prompt_buf,
+      width  = width,
+      height = height,
+      row    = row,
+      col    = col,
+      pad_v  = pad_v,
+      pad_h  = pad_h,
+      border = "rounded",
+      title  = " Aiwaku Prompt ",
+      footer = footer(),
+      style  = false,
     }
   )
 
-  vim.wo[title_win].winhl = "Normal:FloatingTermBg"
+  local prompt_win = prompt_float.win
 
-  local ns = vim.api.nvim_create_namespace("aiwaku_prompt")
-  vim.api.nvim_buf_set_extmark(
-    title_buf,
-    ns,
-    0,
-    0,
-    { line_hl_group = "Title" }
-  )
-
-  -- Create a horizontal separator between title and prompt.
-  local sep_line    = string.rep("─", width)
-  local sep_top_buf = vim.api.nvim_create_buf(false, true)
-
-  vim.bo[sep_top_buf].bufhidden = "wipe"
-  vim.api.nvim_buf_set_lines(sep_top_buf, 0, -1, false, { sep_line })
-
-  local sep_top_win = vim.api.nvim_open_win(
-    sep_top_buf,
-    false,
-    {
-      relative  = "editor",
-      width     = width,
-      height    = 1,
-      row       = row + pad_v + 1,
-      col       = col,
-      style     = "minimal",
-      border    = "none",
-      focusable = false,
-      zindex    = 11,
-    }
-  )
-
-  vim.wo[sep_top_win].winhl = "Normal:FloatingTermBg"
-  vim.api.nvim_buf_set_extmark(
-    sep_top_buf,
-    ns,
-    0,
-    0,
-    { line_hl_group = "NonText" }
-  )
-
-  -- Open the prompt window inside the backdrop with padding.
-  -- Reserve 1 row for the title, 1 separator, 1 separator, 1 row for the hint bar.
-  local inner_width  = width  - 2 * pad_h
-  local inner_height = height - 2 * pad_v - 4
-  local inner_row    = row + pad_v + 2
-  local inner_col    = col + pad_h
-
-  local prompt_win = vim.api.nvim_open_win(
-    prompt_buf,
-    true,
-    {
-      relative = "editor",
-      width    = inner_width,
-      height   = inner_height,
-      row      = inner_row,
-      col      = inner_col,
-      border   = "none",
-      zindex   = 11,
-    }
-  )
-
-  -- Set up the prompt window: show line numbers but disable all other chrome.
+  -- Show line numbers but disable all other chrome.
   vim.wo[prompt_win].colorcolumn    = ""
   vim.wo[prompt_win].cursorline     = false
   vim.wo[prompt_win].fillchars      = "eob: "
@@ -225,102 +118,11 @@ function M.prompt_and_send(ls, le)
   vim.wo[prompt_win].spell          = false
   vim.wo[prompt_win].statusline     = " "
   vim.wo[prompt_win].winbar         = ""
-  vim.wo[prompt_win].winhl          = "Normal:FloatingTermBg,LineNr:LineNr"
 
-  -- Create a horizontal separator between prompt and hint bar.
-  local sep_bot_buf = vim.api.nvim_create_buf(false, true)
-
-  vim.bo[sep_bot_buf].bufhidden = "wipe"
-  vim.api.nvim_buf_set_lines(sep_bot_buf, 0, -1, false, { sep_line })
-
-  local sep_bot_win = vim.api.nvim_open_win(
-    sep_bot_buf,
-    false,
-    {
-      border    = "none",
-      col       = col,
-      focusable = false,
-      height    = 1,
-      relative  = "editor",
-      row       = row + height - 3,
-      style     = "minimal",
-      width     = width,
-      zindex    = 11,
-    }
-  )
-
-  vim.wo[sep_bot_win].winhl = "Normal:FloatingTermBg"
-  vim.api.nvim_buf_set_extmark(
-    sep_bot_buf,
-    ns,
-    0,
-    0,
-    { line_hl_group = "NonText" }
-  )
-
-  -- Whether to append the file reference when sending the prompt (default on).
-  local include_ref = true
-
-  -- Create the hint bar at the bottom of the backdrop.
-  local hint_buf  = vim.api.nvim_create_buf(false, true)
-  local model_pad = 2
-
-  vim.bo[hint_buf].bufhidden = "wipe"
-
-  local hint_win = vim.api.nvim_open_win(
-    hint_buf,
-    false,
-    {
-      border    = "none",
-      col       = col,
-      focusable = false,
-      height    = 1,
-      relative  = "editor",
-      row       = row + height - 2,
-      style     = "minimal",
-      width     = width,
-      zindex    = 11,
-    }
-  )
-
-  vim.wo[hint_win].winhl = "Normal:FloatingTermBg"
-
-  --- Rebuild the hint bar to reflect the current `include_ref` state.
-  local function update_hint_bar()
-    local pad      = string.rep(" ", model_pad)
-    local ref_str  = pad .. (include_ref and "ref:on" or "ref:off") .. pad
-    local hint     = "<M-CR> / :w => Send Prompt ┃ <Esc> / q => Quit"
-    local right    = model_name .. pad
-    local hint_dw  = vim.fn.strdisplaywidth(hint)
-    local hint_col = math.floor((width - hint_dw) / 2)
-    local line     =
-      ref_str ..
-      string.rep(" ", math.max(0, hint_col - #ref_str)) ..
-      hint ..
-      string.rep(" ", math.max(0, width - hint_col - hint_dw - #right)) ..
-      right
-
-    vim.api.nvim_buf_set_lines(hint_buf, 0, -1, false, { line })
-    vim.api.nvim_buf_clear_namespace(hint_buf, ns, 0, -1)
-
-    -- Ref-toggle indicator (left) and hint text (centre) share the same highlight.
-    local model_col = #line - #right
-
-    vim.api.nvim_buf_set_extmark(hint_buf, ns, 0, 0, {
-      end_col  = model_col,
-      hl_group = "Comment",
-    })
-
-    -- Model name (right).
-    if model_col >= 0 then
-      vim.api.nvim_buf_set_extmark(hint_buf, ns, 0, model_col, {
-        end_col  = model_col + #model_name,
-        hl_group = "Special",
-      })
-    end
+  --- Update the footer to reflect the current `include_ref` state.
+  local function update_footer()
+    float.set_footer(prompt_float, footer())
   end
-
-  update_hint_bar()
 
   local closed = false
 
@@ -347,11 +149,7 @@ function M.prompt_and_send(ls, le)
       end
     end
 
-    for _, w in ipairs({ prompt_win, title_win, sep_top_win, sep_bot_win, hint_win, backdrop_win }) do
-      if vim.api.nvim_win_is_valid(w) then
-        vim.api.nvim_win_close(w, true)
-      end
-    end
+    float.close(prompt_float)
   end
 
   --- Close the UI (which saves the buffer to history) and dispatch its content to the active
@@ -584,40 +382,35 @@ function M.prompt_and_send(ls, le)
     { buffer = prompt_buf, nowait = true }
   )
 
-  vim.keymap.set(
-    "n",
-    "k",
-    function()
-      if in_history then
-        if history_idx < #M.history then
-          history_idx = history_idx + 1
-          show_history(history_idx)
-        end
-      elseif buf_is_empty() then
-        enter_history()
-      else vim.cmd("normal! k")
-        end
-    end,
-    { buffer = prompt_buf, nowait = true }
-  )
-
-  vim.keymap.set(
-    "n",
-    "<Up>",
-    function()
-      if in_history then
-        if history_idx < #M.history then
-          history_idx = history_idx + 1
-          show_history(history_idx)
-        end
-      elseif buf_is_empty() then
-        enter_history()
-      else
-        vim.cmd("normal! k")
+  --- Show the previous (older) history entry, entering the history mode when the buffer is
+  --- empty. Otherwise, move the cursor up.
+  local function history_prev()
+    if in_history then
+      if history_idx < #M.history then
+        history_idx = history_idx + 1
+        show_history(history_idx)
       end
-    end,
-    { buffer = prompt_buf, nowait = true }
-  )
+    elseif buf_is_empty() then
+      enter_history()
+    else
+      vim.cmd("normal! k")
+    end
+  end
+
+  --- Show the next (newer) history entry. Otherwise, move the cursor down.
+  local function history_next()
+    if in_history then
+      if history_idx > 1 then
+        history_idx = history_idx - 1
+        show_history(history_idx)
+      end
+    else
+      vim.cmd("normal! j")
+    end
+  end
+
+  vim.keymap.set("n", { "k", "<Up>" },   history_prev, { buffer = prompt_buf, nowait = true })
+  vim.keymap.set("n", { "j", "<Down>" }, history_next, { buffer = prompt_buf, nowait = true })
 
   vim.keymap.set(
     "i",
@@ -626,38 +419,6 @@ function M.prompt_and_send(ls, le)
       if buf_is_empty() then
         vim.cmd("stopinsert")
         enter_history()
-        end
-    end,
-    { buffer = prompt_buf, nowait = true }
-  )
-
-  vim.keymap.set(
-    "n",
-    "j",
-    function()
-      if in_history then
-        if history_idx > 1 then
-          history_idx = history_idx - 1
-          show_history(history_idx)
-        end
-      else
-        vim.cmd("normal! j")
-      end
-    end,
-    { buffer = prompt_buf, nowait = true }
-  )
-
-  vim.keymap.set(
-    "n",
-    "<Down>",
-    function()
-      if in_history then
-        if history_idx > 1 then
-          history_idx = history_idx - 1
-          show_history(history_idx)
-        end
-      else
-        vim.cmd("normal! j")
       end
     end,
     { buffer = prompt_buf, nowait = true }
@@ -677,7 +438,7 @@ function M.prompt_and_send(ls, le)
     "<C-s>",
     function()
       include_ref = not include_ref
-      update_hint_bar()
+      update_footer()
     end,
     { buffer = prompt_buf, nowait = true }
   )
