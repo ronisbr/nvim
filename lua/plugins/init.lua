@@ -60,7 +60,6 @@ vim.pack.add({
   "https://github.com/nvim-mini/mini.starter",
   "https://github.com/nvim-mini/mini.trailspace",
   "https://github.com/nvimtools/none-ls.nvim",
-  "https://github.com/rachartier/tiny-cmdline.nvim.git",
   "https://github.com/ronisbr/nano-theme.nvim",
   "https://github.com/zbirenbaum/copilot.lua",
 })
@@ -78,7 +77,6 @@ require("plugins.mini")
 require("plugins.aiwaku")
 require("plugins.julia")
 require("plugins.lsp")
-require("plugins.tiny-cmdline")
 require("plugins.treesitter")
 require("plugins.typst")
 require("plugins.vimtex")
