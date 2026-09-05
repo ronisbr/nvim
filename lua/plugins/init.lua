@@ -60,6 +60,7 @@ vim.pack.add({
   "https://github.com/nvimtools/none-ls.nvim",
   "https://github.com/ronisbr/nano-theme.nvim",
   "https://github.com/zbirenbaum/copilot.lua",
+  "https://github.com/kevinhwang91/nvim-hlslens.git"
 })
 
 require("plugins.colorscheme")
@@ -73,6 +74,7 @@ require("plugins.copilot")
 require("plugins.mini")
 
 require("plugins.aiwaku")
+require("plugins.hlslens")
 require("plugins.julia")
 require("plugins.lsp")
 require("plugins.markdown")
