@@ -24,6 +24,9 @@ MiniMisc.on_event(
           open = "<M-CR>"
         },
       },
+      server = {
+        type = "binary"
+      },
       suggestion = {
         auto_trigger = true,
         keymap = {
