@@ -36,7 +36,6 @@ vim.pack.add({
   "https://github.com/JuliaEditorSupport/julia-vim",
   "https://github.com/antonk52/filepaths_ls.nvim",
   "https://github.com/juhaku/aiwaku.nvim",
-  "https://github.com/neovim-treesitter/nvim-treesitter",
   "https://github.com/neovim-treesitter/treesitter-parser-registry",
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/nvim-lua/plenary.nvim",
@@ -47,7 +46,6 @@ vim.pack.add({
   "https://github.com/nvim-mini/mini.diff",
   "https://github.com/nvim-mini/mini.extra",
   "https://github.com/nvim-mini/mini.files",
-  { src = "https://github.com/nvim-mini/mini-git", name = "mini.git" },
   "https://github.com/nvim-mini/mini.hipatterns",
   "https://github.com/nvim-mini/mini.icons",
   "https://github.com/nvim-mini/mini.indentscope",
@@ -60,7 +58,9 @@ vim.pack.add({
   "https://github.com/nvimtools/none-ls.nvim",
   "https://github.com/ronisbr/nano-theme.nvim",
   "https://github.com/zbirenbaum/copilot.lua",
-  "https://github.com/kevinhwang91/nvim-hlslens.git"
+  "https://github.com/kevinhwang91/nvim-hlslens.git",
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter", branch = "main", build = ":TSUpdate" },
+  { src = "https://github.com/nvim-mini/mini-git", name = "mini.git" },
 })
 
 require("plugins.colorscheme")
