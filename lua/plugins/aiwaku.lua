@@ -9,9 +9,9 @@ MiniMisc.on_event(
   function()
     require("aiwaku").setup({
       cmd = {
-        { name = "OpenCode", cmd = "opencode" },
-        { name = "Claude",   cmd = "claude" },
+        { name = "Claude",   cmd = "CLAUDE_CODE_TMUX_TRUECOLOR=1 claude" },
         { name = "Copilot",  cmd = "copilot" },
+        { name = "OpenCode", cmd = "opencode" },
       },
       lsp_code_actions = {
         { title = "Send to Aiwaku" },
